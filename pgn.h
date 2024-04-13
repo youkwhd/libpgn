@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "table.h"
+#include "string.h"
 #include "piece.h"
 
 #define PGN_UNUSED(x) ((void)x)
@@ -18,7 +19,7 @@ typedef struct pgn_t {
     pgn_table_t *metadata;
 } pgn_t;
 
-void pgn_init(pgn_t *pgn);
+pgn_t *pgn_init();
 void pgn_cleanup(pgn_t *pgn);
 void pgn_parse_from_file(pgn_t *pgn, FILE *file);
 void pgn_parse_from_string(pgn_t *pgn, char *str);
