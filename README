@@ -2,3 +2,8 @@ libpgn
 ======
 
 Portable Game Notation file manipulation.
+
+Compiling the library
+---------------------
+
+    ./make
