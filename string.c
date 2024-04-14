@@ -10,6 +10,11 @@ pgn_string_t *pgn_string_init()
     return pstr;
 }
 
+bool pgn_string_equal(pgn_string_t *pstr, char *str)
+{
+    return strcmp(pstr->buf, str) == 0;
+}
+
 void pgn_string_reset(pgn_string_t *pstr)
 {
     pstr->length = 0;

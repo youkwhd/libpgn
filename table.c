@@ -51,12 +51,30 @@ void pgn_table_insert(pgn_table_t *table, char *key, char *value)
 char *pgn_table_get(pgn_table_t *table, char *key)
 {
     for (size_t i = 0; i < table->length; i++) {
-        if (strcmp(table->items[i]->key->buf, key) == 0) {
+        if (pgn_string_equal(table->items[i]->key, key)) {
             return table->items[i]->value->buf;
         }
     }
 
     return NULL;
+}
+
+void pgn_table_delete(pgn_table_t *table, char *key)
+{
+    for (size_t i = 0; i < table->length; i++) {
+        if (!pgn_string_equal(table->items[i]->key, key)) {
+            continue;
+        }
+
+        __pgn_table_item_cleanup(table->items[i]);
+
+        for (size_t j = i; j < table->length; j++) {
+            table->items[j] = table->items[j + 1];
+        }
+
+        table->length--;
+        break;
+    }
 }
 
 void pgn_table_cleanup(pgn_table_t *table)

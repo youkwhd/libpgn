@@ -26,6 +26,7 @@ pgn_table_t *pgn_table_init();
 void pgn_table_printp(pgn_table_t *table);
 void pgn_table_insert(pgn_table_t *table, char *key, char *value);
 char *pgn_table_get(pgn_table_t *table, char *key);
+void pgn_table_delete(pgn_table_t *table, char *key);
 void pgn_table_cleanup(pgn_table_t *table);
 
 #endif // __LIBPGN_TABLE_H
