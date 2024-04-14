@@ -12,3 +12,16 @@ pgn_piece_t pgn_piece_parse_from_alphabet(char ch)
     default: return PGN_PIECE_PAWN;
     }
 }
+
+char pgn_piece_to_alphabet(pgn_piece_t piece)
+{
+    switch (piece) {
+    case PGN_PIECE_PAWN: return PGN_PIECE_PAWN_ALPHABET;
+    case PGN_PIECE_ROOK: return PGN_PIECE_ROOK_ALPHABET;
+    case PGN_PIECE_KNIGHT: return PGN_PIECE_KNIGHT_ALPHABET;
+    case PGN_PIECE_BISHOP: return PGN_PIECE_BISHOP_ALPHABET;
+    case PGN_PIECE_QUEEN: return PGN_PIECE_QUEEN_ALPHABET;
+    case PGN_PIECE_KING: return PGN_PIECE_KING_ALPHABET;
+    default: {} // unreachable
+    }
+}

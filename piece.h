@@ -22,5 +22,6 @@ typedef enum pgn_piece_t {
 } pgn_piece_t;
 
 pgn_piece_t pgn_piece_parse_from_alphabet(char ch);
+char pgn_piece_to_alphabet(pgn_piece_t piece);
 
 #endif // __LIBPGN_PIECE_H
