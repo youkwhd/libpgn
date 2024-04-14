@@ -25,7 +25,6 @@ typedef struct pgn_t {
 
 pgn_t *pgn_init();
 void pgn_cleanup(pgn_t *pgn);
-pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed);
 void pgn_parse_from_file(pgn_t *pgn, FILE *file);
 void pgn_parse_from_string(pgn_t *pgn, char *str);
 

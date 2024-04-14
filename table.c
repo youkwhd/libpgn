@@ -2,6 +2,46 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+
+void pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consumed)
+{
+    /* Redundant check, but it works to not make unnecessary
+     * memory allocations (key_buf, value_buf)
+     */
+    if (str[*consumed] != '[') return;
+
+    pgn_string_t *key_buffer = pgn_string_init();
+    pgn_string_t *value_buffer = pgn_string_init();
+
+    for (;;) {
+        if (str[*consumed] != '[') goto cleanup;
+        (*consumed)++;
+
+        while (str[*consumed] != ' ') pgn_string_append(key_buffer, str[(*consumed)++]);
+        pgn_string_append_null_terminator(key_buffer);
+
+        assert(str[++(*consumed)] == '"');
+        (*consumed)++;
+
+        while (str[*consumed] != '"') pgn_string_append(value_buffer, str[(*consumed)++]);
+        pgn_string_append_null_terminator(value_buffer);
+
+        pgn_table_insert(table, key_buffer->buf, value_buffer->buf);
+        pgn_string_reset(key_buffer);
+        pgn_string_reset(value_buffer);
+
+        assert(str[++(*consumed)] == ']');
+        /* TODO: maybe expect whitespaces than just newline
+         */
+        assert(str[++(*consumed)] == '\n');
+        (*consumed)++;
+    }
+
+cleanup:
+    pgn_string_cleanup(key_buffer);
+    pgn_string_cleanup(value_buffer);
+}
 
 __pgn_table_item_t *__pgn_table_item_init()
 {

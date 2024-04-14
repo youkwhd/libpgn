@@ -1,5 +1,25 @@
 #include "moves.h"
 
+pgn_move_t pgn_move_from_string(char *str, size_t *consumed)
+{
+    pgn_move_t move = {0};
+
+    move.piece = pgn_piece_from_alphabet(str[(*consumed)++]);
+
+    move.captures = false;
+    if (str[*consumed] == 'x') {
+        move.captures = true;
+        (*consumed)++;
+    }
+
+    move.to.x = str[(*consumed)++];
+    move.to.y = str[(*consumed)++] - '0';
+
+    move.annotation = pgn_annotation_from_string(str, consumed);
+
+    return move;
+}
+
 pgn_moves_t *pgn_moves_init()
 {
     pgn_moves_t *moves = malloc(sizeof *moves);
