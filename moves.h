@@ -9,7 +9,7 @@
 
 typedef struct pgn_move_t {
     pgn_piece_t piece;
-    bool captured;
+    bool captures;
     pgn_coordinate_t to;
     pgn_annotation_t annotation;
 } pgn_move_t;
