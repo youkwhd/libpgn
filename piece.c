@@ -24,6 +24,8 @@ char pgn_piece_to_alphabet(pgn_piece_t piece)
     case PGN_PIECE_KING: return PGN_PIECE_KING_ALPHABET;
     default: {} // unreachable
     }
+
+    return 0;
 }
 
 char *pgn_piece_to_string(pgn_piece_t piece)
@@ -37,4 +39,6 @@ char *pgn_piece_to_string(pgn_piece_t piece)
     case PGN_PIECE_KING: return PGN_PIECE_KING_STR;
     default: {} // unreachable
     }
+
+    return 0;
 }

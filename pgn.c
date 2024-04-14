@@ -55,6 +55,8 @@ size_t pgn_parse_metadata(pgn_t *pgn, char *str)
 
 pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed)
 {
+    PGN_UNUSED(pgn);
+
     unsigned int cursor = 0;
     pgn_move_t move = {0};
 
@@ -77,7 +79,10 @@ pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed)
 
 size_t pgn_parse_moves(pgn_t *pgn, char *str)
 {
+    PGN_UNUSED(pgn);
+    PGN_UNUSED(str);
     PGN_NOT_IMPLEMENTED();
+
     unsigned int cursor = 0;
     return cursor;
 }
