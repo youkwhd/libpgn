@@ -1,6 +1,8 @@
 #ifndef __LIBPGN_ANNOTATION_H
 #define __LIBPGN_ANNOTATION_H
 
+#include <stdlib.h>
+
 typedef enum pgn_annotation_t {
     PGN_ANNOTATION_NONE = 0,
     PGN_ANNOTATION_CHECKMATE,
@@ -11,5 +13,7 @@ typedef enum pgn_annotation_t {
     PGN_ANNOTATION_MISTAKE,
     PGN_ANNOTATION_BLUNDER,
 } pgn_annotation_t;
+
+pgn_annotation_t pgn_annotation_from_string(char *str, size_t *consumed);
 
 #endif // __LIBPGN_ANNOTATION_H
