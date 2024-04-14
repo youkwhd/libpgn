@@ -58,7 +58,7 @@ pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed)
     unsigned int cursor = 0;
     pgn_move_t move = {0};
 
-    move.piece = pgn_piece_parse_from_alphabet(str[cursor++]);
+    move.piece = pgn_piece_from_alphabet(str[cursor++]);
 
     move.captures = false;
     if (str[cursor] == 'x') {

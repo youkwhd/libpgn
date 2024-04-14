@@ -1,6 +1,6 @@
 #include "piece.h"
 
-pgn_piece_t pgn_piece_parse_from_alphabet(char ch)
+pgn_piece_t pgn_piece_from_alphabet(char ch)
 {
     switch (ch) {
     case PGN_PIECE_PAWN_ALPHABET: return PGN_PIECE_PAWN;
