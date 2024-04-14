@@ -11,7 +11,7 @@
 #define PGN_UNUSED(x) ((void)x)
 #define PGN_NOT_IMPLEMENTED() \
     do { \
-        fprintf(stderr, "LIBPGN [ERR]: Function `%s` is not implemented yet, at %s:%d\n", __func__, __FILE__, __LINE__); \
+        fprintf(stderr, "libpgn: function `%s` is not implemented yet, at %s:%d\n", __func__, __FILE__, __LINE__); \
         exit(EXIT_FAILURE); \
     } while (0)
 
