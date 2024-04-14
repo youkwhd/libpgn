@@ -53,11 +53,48 @@ size_t pgn_parse_metadata(pgn_t *pgn, char *str)
     return cursor;
 }
 
-size_t pgn_parse_move(pgn_t *pgn, char *str)
+pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed)
 {
-    PGN_NOT_IMPLEMENTED();
     unsigned int cursor = 0;
-    return cursor;
+    pgn_move_t move = {0};
+
+    move.piece = pgn_piece_parse_from_alphabet(str[cursor++]);
+
+    move.captures = false;
+    if (str[cursor] == 'x') {
+        move.captures = true;
+        cursor++;
+    }
+
+    move.to.x = str[cursor++];
+    move.to.y = str[cursor++] - '0';
+
+    move.annotation = PGN_ANNOTATION_NONE;
+    if (str[cursor] == '!' && str[cursor + 1] == '!') {
+        move.annotation = PGN_ANNOTATION_EXCELLENT_MOVE;
+        cursor += 2;
+    } else if (str[cursor] == '!' && str[cursor + 1] == '?') {
+        move.annotation = PGN_ANNOTATION_INTRESTING_MOVE;
+        cursor += 2;
+    } else if (str[cursor] == '!') {
+        move.annotation = PGN_ANNOTATION_GOOD_MOVE;
+        cursor += 1;
+    } else if (str[cursor] == '?' && str[cursor + 1] == '!') {
+        move.annotation = PGN_ANNOTATION_DUBIOUS_MOVE;
+        cursor += 2;
+    } else if (str[cursor] == '?' && str[cursor + 1] == '?') {
+        move.annotation = PGN_ANNOTATION_BLUNDER;
+        cursor += 2;
+    } else if (str[cursor] == '?') {
+        move.annotation = PGN_ANNOTATION_MISTAKE;
+        cursor += 1;
+    } else if (str[cursor] == '#') {
+        move.annotation = PGN_ANNOTATION_CHECKMATE;
+        cursor += 1;
+    }
+
+    *str_consumed += cursor;
+    return move;
 }
 
 size_t pgn_parse_moves(pgn_t *pgn, char *str)

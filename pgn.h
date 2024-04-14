@@ -7,6 +7,9 @@
 #include "table.h"
 #include "string.h"
 #include "piece.h"
+#include "annotation.h"
+#include "coordinate.h"
+#include "moves.h"
 
 #define PGN_UNUSED(x) ((void)x)
 #define PGN_NOT_IMPLEMENTED() \
@@ -17,10 +20,12 @@
 
 typedef struct pgn_t {
     pgn_table_t *metadata;
+    pgn_moves_t moves;
 } pgn_t;
 
 pgn_t *pgn_init();
 void pgn_cleanup(pgn_t *pgn);
+pgn_move_t pgn_parse_move(pgn_t *pgn, char *str, size_t *str_consumed);
 void pgn_parse_from_file(pgn_t *pgn, FILE *file);
 void pgn_parse_from_string(pgn_t *pgn, char *str);
 
