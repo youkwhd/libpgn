@@ -68,7 +68,7 @@ void pgn_table_delete(pgn_table_t *table, char *key)
 
         __pgn_table_item_cleanup(table->items[i]);
 
-        for (size_t j = i; j < table->length; j++) {
+        for (size_t j = i; j < table->length - 1; j++) {
             table->items[j] = table->items[j + 1];
         }
 
