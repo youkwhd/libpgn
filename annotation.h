@@ -14,6 +14,7 @@ typedef enum pgn_annotation_t {
     PGN_ANNOTATION_BLUNDER,
 } pgn_annotation_t;
 
-pgn_annotation_t pgn_annotation_from_string(char *str, size_t *consumed);
+pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed);
+pgn_annotation_t pgn_annotation_from_string(char *str);
 
 #endif // __LIBPGN_ANNOTATION_H

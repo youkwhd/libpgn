@@ -24,7 +24,9 @@ typedef struct pgn_moves_t {
     size_t size;
 } pgn_moves_t;
 
-pgn_move_t pgn_move_from_string(char *str, size_t *consumed);
+pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
+pgn_move_t pgn_move_from_string(char *str);
+
 pgn_moves_t *pgn_moves_init();
 void pgn_moves_push(pgn_moves_t *moves, pgn_move_t move);
 void pgn_moves_cleanup(pgn_moves_t *moves);

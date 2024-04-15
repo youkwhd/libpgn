@@ -1,6 +1,6 @@
 #include "annotation.h"
 
-pgn_annotation_t pgn_annotation_from_string(char *str, size_t *consumed)
+pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed)
 {
     if (str[0] == '\0') return PGN_ANNOTATION_NONE;
 
@@ -42,4 +42,10 @@ pgn_annotation_t pgn_annotation_from_string(char *str, size_t *consumed)
     }
 
     return PGN_ANNOTATION_NONE;
+}
+
+pgn_annotation_t pgn_annotation_from_string(char *str)
+{
+    size_t consumed = 0;
+    return __pgn_annotation_from_string(str, &consumed);
 }

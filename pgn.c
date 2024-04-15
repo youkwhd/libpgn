@@ -37,5 +37,5 @@ void pgn_parse_from_string(pgn_t *pgn, char *str)
     PGN_UNUSED(str);
 
     size_t cursor = 0;
-    pgn_table_from_metadata_string(pgn->metadata, str, &cursor);
+    __pgn_table_from_metadata_string(pgn->metadata, str, &cursor);
 }

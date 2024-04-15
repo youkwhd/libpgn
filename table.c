@@ -4,7 +4,7 @@
 #include <string.h>
 #include <assert.h>
 
-void pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consumed)
+void __pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consumed)
 {
     /* Redundant check, but it works to not make unnecessary
      * memory allocations (key_buf, value_buf)
@@ -41,6 +41,12 @@ void pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consu
 cleanup:
     pgn_string_cleanup(key_buffer);
     pgn_string_cleanup(value_buffer);
+}
+
+void pgn_table_from_metadata_string(pgn_table_t *table, char *str)
+{
+    size_t consumed = 0;
+    __pgn_table_from_metadata_string(table, str, &consumed);
 }
 
 __pgn_table_item_t *__pgn_table_item_init()
