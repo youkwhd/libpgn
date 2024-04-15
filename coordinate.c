@@ -1,6 +1,6 @@
 #include "coordinate.h"
 
-char pgn_coordinate_as_alphabet(int n)
+char pgn_coordinate_as_char(int n)
 {
     return n + 'a';
 }
