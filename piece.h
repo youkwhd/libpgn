@@ -20,7 +20,8 @@
 #define PGN_PIECE_KING_STR "King"
 
 typedef enum pgn_piece_t {
-    PGN_PIECE_PAWN = 0,
+    PGN_PIECE_UNKNOWN = -1,
+    PGN_PIECE_PAWN,
     PGN_PIECE_ROOK,
     PGN_PIECE_KNIGHT,
     PGN_PIECE_BISHOP,

@@ -9,7 +9,7 @@ pgn_piece_t pgn_piece_from_alphabet(char ch)
     case PGN_PIECE_BISHOP_ALPHABET: return PGN_PIECE_BISHOP;
     case PGN_PIECE_QUEEN_ALPHABET: return PGN_PIECE_QUEEN;
     case PGN_PIECE_KING_ALPHABET: return PGN_PIECE_KING;
-    default: return PGN_PIECE_PAWN;
+    default: return PGN_PIECE_UNKNOWN;
     }
 }
 

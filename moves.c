@@ -5,6 +5,7 @@ pgn_move_t pgn_move_from_string(char *str, size_t *consumed)
     pgn_move_t move = {0};
 
     move.piece = pgn_piece_from_alphabet(str[(*consumed)++]);
+    if (move.piece == PGN_PIECE_UNKNOWN) move.piece = PGN_PIECE_PAWN;
 
     move.captures = false;
     if (str[*consumed] == 'x') {
