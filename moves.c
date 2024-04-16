@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "moves.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
@@ -19,7 +20,7 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
     move.to.x = str[(*consumed)++];
     move.to.y = str[(*consumed)++] - '0';
 
-    move.annotation = __pgn_annotation_from_string(str, consumed);
+    move.annotation = __pgn_annotation_from_string(str + *consumed, consumed);
 
     return move;
 }
