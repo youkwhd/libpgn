@@ -3,39 +3,25 @@
 pgn_t *pgn_init()
 {
     pgn_t *pgn = malloc(sizeof *pgn);
-    pgn->metadata = pgn_table_init();
-
+    pgn->metadata = NULL;
+    pgn->moves = NULL;
     return pgn;
 }
 
 void pgn_cleanup(pgn_t *pgn)
 {
-    pgn_table_cleanup(pgn->metadata);
+    if (pgn->metadata)
+        pgn_table_cleanup(pgn->metadata);
+
+    if (pgn->moves)
+        pgn_moves_cleanup(pgn->moves);
+
     free(pgn);
 }
 
-size_t pgn_parse_moves(pgn_t *pgn, char *str)
+void pgn_parse(pgn_t *pgn, char *str)
 {
-    PGN_UNUSED(pgn);
-    PGN_UNUSED(str);
-    PGN_NOT_IMPLEMENTED();
-
-    unsigned int cursor = 0;
-    return cursor;
-}
-
-void pgn_parse_from_file(pgn_t *pgn, FILE *file)
-{
-    PGN_UNUSED(pgn);
-    PGN_UNUSED(file);
-    PGN_NOT_IMPLEMENTED();
-}
-
-void pgn_parse_from_string(pgn_t *pgn, char *str)
-{
-    PGN_UNUSED(pgn);
-    PGN_UNUSED(str);
-
     size_t cursor = 0;
-    __pgn_table_from_metadata_string(pgn->metadata, str, &cursor);
+    pgn->metadata = __pgn_table_from_string(str, &cursor);
+    // pgn->moves = __pgn_moves_from_string(str, &cursor);
 }

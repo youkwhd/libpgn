@@ -20,12 +20,14 @@
 
 typedef struct pgn_t {
     pgn_table_t *metadata;
-    pgn_moves_t moves;
+    pgn_moves_t *moves;
 } pgn_t;
 
 pgn_t *pgn_init();
 void pgn_cleanup(pgn_t *pgn);
-void pgn_parse_from_file(pgn_t *pgn, FILE *file);
-void pgn_parse_from_string(pgn_t *pgn, char *str);
+void pgn_parse(pgn_t *pgn, char *str);
+
+#define pgn_parse_metadata(str) pgn_table_from_string(str)
+#define pgn_parse_moves(str) pgn_moves_from_string(str)
 
 #endif // __LIBPGN_PGN_H

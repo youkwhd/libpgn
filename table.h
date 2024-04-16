@@ -23,8 +23,8 @@ __pgn_table_item_t *__pgn_table_item_init();
 void __pgn_table_item_cleanup(__pgn_table_item_t *item);
 
 pgn_table_t *pgn_table_init();
-void __pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consumed);
-void pgn_table_from_metadata_string(pgn_table_t *table, char *str);
+pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed);
+pgn_table_t *pgn_table_from_string(char *str);
 void pgn_table_printp(pgn_table_t *table);
 void pgn_table_insert(pgn_table_t *table, char *key, char *value);
 char *pgn_table_get(pgn_table_t *table, char *key);

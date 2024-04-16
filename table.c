@@ -4,13 +4,14 @@
 #include <string.h>
 #include <assert.h>
 
-void __pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *consumed)
+pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed)
 {
     /* Redundant check, but it works to not make unnecessary
      * memory allocations (key_buf, value_buf)
      */
-    if (str[*consumed] != '[') return;
+    if (str[*consumed] != '[') return NULL;
 
+    pgn_table_t *table = pgn_table_init();
     pgn_string_t *key_buffer = pgn_string_init();
     pgn_string_t *value_buffer = pgn_string_init();
 
@@ -41,12 +42,13 @@ void __pgn_table_from_metadata_string(pgn_table_t *table, char *str, size_t *con
 cleanup:
     pgn_string_cleanup(key_buffer);
     pgn_string_cleanup(value_buffer);
+    return table;
 }
 
-void pgn_table_from_metadata_string(pgn_table_t *table, char *str)
+pgn_table_t *pgn_table_from_string(char *str)
 {
     size_t consumed = 0;
-    __pgn_table_from_metadata_string(table, str, &consumed);
+    __pgn_table_from_string(str, &consumed);
 }
 
 __pgn_table_item_t *__pgn_table_item_init()
