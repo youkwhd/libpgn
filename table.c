@@ -48,7 +48,7 @@ cleanup:
 pgn_table_t *pgn_table_from_string(char *str)
 {
     size_t consumed = 0;
-    __pgn_table_from_string(str, &consumed);
+    return __pgn_table_from_string(str, &consumed);
 }
 
 __pgn_table_item_t *__pgn_table_item_init()
