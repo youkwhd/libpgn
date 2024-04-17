@@ -1,6 +1,8 @@
 #ifndef __LIBPGN_COORDINATE_H
 #define __LIBPGN_COORDINATE_H
 
+#define PGN_COORDINATE_UNKNOWN 0
+
 typedef struct pgn_coordinate_t {
     char x;
     int y;

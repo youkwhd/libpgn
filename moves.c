@@ -1,26 +1,64 @@
+#include <ctype.h>
+#include <assert.h>
 #include <stdio.h>
 #include "moves.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
+    /* TODO: wip reverse parsing
+     */
     pgn_move_t move = {0};
+    move.piece = PGN_PIECE_UNKNOWN;
+    // move.? = ..
 
-    move.piece = pgn_piece_from_char(str[(*consumed)++]);
-    if (move.piece == PGN_PIECE_UNKNOWN) {
-        move.piece = PGN_PIECE_PAWN;
-        (*consumed)--;
+    int cursor = 0;
+
+    while (str[cursor] != '\0' && !isspace(str[cursor])) cursor++;
+    *consumed += cursor;
+    cursor--;
+
+    while (str[cursor] == '?' || str[cursor] == '!' || str[cursor] == '#') cursor--;
+    move.annotation = pgn_annotation_from_string(str + (++cursor));
+    cursor--;
+
+    move.checks = false;
+    if (str[cursor] == '+') {
+        move.checks = true;
+        cursor--;
     }
+
+    for (move.castles = PGN_CASTLING_NONE; cursor >= 0 && str[cursor] == 'O'; cursor -= 2)
+        move.castles++;
+
+    if (cursor <= 0) return move;
+
+    move.promoted_to = pgn_piece_from_char(str[cursor]);
+    if (move.promoted_to == PGN_PIECE_UNKNOWN) {
+        if (str[cursor] == ')') {
+            move.promoted_to = pgn_piece_from_char(str[--cursor]);
+            assert(str[--cursor] == '(');
+            cursor--;
+        }
+    } else {
+        cursor--;
+        if (str[cursor] == '=' || str[cursor] == '/')
+            cursor--;
+    }
+
+    if (isdigit(str[cursor])) move.dest.y = str[cursor--] - '0';
+    if (islower(str[cursor]) && str[cursor] != 'x') move.dest.x = str[cursor--];
 
     move.captures = false;
-    if (str[*consumed] == 'x') {
+    if (str[cursor] == 'x') {
         move.captures = true;
-        (*consumed)++;
+        cursor--;
     }
 
-    move.to.x = str[(*consumed)++];
-    move.to.y = str[(*consumed)++] - '0';
+    if (isdigit(str[cursor])) move.from.y = str[cursor--] - '0';
+    if (islower(str[cursor])) move.from.x = str[cursor--];
 
-    move.annotation = __pgn_annotation_from_string(str + *consumed, consumed);
+    move.piece = PGN_PIECE_PAWN;
+    if (cursor >= 0) move.piece = pgn_piece_from_char(str[cursor]);
 
     return move;
 }

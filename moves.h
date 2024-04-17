@@ -8,13 +8,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+/* TODO: move this somewhere
+ */
+#define PGN_CASTLING_NONE 0
+#define PGN_CASTLING_KINGSIDE 2
+#define PGN_CASTLING_QUEENSIDE 3
+
 #define PGN_MOVES_INITIAL_SIZE 32
 #define PGN_MOVES_GROW_SIZE 32
 
 typedef struct pgn_move_t {
-    pgn_piece_t piece;
-    bool captures;
-    pgn_coordinate_t to;
+    pgn_piece_t piece, promoted_to;
+    int castles;
+    bool captures, checks;
+    pgn_coordinate_t from, dest;
     pgn_annotation_t annotation;
 } pgn_move_t;
 
