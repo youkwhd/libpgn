@@ -6,6 +6,8 @@
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
     /* TODO: wip reverse parsing
+     *
+     * case with en passant
      */
     pgn_move_t move = {0};
     move.piece = PGN_PIECE_UNKNOWN;
@@ -49,7 +51,7 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
     if (islower(str[cursor]) && str[cursor] != 'x') move.dest.x = str[cursor--];
 
     move.captures = false;
-    if (str[cursor] == 'x') {
+    if (str[cursor] == 'x' || str[cursor] == ':') {
         move.captures = true;
         cursor--;
     }
