@@ -25,8 +25,20 @@ typedef struct pgn_move_t {
     pgn_annotation_t annotation;
 } pgn_move_t;
 
+#define PGN_MOVES_ALTERNATIVES_INITIAL_SIZE 6
+
+typedef struct __pgn_moves_t {
+    pgn_move_t white;
+    pgn_move_t black;
+    struct {
+        pgn_move_t *values;
+        size_t length;
+        size_t size;
+    } alternatives;
+} __pgn_moves_t;
+
 typedef struct pgn_moves_t {
-    pgn_move_t *values;
+    __pgn_moves_t *values;
     size_t length;
     size_t size;
 } pgn_moves_t;
@@ -34,8 +46,14 @@ typedef struct pgn_moves_t {
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
 pgn_move_t pgn_move_from_string(char *str);
 
-pgn_moves_t *pgn_moves_init();
-void pgn_moves_push(pgn_moves_t *moves, pgn_move_t move);
-void pgn_moves_cleanup(pgn_moves_t *moves);
+__pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
+__pgn_moves_t *pgn_moves_from_string(char *str);
+
+__pgn_moves_t *__pgn_moves_init();
+void __pgn_moves_cleanup(__pgn_moves_t *__moves);
+
+// pgn_moves_t *pgn_moves_init();
+// void pgn_moves_push(pgn_moves_t *moves, pgn_move_t move);
+// void pgn_moves_cleanup(pgn_moves_t *moves);
 
 #endif // __LIBPGN_MOVES_H
