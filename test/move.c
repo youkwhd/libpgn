@@ -11,6 +11,8 @@ void __print_success()
 
 void test_parsing_move()
 {
+    printf("calling %s()\n", __func__);
+    __nth = 1;
     pgn_move_t move = {0};
 
     move = pgn_move_from_string("e4??");
@@ -84,8 +86,33 @@ void test_parsing_move()
     __print_success();
 }
 
+void test_parsing_bunch_of_moves()
+{
+    printf("calling %s()\n", __func__);
+    __nth = 1;
+    __pgn_moves_t *moves = NULL;
+
+    moves = pgn_moves_from_string("1.e4 e5");
+    assert(moves->white.piece == PGN_PIECE_PAWN);
+    assert(moves->white.dest.x == 'e');
+    assert(moves->white.dest.y == 4);
+    assert(moves->white.captures == false);
+    assert(moves->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->black.piece == PGN_PIECE_PAWN);
+    assert(moves->black.dest.x == 'e');
+    assert(moves->black.dest.y == 5);
+    assert(moves->black.captures == false);
+    assert(moves->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->alternatives.length == 0);
+    __pgn_moves_cleanup(moves);
+
+    __print_success();
+}
+
 int main(void)
 {
     test_parsing_move();
+    putchar('\n');
+    test_parsing_bunch_of_moves();
     return 0;
 }
