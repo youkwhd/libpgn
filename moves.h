@@ -45,7 +45,7 @@ struct pgn_moves_t {
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
 pgn_move_t pgn_move_from_string(char *str);
 
-pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
+pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed, bool parsing_for_alternatives);
 pgn_moves_t *pgn_moves_from_string(char *str);
 
 /* __pgn_moves_t *__pgn_moves_init(); */

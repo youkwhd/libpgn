@@ -103,7 +103,7 @@ void test_parsing_bunch_of_moves()
     assert(moves->values[0]->black.dest.y == 5);
     assert(moves->values[0]->black.captures == false);
     assert(moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->values[0]->alternatives->length == 0);
+    assert(moves->values[0]->alternatives == NULL);
     pgn_moves_cleanup(moves);
     __print_success();
 
@@ -118,7 +118,7 @@ void test_parsing_bunch_of_moves()
     assert(moves->values[0]->black.dest.y == 5);
     assert(moves->values[0]->black.captures == true);
     assert(moves->values[0]->black.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
-    assert(moves->values[0]->alternatives->length == 0);
+    assert(moves->values[0]->alternatives == NULL);
     pgn_moves_cleanup(moves);
     __print_success();
 
@@ -133,7 +133,7 @@ void test_parsing_bunch_of_moves()
     assert(moves->values[0]->black.dest.y == 5);
     assert(moves->values[0]->black.captures == false);
     assert(moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->values[0]->alternatives->length == 0);
+    assert(moves->values[0]->alternatives == NULL);
 
     assert(moves->values[1]->white.piece == PGN_PIECE_KNIGHT);
     assert(moves->values[1]->white.dest.x == 'c');
@@ -145,7 +145,34 @@ void test_parsing_bunch_of_moves()
     assert(moves->values[1]->black.dest.y == 6);
     assert(moves->values[1]->black.captures == false);
     assert(moves->values[1]->black.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->values[1]->alternatives->length == 0);
+    assert(moves->values[0]->alternatives == NULL);
+    pgn_moves_cleanup(moves);
+    __print_success();
+
+    moves = pgn_moves_from_string("69.Be4 ( 69. Be2 69... e4 ) 69... Rxe5?!");
+    assert(moves->values[0]->white.piece == PGN_PIECE_BISHOP);
+    assert(moves->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->white.captures == false);
+    assert(moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->black.piece == PGN_PIECE_ROOK);
+    assert(moves->values[0]->black.dest.x == 'e');
+    assert(moves->values[0]->black.dest.y == 5);
+    assert(moves->values[0]->black.captures == true);
+    assert(moves->values[0]->black.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
+    assert(moves->values[0]->alternatives);
+
+    assert(moves->values[0]->alternatives->values[0]->white.piece == PGN_PIECE_BISHOP);
+    assert(moves->values[0]->alternatives->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->alternatives->values[0]->white.dest.y == 2);
+    assert(moves->values[0]->alternatives->values[0]->white.captures == false);
+    assert(moves->values[0]->alternatives->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->alternatives->values[0]->black.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->alternatives->values[0]->black.dest.x == 'e');
+    assert(moves->values[0]->alternatives->values[0]->black.dest.y == 4);
+    assert(moves->values[0]->alternatives->values[0]->black.captures == false);
+    assert(moves->values[0]->alternatives->values[0]->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->alternatives->values[0]->alternatives == NULL);
     pgn_moves_cleanup(moves);
     __print_success();
 }

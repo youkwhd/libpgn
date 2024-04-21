@@ -74,17 +74,20 @@ pgn_move_t pgn_move_from_string(char *str)
 __pgn_moves_item_t *__pgn_moves_item_init()
 {
     __pgn_moves_item_t *moves = malloc(sizeof *moves);
-    moves->alternatives = pgn_moves_init();
+    moves->alternatives = NULL;
     return moves;
 }
 
 void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
 {
-    free(moves->alternatives);
+    if (moves->alternatives) {
+        pgn_moves_cleanup(moves->alternatives);
+    }
+
     free(moves);
 }
 
-pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
+pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed, bool parsing_for_alternatives)
 {
     size_t cursor = 0;
     pgn_moves_t *moves = pgn_moves_init();
@@ -109,6 +112,16 @@ remove_whitespaces:
         goto remove_whitespaces;
     }
 
+    if (str[cursor] == '(') {
+        cursor++;
+        while (str[cursor] == ' ') cursor++;
+        move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
+        while (str[cursor] == ' ') cursor++;
+        assert(str[cursor++] == ')');
+
+        while (str[cursor] == ' ') cursor++;
+    }
+
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
 
@@ -122,16 +135,17 @@ remove_whitespaces:
     while (str[cursor] == ' ') cursor++;
     pgn_moves_push(moves, move);
 
-    if (str[cursor] != '\0')
+    if (str[cursor] != '\0' && !parsing_for_alternatives)
         goto parse_moves;
 
+    *consumed += cursor;
     return moves;
 }
 
 pgn_moves_t *pgn_moves_from_string(char *str)
 {
     size_t consumed = 0;
-    return __pgn_moves_from_string(str, &consumed);
+    return __pgn_moves_from_string(str, &consumed, false);
 }
 
 pgn_moves_t *pgn_moves_init()
