@@ -71,35 +71,35 @@ pgn_move_t pgn_move_from_string(char *str)
     return __pgn_move_from_string(str, &consumed);
 }
 
-__pgn_moves_t *__pgn_moves_init()
+__pgn_moves_item_t *__pgn_moves_item_init()
 {
-    __pgn_moves_t *__moves = malloc(sizeof *__moves);
-    // __moves->alternatives = {0};
-    __moves->alternatives.values = malloc(sizeof *__moves->alternatives.values * PGN_MOVES_ALTERNATIVES_INITIAL_SIZE);
-    __moves->alternatives.length = 0;
-    __moves->alternatives.size = PGN_MOVES_ALTERNATIVES_INITIAL_SIZE;
-
-    return __moves;
+    __pgn_moves_item_t *moves = malloc(sizeof *moves);
+    moves->alternatives = pgn_moves_init();
+    return moves;
 }
 
-void __pgn_moves_cleanup(__pgn_moves_t *__moves)
+void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
 {
-    free(__moves->alternatives.values);
-    free(__moves);
+    free(moves->alternatives);
+    free(moves);
 }
 
-__pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
+pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
 {
     size_t cursor = 0;
-    __pgn_moves_t *__moves = __pgn_moves_init();
+    pgn_moves_t *moves = pgn_moves_init();
 
+    __pgn_moves_item_t *move;
+
+parse_moves:
+    move = __pgn_moves_item_init();
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
         assert(str[cursor++] == '.');
     }
     while (str[cursor] == ' ') cursor++;
 
-    __moves->white = __pgn_move_from_string(str + cursor, &cursor);
+    move->white = __pgn_move_from_string(str + cursor, &cursor);
 
 remove_whitespaces:
     while (str[cursor] == ' ') cursor++;
@@ -117,12 +117,18 @@ remove_whitespaces:
     }
     while (str[cursor] == ' ') cursor++;
 
-    __moves->black = __pgn_move_from_string(str + cursor, &cursor);
+    move->black = __pgn_move_from_string(str + cursor, &cursor);
 
-    return __moves;
+    while (str[cursor] == ' ') cursor++;
+    pgn_moves_push(moves, move);
+
+    if (str[cursor] != '\0')
+        goto parse_moves;
+
+    return moves;
 }
 
-__pgn_moves_t *pgn_moves_from_string(char *str)
+pgn_moves_t *pgn_moves_from_string(char *str)
 {
     size_t consumed = 0;
     return __pgn_moves_from_string(str, &consumed);
@@ -138,7 +144,7 @@ pgn_moves_t *pgn_moves_init()
     return moves;
 }
 
-void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_t __moves)
+void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t *__moves)
 {
     if (moves->length >= moves->size) {
         moves->size += PGN_MOVES_GROW_SIZE;
@@ -150,7 +156,10 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_t __moves)
 
 void pgn_moves_cleanup(pgn_moves_t *moves)
 {
-    free(moves->values->alternatives.values);
+    for (int i = 0; i < moves->length; i++) {
+        __pgn_moves_item_cleanup(moves->values[i]);
+    }
+
     free(moves->values);
     free(moves);
 }

@@ -90,36 +90,63 @@ void test_parsing_bunch_of_moves()
 {
     printf("calling %s()\n", __func__);
     __nth = 1;
-    __pgn_moves_t *moves = NULL;
+    pgn_moves_t *moves = NULL;
 
     moves = pgn_moves_from_string("1.e4 e5");
-    assert(moves->white.piece == PGN_PIECE_PAWN);
-    assert(moves->white.dest.x == 'e');
-    assert(moves->white.dest.y == 4);
-    assert(moves->white.captures == false);
-    assert(moves->white.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->black.piece == PGN_PIECE_PAWN);
-    assert(moves->black.dest.x == 'e');
-    assert(moves->black.dest.y == 5);
-    assert(moves->black.captures == false);
-    assert(moves->black.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->alternatives.length == 0);
-    __pgn_moves_cleanup(moves);
+    assert(moves->values[0]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->white.captures == false);
+    assert(moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->black.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->black.dest.x == 'e');
+    assert(moves->values[0]->black.dest.y == 5);
+    assert(moves->values[0]->black.captures == false);
+    assert(moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->alternatives->length == 0);
+    pgn_moves_cleanup(moves);
     __print_success();
 
     moves = pgn_moves_from_string("69.Be4 69... Rxe5?!");
-    assert(moves->white.piece == PGN_PIECE_BISHOP);
-    assert(moves->white.dest.x == 'e');
-    assert(moves->white.dest.y == 4);
-    assert(moves->white.captures == false);
-    assert(moves->white.annotation == PGN_ANNOTATION_NONE);
-    assert(moves->black.piece == PGN_PIECE_ROOK);
-    assert(moves->black.dest.x == 'e');
-    assert(moves->black.dest.y == 5);
-    assert(moves->black.captures == true);
-    assert(moves->black.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
-    assert(moves->alternatives.length == 0);
-    __pgn_moves_cleanup(moves);
+    assert(moves->values[0]->white.piece == PGN_PIECE_BISHOP);
+    assert(moves->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->white.captures == false);
+    assert(moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->black.piece == PGN_PIECE_ROOK);
+    assert(moves->values[0]->black.dest.x == 'e');
+    assert(moves->values[0]->black.dest.y == 5);
+    assert(moves->values[0]->black.captures == true);
+    assert(moves->values[0]->black.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
+    assert(moves->values[0]->alternatives->length == 0);
+    pgn_moves_cleanup(moves);
+    __print_success();
+
+    moves = pgn_moves_from_string("9.e4 { This is a comment :O } e5 10. Nc3 Nc6");
+    assert(moves->values[0]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->white.captures == false);
+    assert(moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->black.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->black.dest.x == 'e');
+    assert(moves->values[0]->black.dest.y == 5);
+    assert(moves->values[0]->black.captures == false);
+    assert(moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->alternatives->length == 0);
+
+    assert(moves->values[1]->white.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->white.dest.x == 'c');
+    assert(moves->values[1]->white.dest.y == 3);
+    assert(moves->values[1]->white.captures == false);
+    assert(moves->values[1]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[1]->black.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->black.dest.x == 'c');
+    assert(moves->values[1]->black.dest.y == 6);
+    assert(moves->values[1]->black.captures == false);
+    assert(moves->values[1]->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[1]->alternatives->length == 0);
+    pgn_moves_cleanup(moves);
     __print_success();
 }
 
