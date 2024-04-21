@@ -96,13 +96,24 @@ pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed, bool parsing_f
 
 parse_moves:
     move = __pgn_moves_item_init();
+    int dots_count = 0;
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
-        assert(str[cursor++] == '.');
+        while (str[cursor] == '.') {
+            cursor++;
+            dots_count++;
+        }
     }
     while (str[cursor] == ' ') cursor++;
 
-    move->white = __pgn_move_from_string(str + cursor, &cursor);
+    assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
+    if (dots_count == 0 || dots_count == 1) {
+        move->white = __pgn_move_from_string(str + cursor, &cursor);
+    } else if (dots_count == 3) {
+        move->black = __pgn_move_from_string(str + cursor, &cursor);
+        /* TODO: remove comments */
+        goto recur;
+    }
 
 remove_whitespaces:
     while (str[cursor] == ' ') cursor++;
@@ -133,7 +144,19 @@ remove_whitespaces:
     move->black = __pgn_move_from_string(str + cursor, &cursor);
 
     while (str[cursor] == ' ') cursor++;
+
+recur:
     pgn_moves_push(moves, move);
+
+    if (str[cursor] == '(') {
+        cursor++;
+        while (str[cursor] == ' ') cursor++;
+        move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
+        while (str[cursor] == ' ') cursor++;
+        assert(str[cursor++] == ')');
+
+        while (str[cursor] == ' ') cursor++;
+    }
 
     if (str[cursor] != '\0' && !parsing_for_alternatives)
         goto parse_moves;
