@@ -15,7 +15,21 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 
     int cursor = 0;
 
-    while (str[cursor] != '\0' && !isspace(str[cursor])) cursor++;
+    int __open_bracket = 0;
+    int __close_bracket = 0;
+
+    while (str[cursor] != '\0' && !isspace(str[cursor])) {
+        if (str[cursor] == '(') {
+            __open_bracket++;
+        }
+        if (str[cursor] == ')') {
+            if (++__close_bracket > __open_bracket)
+                break;
+        }
+
+        cursor++;
+    }
+
     *consumed += cursor;
     cursor--;
 
@@ -24,6 +38,15 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
     cursor--;
 
     move.checks = false;
+    if (str[cursor] == '+') {
+        move.checks = true;
+        cursor--;
+    }
+    /* TODO:
+     * add double check type
+     *
+     * maybe enum
+     */
     if (str[cursor] == '+') {
         move.checks = true;
         cursor--;
