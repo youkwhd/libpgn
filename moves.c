@@ -93,8 +93,9 @@ __pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
     size_t cursor = 0;
     __pgn_moves_t *__moves = __pgn_moves_init();
 
-    if (isdigit(str[cursor]) && str[cursor + 1] == '.') {
-        cursor += 2;
+    if (isdigit(str[cursor])) {
+        while (isdigit(str[cursor])) cursor++;
+        assert(str[cursor++] == '.');
     }
     while (str[cursor] == ' ') cursor++;
 
@@ -108,8 +109,11 @@ remove_whitespaces:
         goto remove_whitespaces;
     }
 
-    if (isdigit(str[cursor]) && str[cursor + 1] == '.') {
-        cursor += 4;
+    if (isdigit(str[cursor])) {
+        while (isdigit(str[cursor])) cursor++;
+
+        for (int i = 0; i < 3; i++)
+            assert(str[cursor++] == '.');
     }
     while (str[cursor] == ' ') cursor++;
 

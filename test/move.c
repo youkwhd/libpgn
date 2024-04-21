@@ -105,7 +105,21 @@ void test_parsing_bunch_of_moves()
     assert(moves->black.annotation == PGN_ANNOTATION_NONE);
     assert(moves->alternatives.length == 0);
     __pgn_moves_cleanup(moves);
+    __print_success();
 
+    moves = pgn_moves_from_string("69.Be4 69... Rxe5?!");
+    assert(moves->white.piece == PGN_PIECE_BISHOP);
+    assert(moves->white.dest.x == 'e');
+    assert(moves->white.dest.y == 4);
+    assert(moves->white.captures == false);
+    assert(moves->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->black.piece == PGN_PIECE_ROOK);
+    assert(moves->black.dest.x == 'e');
+    assert(moves->black.dest.y == 5);
+    assert(moves->black.captures == true);
+    assert(moves->black.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
+    assert(moves->alternatives.length == 0);
+    __pgn_moves_cleanup(moves);
     __print_success();
 }
 
