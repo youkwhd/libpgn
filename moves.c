@@ -141,6 +141,14 @@ remove_whitespaces:
     }
     while (str[cursor] == ' ') cursor++;
 
+    /* NOTE: this occurs when "( 1. e4 )"
+     * as seen there's no black move.
+     *
+     * please fucking refactor this cursed moves.c file
+     */
+    if (str[cursor] == ')' && parsing_for_alternatives)
+        goto recur;
+
     move->black = __pgn_move_from_string(str + cursor, &cursor);
 
     while (str[cursor] == ' ') cursor++;
