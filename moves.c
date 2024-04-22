@@ -54,7 +54,7 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
     }
 
     *consumed += cursor;
-    if (move.nth_best != 0)
+    if (move.nth_best)
         *consumed += (__cursor - cursor);
 
     cursor--;
