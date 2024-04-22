@@ -1,5 +1,7 @@
 #include "pgn.h"
 
+#include <ctype.h>
+
 pgn_t *pgn_init()
 {
     pgn_t *pgn = malloc(sizeof *pgn);
@@ -22,6 +24,10 @@ void pgn_cleanup(pgn_t *pgn)
 void pgn_parse(pgn_t *pgn, char *str)
 {
     size_t cursor = 0;
-    pgn->metadata = __pgn_table_from_string(str, &cursor);
-    // pgn->moves = __pgn_moves_from_string(str, &cursor);
+
+    pgn->metadata = __pgn_table_from_string(str + cursor, &cursor);
+    while (isspace(str[cursor])) cursor++;
+
+    pgn->moves = __pgn_moves_from_string(str + cursor, &cursor, false);
+    pgn->score = __pgn_score_from_string(str + cursor, &cursor);
 }
