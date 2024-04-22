@@ -123,6 +123,7 @@ parse_moves:
      * checking if it's the score.
      */
     if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+        *consumed += cursor;
         return moves;
     }
 
@@ -161,7 +162,16 @@ remove_whitespaces:
         while (isspace(str[cursor])) cursor++;
         assert(str[cursor++] == ')');
 
-    while (isspace(str[cursor])) cursor++;
+        while (isspace(str[cursor])) cursor++;
+    }
+
+    /* TODO: maybe isolate into a function
+     *
+     * checking if it's the score.
+     */
+    if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+        *consumed += cursor;
+        return moves;
     }
 
     if (isdigit(str[cursor])) {
