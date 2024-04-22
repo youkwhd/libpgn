@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "moves.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
@@ -30,8 +31,34 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         cursor++;
     }
 
+    /* trying to parse the nth best move
+     *
+     * TODO: check for '\0'
+     */
+    int __cursor = cursor;
+    if (isspace(str[__cursor])) {
+        while (isspace(str[__cursor])) __cursor++;
+
+        if (str[__cursor] == '$') {
+            assert(isdigit(str[++__cursor]));
+            /* TODO: what about 10th best move and beyond
+             *
+             * (this will only take the first digit)
+             */
+            move.nth_best = str[__cursor] - '0';
+
+            /* TODO: don't discard the rest.
+             */
+            while (isdigit(str[__cursor])) __cursor++;
+        }
+    }
+
     *consumed += cursor;
+    if (move.nth_best != 0)
+        *consumed += (__cursor - cursor);
+
     cursor--;
+
 
     while (str[cursor] == '?' || str[cursor] == '!' || str[cursor] == '#') cursor--;
     move.annotation = pgn_annotation_from_string(str + (++cursor));

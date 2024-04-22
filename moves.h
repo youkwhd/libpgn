@@ -19,6 +19,7 @@
 
 typedef struct pgn_move_t {
     pgn_piece_t piece, promoted_to;
+    unsigned int nth_best;
     int castles;
     bool captures, checks;
     pgn_coordinate_t from, dest;
