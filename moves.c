@@ -118,6 +118,14 @@ pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed, bool parsing_f
     __pgn_moves_item_t *move;
 
 parse_moves:
+    /* TODO: maybe isolate into a function
+     *
+     * checking if it's the score.
+     */
+    if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+        return moves;
+    }
+
     move = __pgn_moves_item_init();
     int dots_count = 0;
     if (isdigit(str[cursor])) {
@@ -127,7 +135,7 @@ parse_moves:
             dots_count++;
         }
     }
-    while (str[cursor] == ' ') cursor++;
+    while (isspace(str[cursor])) cursor++;
 
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
     if (dots_count == 0 || dots_count == 1) {
@@ -139,7 +147,7 @@ parse_moves:
     }
 
 remove_whitespaces:
-    while (str[cursor] == ' ') cursor++;
+    while (isspace(str[cursor])) cursor++;
     if (str[cursor] == '{') {
         while (str[cursor] != '}') cursor++;
         cursor++;
@@ -148,12 +156,12 @@ remove_whitespaces:
 
     if (str[cursor] == '(') {
         cursor++;
-        while (str[cursor] == ' ') cursor++;
+        while (isspace(str[cursor])) cursor++;
         move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
-        while (str[cursor] == ' ') cursor++;
+        while (isspace(str[cursor])) cursor++;
         assert(str[cursor++] == ')');
 
-        while (str[cursor] == ' ') cursor++;
+    while (isspace(str[cursor])) cursor++;
     }
 
     if (isdigit(str[cursor])) {
@@ -162,7 +170,7 @@ remove_whitespaces:
         for (int i = 0; i < 3; i++)
             assert(str[cursor++] == '.');
     }
-    while (str[cursor] == ' ') cursor++;
+    while (isspace(str[cursor])) cursor++;
 
     /* NOTE: this occurs when "( 1. e4 )"
      * as seen there's no black move.
@@ -174,19 +182,19 @@ remove_whitespaces:
 
     move->black = __pgn_move_from_string(str + cursor, &cursor);
 
-    while (str[cursor] == ' ') cursor++;
+    while (isspace(str[cursor])) cursor++;
 
 recur:
     pgn_moves_push(moves, move);
 
     if (str[cursor] == '(') {
         cursor++;
-        while (str[cursor] == ' ') cursor++;
+        while (isspace(str[cursor])) cursor++;
         move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
-        while (str[cursor] == ' ') cursor++;
+        while (isspace(str[cursor])) cursor++;
         assert(str[cursor++] == ')');
 
-        while (str[cursor] == ' ') cursor++;
+        while (isspace(str[cursor])) cursor++;
     }
 
     if (str[cursor] != '\0' && !parsing_for_alternatives)

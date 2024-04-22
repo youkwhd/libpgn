@@ -9,6 +9,7 @@
 #include "piece.h"
 #include "annotation.h"
 #include "coordinate.h"
+#include "score.h"
 #include "moves.h"
 
 #define PGN_UNUSED(x) ((void)x)
@@ -21,6 +22,7 @@
 typedef struct pgn_t {
     pgn_table_t *metadata;
     pgn_moves_t *moves;
+    pgn_score_t score;
 } pgn_t;
 
 pgn_t *pgn_init();

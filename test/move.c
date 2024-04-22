@@ -246,6 +246,41 @@ void test_parsing_real_games()
     assert(moves->values[1]->alternatives == NULL);
     pgn_moves_cleanup(moves);
     __print_success();
+
+    moves = pgn_moves_from_string("1.c4 ( 1.e4  ) c5 2.Nc3 Nc6 1/2-1/2");
+    assert(moves->values[0]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->white.dest.x == 'c');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->white.captures == false);
+    assert(moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->black.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->black.dest.x == 'c');
+    assert(moves->values[0]->black.dest.y == 5);
+    assert(moves->values[0]->black.captures == false);
+    assert(moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
+
+    assert(moves->values[0]->alternatives->values[0]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->alternatives->values[0]->white.dest.x == 'e');
+    assert(moves->values[0]->alternatives->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->alternatives->values[0]->white.captures == false);
+    assert(moves->values[0]->alternatives->values[0]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[0]->alternatives->values[0]->alternatives == NULL);
+
+    assert(moves->values[1]->white.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->white.dest.x == 'c');
+    assert(moves->values[1]->white.dest.y == 3);
+    assert(moves->values[1]->white.captures == false);
+    assert(moves->values[1]->white.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[1]->alternatives == NULL);
+
+    assert(moves->values[1]->black.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->black.dest.x == 'c');
+    assert(moves->values[1]->black.dest.y == 6);
+    assert(moves->values[1]->black.captures == false);
+    assert(moves->values[1]->black.annotation == PGN_ANNOTATION_NONE);
+    assert(moves->values[1]->alternatives == NULL);
+    pgn_moves_cleanup(moves);
+    __print_success();
 }
 
 int main(void)
