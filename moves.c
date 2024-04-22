@@ -269,7 +269,7 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t *__moves)
 
 void pgn_moves_cleanup(pgn_moves_t *moves)
 {
-    for (int i = 0; i < moves->length; i++) {
+    for (size_t i = 0; i < moves->length; i++) {
         __pgn_moves_item_cleanup(moves->values[i]);
     }
 
