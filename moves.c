@@ -142,7 +142,7 @@ parse_moves:
         move->white = __pgn_move_from_string(str + cursor, &cursor);
     } else if (dots_count == 3) {
         move->black = __pgn_move_from_string(str + cursor, &cursor);
-        /* TODO: remove comments */
+        /* TODO: remove pgn comments */
         goto recur;
     }
 
