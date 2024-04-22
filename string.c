@@ -1,5 +1,7 @@
 #include "string.h"
 
+#include <string.h>
+
 pgn_string_t *pgn_string_init()
 {
     pgn_string_t *pstr = malloc(sizeof *pstr);

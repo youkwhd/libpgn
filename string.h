@@ -2,7 +2,6 @@
 #define __LIBPGN_STRING_H
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 
 #define PGN_STRING_INITIAL_SIZE 64
