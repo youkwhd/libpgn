@@ -4,6 +4,25 @@
 #include <stdlib.h>
 #include "moves.h"
 
+int __pgn_comment_length(char *str)
+{
+    int cursor = 0;
+
+    assert(str[cursor++] == '{');
+    while (str[cursor++] != '}');
+
+    return cursor;
+}
+
+int __pgn_whitespace_length(char *str)
+{
+    int cursor = 0;
+
+    while (isspace(str[cursor])) cursor++;
+
+    return cursor;
+}
+
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
     /* TODO: wip reverse parsing
@@ -11,22 +30,14 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
      * case with en passant
      */
     pgn_move_t move = {0};
-    move.piece = PGN_PIECE_UNKNOWN;
-    // move.? = ..
-
     int cursor = 0;
 
-    int __open_bracket = 0;
-    int __close_bracket = 0;
+    int __open_paren = 0;
+    int __close_paren = 0;
 
     while (str[cursor] != '\0' && !isspace(str[cursor])) {
-        if (str[cursor] == '(') {
-            __open_bracket++;
-        }
-        if (str[cursor] == ')') {
-            if (++__close_bracket > __open_bracket)
-                break;
-        }
+        if (str[cursor] == '(') __open_paren++;
+        if (str[cursor] == ')' && ++__close_paren > __open_paren) break;
 
         cursor++;
     }
@@ -37,7 +48,7 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
      */
     int __cursor = cursor;
     if (isspace(str[__cursor])) {
-        while (isspace(str[__cursor])) __cursor++;
+        __cursor += __pgn_whitespace_length(str + __cursor);
 
         if (str[__cursor] == '$') {
             assert(isdigit(str[++__cursor]));
@@ -59,29 +70,18 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 
     cursor--;
 
+    while (pgn_annotation_from_string(str + cursor) != PGN_ANNOTATION_NONE) cursor--;
+    move.annotation = pgn_annotation_from_string(str + (cursor + 1));
 
-    while (str[cursor] == '?' || str[cursor] == '!' || str[cursor] == '#') cursor--;
-    move.annotation = pgn_annotation_from_string(str + (++cursor));
-    cursor--;
+    while (str[cursor] == '+') cursor--;
+    move.check = pgn_check_from_string(str + (cursor + 1));
 
-    move.checks = false;
-    if (str[cursor] == '+') {
-        move.checks = true;
-        cursor--;
-    }
-    /* TODO:
-     * add double check type
-     *
-     * maybe enum
-     */
-    if (str[cursor] == '+') {
-        move.checks = true;
-        cursor--;
-    }
+    for (move.castles = PGN_CASTLING_NONE; cursor >= 0 && str[cursor] == 'O'; cursor -= 2) {
+        if (cursor - 1 >= 0)
+            assert(str[cursor - 1] == '-');
 
-    for (move.castles = PGN_CASTLING_NONE; cursor >= 0 && str[cursor] == 'O'; cursor -= 2)
         move.castles++;
-
+    }
     if (cursor <= 0) return move;
 
     move.promoted_to = pgn_piece_from_char(str[cursor]);
@@ -100,7 +100,6 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
     if (isdigit(str[cursor])) move.dest.y = str[cursor--] - '0';
     if (islower(str[cursor]) && str[cursor] != 'x') move.dest.x = str[cursor--];
 
-    move.captures = false;
     if (str[cursor] == 'x' || str[cursor] == ':') {
         move.captures = true;
         cursor--;
@@ -163,7 +162,7 @@ parse_moves:
             dots_count++;
         }
     }
-    while (isspace(str[cursor])) cursor++;
+    cursor += __pgn_whitespace_length(str + cursor);
 
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
     if (dots_count == 0 || dots_count == 1) {
@@ -174,22 +173,18 @@ parse_moves:
         goto recur;
     }
 
-remove_whitespaces:
-    while (isspace(str[cursor])) cursor++;
-    if (str[cursor] == '{') {
-        while (str[cursor] != '}') cursor++;
-        cursor++;
-        goto remove_whitespaces;
-    }
+    cursor += __pgn_whitespace_length(str + cursor);
+    while (str[cursor] == '{') 
+        cursor += __pgn_comment_length(str + cursor);
 
     if (str[cursor] == '(') {
         cursor++;
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
         move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
     }
 
     /* TODO: maybe isolate into a function
@@ -207,7 +202,7 @@ remove_whitespaces:
         for (int i = 0; i < 3; i++)
             assert(str[cursor++] == '.');
     }
-    while (isspace(str[cursor])) cursor++;
+    cursor += __pgn_whitespace_length(str + cursor);
 
     /* NOTE: this occurs when "( 1. e4 )"
      * as seen there's no black move.
@@ -218,20 +213,19 @@ remove_whitespaces:
         goto recur;
 
     move->black = __pgn_move_from_string(str + cursor, &cursor);
-
-    while (isspace(str[cursor])) cursor++;
+    cursor += __pgn_whitespace_length(str + cursor);
 
 recur:
     pgn_moves_push(moves, move);
 
     if (str[cursor] == '(') {
         cursor++;
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
         move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
-        while (isspace(str[cursor])) cursor++;
+        cursor += __pgn_whitespace_length(str + cursor);
     }
 
     if (str[cursor] != '\0' && !parsing_for_alternatives)

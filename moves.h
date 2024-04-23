@@ -4,6 +4,7 @@
 #include "piece.h"
 #include "coordinate.h"
 #include "annotation.h"
+#include "check.h"
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -21,7 +22,8 @@ typedef struct pgn_move_t {
     pgn_piece_t piece, promoted_to;
     unsigned int nth_best;
     int castles;
-    bool captures, checks;
+    bool captures;
+    pgn_check_t check;
     pgn_coordinate_t from, dest;
     pgn_annotation_t annotation;
 } pgn_move_t;
