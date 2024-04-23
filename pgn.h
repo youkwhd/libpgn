@@ -10,6 +10,7 @@
 #include "annotation.h"
 #include "coordinate.h"
 #include "score.h"
+#include "check.h"
 #include "moves.h"
 
 #define PGN_UNUSED(x) ((void)x)
