@@ -176,8 +176,8 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     }
 
     cursor += __pgn_whitespace_length(str + cursor);
-    while (str[cursor] == '{') 
-        cursor += __pgn_comment_length(str + cursor);
+    while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
+    cursor += __pgn_whitespace_length(str + cursor);
 
     if (str[cursor] == '(') {
         cursor++;
@@ -198,6 +198,16 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
+    /* We're at the end of pgn, no black move present.
+     *
+     * TODO: investigate (might be a corrupt file?)
+     */
+    if (str[cursor] == ')' || str[cursor] == '\0') {
+        pgn_moves_push(moves, move);
+        *consumed += cursor;
+        return moves;
+    }
+
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
 
@@ -206,18 +216,10 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     }
     cursor += __pgn_whitespace_length(str + cursor);
 
-    /* NOTE: this occurs when "( 1. e4 )"
-     * as seen there's no black move.
-     *
-     * please fucking refactor this cursed moves.c file
-     */
-    if (str[cursor] == ')') {
-        pgn_moves_push(moves, move);
-        *consumed += cursor;
-        return moves;
-    }
-
     move->black = __pgn_move_from_string(str + cursor, &cursor);
+
+    cursor += __pgn_whitespace_length(str + cursor);
+    while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
     cursor += __pgn_whitespace_length(str + cursor);
 
     pgn_moves_push(moves, move);
