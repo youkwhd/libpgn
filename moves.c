@@ -222,8 +222,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
     cursor += __pgn_whitespace_length(str + cursor);
 
-    pgn_moves_push(moves, move);
-
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
@@ -234,6 +232,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         cursor += __pgn_whitespace_length(str + cursor);
     }
 
+    pgn_moves_push(moves, move);
     __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
     *consumed += cursor;
     return moves;
