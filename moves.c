@@ -139,7 +139,7 @@ void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
 pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves, bool parsing_for_alternatives)
 {
     size_t cursor = 0;
-    __pgn_moves_item_t *move = NULL;
+    __pgn_moves_item_t *move = __pgn_moves_item_init();
 
     /* TODO: maybe isolate into a function
      *
@@ -150,7 +150,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    move = __pgn_moves_item_init();
     int dots_count = 0;
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
