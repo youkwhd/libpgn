@@ -28,6 +28,6 @@ void pgn_parse(pgn_t *pgn, char *str)
     pgn->metadata = __pgn_table_from_string(str + cursor, &cursor);
     while (isspace(str[cursor])) cursor++;
 
-    pgn->moves = __pgn_moves_from_string(str + cursor, &cursor, false);
+    pgn->moves = __pgn_moves_from_string(str + cursor, &cursor);
     pgn->score = __pgn_score_from_string(str + cursor, &cursor);
 }

@@ -136,14 +136,11 @@ void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
     free(moves);
 }
 
-pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed, bool parsing_for_alternatives)
+pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves, bool parsing_for_alternatives)
 {
     size_t cursor = 0;
-    pgn_moves_t *moves = pgn_moves_init();
+    __pgn_moves_item_t *move = NULL;
 
-    __pgn_moves_item_t *move;
-
-parse_moves:
     /* TODO: maybe isolate into a function
      *
      * checking if it's the score.
@@ -170,7 +167,7 @@ parse_moves:
     } else if (dots_count == 3) {
         move->black = __pgn_move_from_string(str + cursor, &cursor);
         /* TODO: remove pgn comments */
-        goto recur;
+        goto __recur;
     }
 
     cursor += __pgn_whitespace_length(str + cursor);
@@ -180,7 +177,7 @@ parse_moves:
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
+        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init(), true);
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
@@ -210,18 +207,18 @@ parse_moves:
      * please fucking refactor this cursed moves.c file
      */
     if (str[cursor] == ')' && parsing_for_alternatives)
-        goto recur;
+        goto __recur;
 
     move->black = __pgn_move_from_string(str + cursor, &cursor);
     cursor += __pgn_whitespace_length(str + cursor);
 
-recur:
+__recur:
     pgn_moves_push(moves, move);
 
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string(str + cursor, &cursor, true);
+        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init(), true);
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
@@ -229,16 +226,21 @@ recur:
     }
 
     if (str[cursor] != '\0' && !parsing_for_alternatives)
-        goto parse_moves;
+        return __pgn_moves_from_string_recurse(str + cursor, &cursor, moves, parsing_for_alternatives);
 
     *consumed += cursor;
     return moves;
 }
 
+pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
+{
+    return __pgn_moves_from_string_recurse(str, consumed, pgn_moves_init(), false);
+}
+
 pgn_moves_t *pgn_moves_from_string(char *str)
 {
     size_t consumed = 0;
-    return __pgn_moves_from_string(str, &consumed, false);
+    return __pgn_moves_from_string(str, &consumed);
 }
 
 pgn_moves_t *pgn_moves_init()
