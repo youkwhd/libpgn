@@ -136,8 +136,11 @@ void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
     free(moves);
 }
 
-pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves, bool parsing_for_alternatives)
+pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves)
 {
+    if (str[0] == ')' || str[0] == '\0')
+        return moves;
+
     size_t cursor = 0;
     __pgn_moves_item_t *move = __pgn_moves_item_init();
 
@@ -166,7 +169,10 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     } else if (dots_count == 3) {
         move->black = __pgn_move_from_string(str + cursor, &cursor);
         /* TODO: remove pgn comments */
-        goto __recur;
+        pgn_moves_push(moves, move);
+        __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
+        *consumed += cursor;
+        return moves;
     }
 
     cursor += __pgn_whitespace_length(str + cursor);
@@ -176,7 +182,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init(), true);
+        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
@@ -205,35 +211,35 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
      *
      * please fucking refactor this cursed moves.c file
      */
-    if (str[cursor] == ')' && parsing_for_alternatives)
-        goto __recur;
+    if (str[cursor] == ')') {
+        pgn_moves_push(moves, move);
+        *consumed += cursor;
+        return moves;
+    }
 
     move->black = __pgn_move_from_string(str + cursor, &cursor);
     cursor += __pgn_whitespace_length(str + cursor);
 
-__recur:
     pgn_moves_push(moves, move);
 
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init(), true);
+        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
         cursor += __pgn_whitespace_length(str + cursor);
     }
 
-    if (str[cursor] != '\0' && !parsing_for_alternatives)
-        return __pgn_moves_from_string_recurse(str + cursor, &cursor, moves, parsing_for_alternatives);
-
+    __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
     *consumed += cursor;
     return moves;
 }
 
 pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
 {
-    return __pgn_moves_from_string_recurse(str, consumed, pgn_moves_init(), false);
+    return __pgn_moves_from_string_recurse(str, consumed, pgn_moves_init());
 }
 
 pgn_moves_t *pgn_moves_from_string(char *str)
