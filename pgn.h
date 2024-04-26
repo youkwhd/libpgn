@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "export.h"
 #include "table.h"
 #include "string.h"
 #include "piece.h"
@@ -20,27 +21,15 @@
         exit(EXIT_FAILURE); \
     } while (0)
 
-/* Common Microsoft behavior designing systems.
- */
-#if defined(_WIN32)
-    /* MS-DOS DLL needs to know
-     * which functions are exported.
-     */
-    #define __MS_EXPORT __declspec(dllexport)
-#else
-    #define __MS_EXPORT
-#endif
-
-
 typedef struct pgn_t {
     pgn_table_t *metadata;
     pgn_moves_t *moves;
     pgn_score_t score;
 } pgn_t;
 
-__MS_EXPORT pgn_t *pgn_init();
-__MS_EXPORT void pgn_cleanup(pgn_t *pgn);
-__MS_EXPORT void pgn_parse(pgn_t *pgn, char *str);
+PGN_EXPORT pgn_t *pgn_init();
+PGN_EXPORT void pgn_cleanup(pgn_t *pgn);
+PGN_EXPORT void pgn_parse(pgn_t *pgn, char *str);
 
 #define pgn_metadata_from_string(str) pgn_table_from_string(str)
 #define pgn_parse_metadata(str) pgn_table_from_string(str)
