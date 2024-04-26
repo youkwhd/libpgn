@@ -27,7 +27,10 @@
      * which functions are exported.
      */
     #define __MS_EXPORT __declspec(dllexport)
+#else
+    #define __MS_EXPORT
 #endif
+
 
 typedef struct pgn_t {
     pgn_table_t *metadata;
