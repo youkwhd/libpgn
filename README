@@ -1,13 +1,7 @@
 libpgn
 ======
 
-FIDE PGN (Portable Game Notation) file manipulation.
-
-NOTE: The library is in very early developement, so expect less
-for the time being, I am still working to make this cross
-platform to bsd, darwin, ms-dos, etc.
-
-Although, support for gnu/linux is absolute.
+FIDE Portable Game Notation (PGN) file manipulation.
 
 Compiling the library
 ---------------------
