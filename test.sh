@@ -12,5 +12,5 @@ for file in $SRC; do
     fi
 
     $CC $file -I. -L. -lpgn -o $EXE
-    ./$EXE
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/. ./$EXE
 done
