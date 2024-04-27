@@ -15,8 +15,8 @@ DEPS         := $(SRC:.c=.h)
 OBJ          := $(SRC:.c=.o)
 
 ifeq ($(OS), Windows_NT)
-	LD      := $(CC)
-	EXT     := .dll
+	LD  := $(CC)
+	EXT := .dll
 endif
 
 all: $(LIB)
