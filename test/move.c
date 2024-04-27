@@ -1,5 +1,5 @@
+#include <pgn.h>
 #include <stdio.h>
-#include "../pgn.h"
 #include <assert.h>
 
 unsigned int __nth = 1;
