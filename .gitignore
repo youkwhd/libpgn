@@ -1,3 +1,7 @@
 libpgn.so
 libpgn.dll
 *.o
+
+# ignore everything except the test/ source files
+test/*
+!test/*.c
