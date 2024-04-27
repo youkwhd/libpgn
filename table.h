@@ -1,6 +1,7 @@
 #ifndef __LIBPGN_TABLE_H
 #define __LIBPGN_TABLE_H
 
+#include "export.h"
 #include "piece.h"
 #include "string.h"
 
@@ -19,16 +20,16 @@ typedef struct pgn_table_t {
     size_t length, size;
 } pgn_table_t;
 
-__pgn_table_item_t *__pgn_table_item_init();
-void __pgn_table_item_cleanup(__pgn_table_item_t *item);
+PGN_EXPORT __pgn_table_item_t *__pgn_table_item_init();
+PGN_EXPORT void __pgn_table_item_cleanup(__pgn_table_item_t *item);
 
-pgn_table_t *pgn_table_init();
-pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed);
-pgn_table_t *pgn_table_from_string(char *str);
-void pgn_table_printp(pgn_table_t *table);
-void pgn_table_insert(pgn_table_t *table, char *key, char *value);
-char *pgn_table_get(pgn_table_t *table, char *key);
-void pgn_table_delete(pgn_table_t *table, char *key);
-void pgn_table_cleanup(pgn_table_t *table);
+PGN_EXPORT pgn_table_t *pgn_table_init();
+PGN_EXPORT pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed);
+PGN_EXPORT pgn_table_t *pgn_table_from_string(char *str);
+PGN_EXPORT void pgn_table_printp(pgn_table_t *table);
+PGN_EXPORT void pgn_table_insert(pgn_table_t *table, char *key, char *value);
+PGN_EXPORT char *pgn_table_get(pgn_table_t *table, char *key);
+PGN_EXPORT void pgn_table_delete(pgn_table_t *table, char *key);
+PGN_EXPORT void pgn_table_cleanup(pgn_table_t *table);
 
 #endif // __LIBPGN_TABLE_H
