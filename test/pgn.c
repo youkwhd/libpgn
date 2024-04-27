@@ -1,6 +1,7 @@
 #include <pgn.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 unsigned int __nth = 1;
 

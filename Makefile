@@ -27,11 +27,14 @@ $(LIB): $(OBJ)
 install: $(LIB)
 	mkdir -p $(INST)/include/pgn
 	cp *.h $(INST)/include/pgn
+	sed -i $(INST)/include/pgn/pgn.h -e "s/#include \"/#include \"pgn\//g"
+	mv $(INST)/include/pgn/pgn.h $(INST)/include
 	cp $(LIB)$(EXT) $(INST)/lib
 
 uninstall:
 	$(RM) $(INST)/lib/$(LIB)$(EXT)
 	$(RM) -r $(INST)/include/pgn
+	$(RM) $(INST)/include/pgn.h
 
 # Assuming every file
 # depens on header DEPS
