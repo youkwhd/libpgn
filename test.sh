@@ -6,7 +6,7 @@ SRC=$(find test/ -name "*.c")
 for file in $SRC; do
     EXE=${file/.c/}
 
-    if [[ $1 == "clean" ]] then
+    if [[ $1 == "clean" ]]; then
         rm $EXE
         continue
     fi
