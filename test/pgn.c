@@ -54,5 +54,6 @@ void test_parsing_pgn()
 int main(void)
 {
     test_parsing_pgn();
+    putchar('\n');
     return 0;
 }

@@ -307,5 +307,6 @@ int main(void)
     test_parsing_bunch_of_moves();
     putchar('\n');
     test_parsing_real_games();
+    putchar('\n');
     return 0;
 }

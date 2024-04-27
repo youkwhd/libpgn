@@ -34,5 +34,6 @@ void test_parsing_metadata()
 int main(void)
 {
     test_parsing_metadata();
+    putchar('\n');
     return 0;
 }
