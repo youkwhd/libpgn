@@ -1,7 +1,6 @@
 #include "table.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 
 pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed)
