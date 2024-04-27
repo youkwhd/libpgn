@@ -3,11 +3,6 @@ libpgn
 
 FIDE Portable Game Notation (PGN) file manipulation.
 
-Compiling the library
----------------------
-
-    ./make
-
 Usage
 -----
 
@@ -15,3 +10,14 @@ This libray is meant to parse and manipulate PGN files, There's
 very simple examples within the test/ folder, I'd recommend to
 read the `test/pgn.c` file, as there would be the actual useful
 functions.
+
+Build
+-----
+
+Compiling libpgn:
+
+    make
+
+Compile and run tests:
+
+    make && ./test.sh
