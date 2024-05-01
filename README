@@ -7,8 +7,8 @@ Usage
 -----
 
 This libray is meant to parse and manipulate PGN files, There's
-very simple examples within the test/ folder, I'd recommend to
-read the `test/pgn.c` file, as there would be the actual useful
+very simple examples within the tests/ folder, I'd recommend to
+read the `tests/pgn.c` file, as there would be the actual useful
 functions.
 
 Build

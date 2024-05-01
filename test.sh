@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CC=gcc
-SRC=$(find test/ -name "*.c")
+SRC=$(find tests/ -name "*.c")
 
 for file in $SRC; do
     EXE=${file/.c/}
