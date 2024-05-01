@@ -16,6 +16,7 @@ typedef struct pgn_string_t {
 } pgn_string_t;
 
 PGN_EXPORT pgn_string_t *pgn_string_init();
+PGN_EXPORT void pgn_string_grow(pgn_string_t *pstr);
 PGN_EXPORT void pgn_string_reset(pgn_string_t *pstr);
 PGN_EXPORT bool pgn_string_equal(pgn_string_t *pstr, char *str);
 PGN_EXPORT void pgn_string_append(pgn_string_t *pstr, char ch);

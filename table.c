@@ -85,7 +85,7 @@ void pgn_table_insert(pgn_table_t *table, char *key, char *value)
 {
     if (table->length >= table->size) {
         table->size += PGN_TABLE_GROW_SIZE;
-        table->items = realloc(table->items, table->size);
+        table->items = realloc(table->items, (sizeof *table->items) * table->size);
     }
 
     __pgn_table_item_t *item = __pgn_table_item_init();

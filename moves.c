@@ -263,7 +263,7 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t *__moves)
 {
     if (moves->length >= moves->size) {
         moves->size += PGN_MOVES_GROW_SIZE;
-        moves->values = realloc(moves->values, moves->size);
+        moves->values = realloc(moves->values,  sizeof(*moves->values) * moves->size);
     }
 
     moves->values[moves->length++] = __moves;

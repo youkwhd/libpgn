@@ -17,6 +17,12 @@ bool pgn_string_equal(pgn_string_t *pstr, char *str)
     return strcmp(pstr->buf, str) == 0;
 }
 
+void pgn_string_grow(pgn_string_t *pstr)
+{
+    pstr->size += PGN_STRING_GROW_SIZE;
+    pstr->buf = realloc(pstr->buf, sizeof(*pstr->buf) * pstr->size);
+}
+
 void pgn_string_reset(pgn_string_t *pstr)
 {
     pstr->length = 0;
@@ -26,8 +32,7 @@ void pgn_string_reset(pgn_string_t *pstr)
 void pgn_string_append(pgn_string_t *pstr, char ch)
 {
     if (pstr->length >= pstr->size) {
-        pstr->size += PGN_STRING_GROW_SIZE;
-        pstr->buf = realloc(pstr->buf, pstr->size);
+        pgn_string_grow(pstr);
     }
 
     pstr->buf[pstr->length++] = ch;
@@ -36,8 +41,7 @@ void pgn_string_append(pgn_string_t *pstr, char ch)
 void pgn_string_append_null_terminator(pgn_string_t *pstr)
 {
     if (pstr->length >= pstr->size) {
-        pstr->size += PGN_STRING_GROW_SIZE;
-        pstr->buf = realloc(pstr->buf, pstr->size);
+        pgn_string_grow(pstr);
     }
 
     pstr->buf[pstr->length] = '\0';
