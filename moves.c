@@ -194,6 +194,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
      * checking if it's the score.
      */
     if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+        pgn_moves_push(moves, move);
         *consumed += cursor;
         return moves;
     }
