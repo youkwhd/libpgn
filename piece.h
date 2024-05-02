@@ -14,13 +14,6 @@
 #define PGN_PIECE_QUEEN_CHAR 'Q'
 #define PGN_PIECE_KING_CHAR 'K'
 
-#define PGN_PIECE_PAWN_STR "Pawn"
-#define PGN_PIECE_ROOK_STR "Rook"
-#define PGN_PIECE_KNIGHT_STR "Knight"
-#define PGN_PIECE_BISHOP_STR "Bishop"
-#define PGN_PIECE_QUEEN_STR "Queen"
-#define PGN_PIECE_KING_STR "King"
-
 typedef enum pgn_piece_t {
     PGN_PIECE_UNKNOWN = 0,
     PGN_PIECE_PAWN,
