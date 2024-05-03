@@ -29,6 +29,9 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
     }
 
     if (isdigit(str[cursor])) {
+        /* TODO: this does not have the capability
+         * to parse multiple digit.
+         */
         score.white = str[cursor] - '0';
 
         assert(str[++cursor] == '-');
