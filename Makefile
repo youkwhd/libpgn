@@ -24,6 +24,15 @@ all: $(LIB)
 $(LIB): $(OBJ)
 	$(LD) $(LDLIBS) $(LDFLAGS) -shared $^ -o $(LIB)$(EXT)
 
+TESTS        := $(wildcard tests/*.c)
+EXE          := $(TESTS:.c=)
+
+test: $(LIB) $(EXE)
+
+$(EXE):
+	$(CC) $@.c -lpgn -L. -I. -o $@
+	./$@
+
 install: $(LIB)
 	mkdir -p $(INST)/include/pgn
 	cp *.h $(INST)/include/pgn
@@ -44,4 +53,4 @@ uninstall:
 clean:
 	$(RM) $(OBJ) $(LIB)$(EXT)
 
-.PHONY: clean all $(LIB) install uninstall
+.PHONY: clean all $(LIB) install uninstall test
