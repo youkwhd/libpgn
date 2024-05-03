@@ -14,6 +14,9 @@ SRC          := $(wildcard *.c)
 DEPS         := $(SRC:.c=.h)
 OBJ          := $(SRC:.c=.o)
 
+TESTS        := $(wildcard tests/*.c)
+EXE          := $(TESTS:.c=)
+
 ifeq ($(OS), Windows_NT)
 	LD  := $(CC)
 	EXT := .dll
@@ -23,9 +26,6 @@ all: $(LIB)
 
 $(LIB): $(OBJ)
 	$(LD) $(LDLIBS) $(LDFLAGS) -shared $^ -o $(LIB)$(EXT)
-
-TESTS        := $(wildcard tests/*.c)
-EXE          := $(TESTS:.c=)
 
 test: $(LIB) $(EXE)
 
