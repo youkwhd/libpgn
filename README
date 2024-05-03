@@ -17,7 +17,3 @@ Build
 Compiling libpgn:
 
     make
-
-Compile and run tests:
-
-    make && ./test.sh
