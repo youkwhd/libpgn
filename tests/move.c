@@ -300,6 +300,46 @@ void test_parsing_real_games()
     __print_success();
 }
 
+void test_parsing_en_passant()
+{
+    printf("calling %s()\n", __func__);
+    __nth = 1;
+
+    pgn_move_t move = pgn_move_from_string("exd6 e.p.");
+    assert(move.piece == PGN_PIECE_PAWN);
+    assert(move.from.x == 'e');
+    assert(move.dest.x == 'd');
+    assert(move.dest.y == 6);
+    assert(move.captures);
+    __print_success();
+
+    pgn_moves_t *moves = pgn_moves_from_string("1. d4 exd3 e.p. 2.  Nc4 Nc6 3. cxb3 e.p. 3... Be4");
+    assert(moves->values[0]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->white.dest.x == 'd');
+    assert(moves->values[0]->white.dest.y == 4);
+    assert(moves->values[0]->black.piece == PGN_PIECE_PAWN);
+    assert(moves->values[0]->black.from.x == 'e');
+    assert(moves->values[0]->black.dest.x == 'd');
+    assert(moves->values[0]->black.dest.y == 3);
+
+    assert(moves->values[1]->white.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->white.dest.x == 'c');
+    assert(moves->values[1]->white.dest.y == 4);
+    assert(moves->values[1]->black.piece == PGN_PIECE_KNIGHT);
+    assert(moves->values[1]->black.dest.x == 'c');
+    assert(moves->values[1]->black.dest.y == 6);
+
+    assert(moves->values[2]->white.piece == PGN_PIECE_PAWN);
+    assert(moves->values[2]->white.from.x == 'c');
+    assert(moves->values[2]->white.dest.x == 'b');
+    assert(moves->values[2]->white.dest.y == 3);
+    assert(moves->values[2]->black.piece == PGN_PIECE_BISHOP);
+    assert(moves->values[2]->black.dest.x == 'e');
+    assert(moves->values[2]->black.dest.y == 4);
+    pgn_moves_cleanup(moves);
+    __print_success();
+}
+
 int main(void)
 {
     test_parsing_move();
@@ -307,6 +347,8 @@ int main(void)
     test_parsing_bunch_of_moves();
     putchar('\n');
     test_parsing_real_games();
+    putchar('\n');
+    test_parsing_en_passant();
     putchar('\n');
     return 0;
 }
