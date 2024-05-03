@@ -25,10 +25,6 @@ int __pgn_whitespace_length(char *str)
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
-    /* TODO: wip reverse parsing
-     *
-     * case with en passant
-     */
     pgn_move_t move = {0};
     int cursor = 0;
 
@@ -47,6 +43,8 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
      * TODO: check for '\0'
      */
     int __cursor = cursor;
+    bool parsed_nth_best  = false, parsed_en_passant = false;
+
     if (isspace(str[__cursor])) {
         __cursor += __pgn_whitespace_length(str + __cursor);
 
@@ -61,11 +59,20 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
             /* TODO: don't discard the rest.
              */
             while (isdigit(str[__cursor])) __cursor++;
+            parsed_nth_best = true;
+        }
+
+        if (str[__cursor] == 'e' && str[__cursor + 1] == '.') {
+            assert(str[__cursor++] == 'e');
+            assert(str[__cursor++] == '.');
+            assert(str[__cursor++] == 'p');
+            assert(str[__cursor++] == '.');
+            parsed_en_passant = true;
         }
     }
 
     *consumed += cursor;
-    if (move.nth_best)
+    if (parsed_nth_best || parsed_en_passant)
         *consumed += (__cursor - cursor);
 
     cursor--;
