@@ -31,7 +31,8 @@ test: $(LIB) $(EXE)
 
 $(EXE):
 	$(CC) $@.c -lpgn -L. -I. -o $@
-	./$@ && $(RM) $@
+	./$@
+	$(RM) $@
 
 install: $(LIB)
 	mkdir -p $(INST)/include/pgn
