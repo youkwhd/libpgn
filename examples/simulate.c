@@ -140,8 +140,8 @@ void move(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player pl, pgn_move
                 break;
             case BLACK:
                 board[0][0] = ' ';
-                board[0][2] = pgn_piece_to_char(PGN_PIECE_KING);
-                board[0][3] = pgn_piece_to_char(PGN_PIECE_ROOK);
+                board[0][2] = tolower(pgn_piece_to_char(PGN_PIECE_KING));
+                board[0][3] = tolower(pgn_piece_to_char(PGN_PIECE_ROOK));
                 board[0][5] = ' ';
                 break;
             }
