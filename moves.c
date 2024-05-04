@@ -104,6 +104,9 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
             cursor--;
     }
 
+    /* TODO:
+     * Can be refactored using a stack
+     */
     if (isdigit(str[cursor])) move.dest.y = str[cursor--] - '0';
     if (islower(str[cursor]) && str[cursor] != 'x') move.dest.x = str[cursor--];
 
