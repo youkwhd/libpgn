@@ -26,6 +26,17 @@ void test_parsing_move()
     assert(move.annotation == PGN_ANNOTATION_BLUNDER);
     __print_success();
 
+    move = pgn_move_from_string("Nb6d5+");
+    assert(move.piece == PGN_PIECE_KNIGHT);
+    assert(move.captures == false);
+    assert(move.from.x == 'b');
+    assert(move.from.y == 6);
+    assert(move.dest.x == 'd');
+    assert(move.dest.y == 5);
+    assert(move.check == PGN_CHECK_SINGLE);
+    assert(move.annotation == PGN_ANNOTATION_NONE);
+    __print_success();
+
     move = pgn_move_from_string("Qf1?!");
     assert(move.piece == PGN_PIECE_QUEEN);
     assert(move.captures == false);
