@@ -98,8 +98,12 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
 
         break;
     case PGN_PIECE_QUEEN:
+        fprintf(stderr, "Queen move is not implemented yet.\n");
+        exit(1);
         break;
     case PGN_PIECE_KING:
+        fprintf(stderr, "King move is not implemented yet.\n");
+        exit(1);
         break;
     }
 
