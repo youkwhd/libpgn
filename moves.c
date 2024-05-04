@@ -68,6 +68,7 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
             assert(str[__cursor++] == 'p');
             assert(str[__cursor++] == '.');
             parsed_en_passant = true;
+            move.en_passant = true;
         }
     }
 

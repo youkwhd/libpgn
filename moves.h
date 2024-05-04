@@ -24,6 +24,7 @@ typedef struct pgn_move_t {
     unsigned int nth_best;
     int castles;
     bool captures;
+    bool en_passant;
     pgn_check_t check;
     pgn_coordinate_t from, dest;
     pgn_annotation_t annotation;
