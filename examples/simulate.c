@@ -6,6 +6,16 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+/* TODOs & Missing features:
+ *  - No way of knowing if a piece is pinned
+ *      this is useful when the pgn file states a piece PIECE move,
+ *      and there's ambigous 2 pieces that could move to the destination (one is pinned one isn't).
+ *
+ *  - No logic for:
+ *      - Queen moves
+ *      - King moves
+ */
+
 #define PGN_FILEPATH "record.pgn"
 
 #define CHESS_BOARD_WIDTH 8
