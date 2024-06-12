@@ -29,6 +29,9 @@ $(LIB): $(OBJ)
 
 test: $(LIB) $(EXE)
 
+example: $(LIB)
+	$(CC) examples/simulate.c -lpgn -L. -I. -o examples/simulate
+
 $(EXE):
 	$(CC) $@.c -lpgn -L. -I. -o $@
 	./$@

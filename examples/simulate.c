@@ -16,7 +16,7 @@
  *      - King moves
  */
 
-#define PGN_FILEPATH "record.pgn"
+#define PGN_FILEPATH "examples/record.pgn"
 
 #define CHESS_BOARD_WIDTH 8
 #define CHESS_BOARD_HEIGHT 8

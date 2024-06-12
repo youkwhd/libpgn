@@ -5,3 +5,7 @@ libpgn.dll
 # ignore everything except the tests/ source files
 tests/*
 !tests/*.c
+
+examples/*
+!examples/*.c
+!examples/*.pgn
