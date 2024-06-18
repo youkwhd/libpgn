@@ -1,5 +1,4 @@
 #include <signal.h>
-#include <time.h>
 #include <ctype.h>
 #include <pgn.h>
 #include <stdbool.h>
@@ -32,24 +31,13 @@ typedef pgn_coordinate_t coordinate;
  */
 void print_banner()
 {
-    srand(time(NULL));
-
-    if (rand() % 2) {
-        printf("\n"
-               "        '||                            \n"
-               "  ....   || ..     ....   ....   ....  \n"
-               ".|   ''  ||' ||  .|...|| ||. '  ||. '  \n"
-               "||       ||  ||  ||      . '|.. . '|.. \n"
-               " '|...' .||. ||.  '|...' |'..|' |'..|' \n"
-               "\n");
-        return;
-    }
-
-    printf("      __                      \n"
-           ".----|  |--.-----.-----.-----.\n"
-           "|  __|     |  -__|__ --|__ --|\n"
-           "|____|__|__|_____|_____|_____|\n"
-           "\n");
+    printf("\n"
+            "        '||                            \n"
+            "  ....   || ..     ....   ....   ....  \n"
+            ".|   ''  ||' ||  .|...|| ||. '  ||. '  \n"
+            "||       ||  ||  ||      . '|.. . '|.. \n"
+            " '|...' .||. ||.  '|...' |'..|' |'..|' \n"
+            "\n");
 }
 
 bool is_piece_player_eq(player pl, char piece)
