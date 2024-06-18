@@ -304,17 +304,28 @@ int main(void)
     printf("\n");
 
     for (size_t i = 0; i < pgn->moves->length; i++) {
+        printf("                   \n");
+        printf("\x1b[1A");
         printf("White moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].white.piece));
+
         move(board, WHITE, pgn->moves->values[i].white);
         print_board(board);
         getchar();
         printf("\n");
+        printf("\x1b[%dA", CHESS_BOARD_HEIGHT + 3);
 
+        printf("                   \n");
+        printf("\x1b[1A");
         printf("Black moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].black.piece));
+
         move(board, BLACK, pgn->moves->values[i].black);
         print_board(board);
         getchar();
         printf("\n");
+
+        if (i + 1 < pgn->moves->length) {
+            printf("\x1b[%dA", CHESS_BOARD_HEIGHT + 3);
+        }
     }
 
     printf("Score: %d (White) %d (Black)\n", pgn->score.white, pgn->score.black);
