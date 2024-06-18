@@ -8,10 +8,6 @@
  *  - No way of knowing if a piece is pinned
  *      this is useful when the pgn file states a piece PIECE move,
  *      and there's ambigous 2 pieces that could move to the destination (one is pinned one isn't).
- *
- *  - No logic for:
- *      - Queen moves
- *      - King moves
  */
 
 #define PGN_FILEPATH "examples/record.pgn"
@@ -44,27 +40,27 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
     case PGN_PIECE_UNKNOWN: return false;
     case PGN_PIECE_PAWN:
         if (pl == WHITE) {
-            if (COOR_INSIDE_BOARD(x, y - 1) && x == dest_x && y - 1 == dest_y) return true;
-            if (COOR_INSIDE_BOARD(x, y - 2) && x == dest_x && y - 2 == dest_y) return true;
+            if (x == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x, y - 1);
+            if (x == dest_x && y - 2 == dest_y) return COOR_INSIDE_BOARD(x, y - 2);
 
-            if (move.captures && !is_piece_player_eq(pl, board[y - 1][x - 1]) && COOR_INSIDE_BOARD(x - 1, y - 1) && x - 1 == dest_x && y - 1 == dest_y) return true;
-            if (move.captures && !is_piece_player_eq(pl, board[y - 1][x + 1]) && COOR_INSIDE_BOARD(x + 1, y - 1) && x + 1 == dest_x && y - 1 == dest_y) return true;
+            if (move.captures && !is_piece_player_eq(pl, board[y - 1][x - 1]) && x - 1 == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x - 1, y - 1);
+            if (move.captures && !is_piece_player_eq(pl, board[y - 1][x + 1]) && x + 1 == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x + 1, y - 1);
 
             // e.p.
-            if (move.en_passant && COOR_INSIDE_BOARD(x - 1, y - 1) && x - 1 == dest_x && y - 1 == dest_y) return true;
-            if (move.en_passant && COOR_INSIDE_BOARD(x + 1, y - 1) && x + 1 == dest_x && y - 1 == dest_y) return true;
+            if (move.en_passant && x - 1 == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x - 1, y - 1);
+            if (move.en_passant && x + 1 == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x + 1, y - 1);
         }
 
         if (pl == BLACK) {
-            if (COOR_INSIDE_BOARD(x, y + 1) && x == dest_x && y + 1 == dest_y) return true;
-            if (COOR_INSIDE_BOARD(x, y + 2) && x == dest_x && y + 2 == dest_y) return true;
+            if (x == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x, y + 1);
+            if (x == dest_x && y + 2 == dest_y) return COOR_INSIDE_BOARD(x, y + 2);
 
-            if (move.captures && !is_piece_player_eq(pl, board[y + 1][x - 1]) && COOR_INSIDE_BOARD(x - 1, y + 1) && x - 1 == dest_x && y + 1 == dest_y) return true;
-            if (move.captures && !is_piece_player_eq(pl, board[y + 1][x + 1]) && COOR_INSIDE_BOARD(x + 1, y + 1) && x + 1 == dest_x && y + 1 == dest_y) return true;
+            if (move.captures && !is_piece_player_eq(pl, board[y + 1][x - 1]) && x - 1 == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x - 1, y + 1);
+            if (move.captures && !is_piece_player_eq(pl, board[y + 1][x + 1]) && x + 1 == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x + 1, y + 1);
 
             // e.p.
-            if (move.en_passant && COOR_INSIDE_BOARD(x - 1, y + 1) && x - 1 == dest_x && y + 1 == dest_y) return true;
-            if (move.en_passant && COOR_INSIDE_BOARD(x + 1, y + 1) && x + 1 == dest_x && y + 1 == dest_y) return true;
+            if (move.en_passant && x - 1 == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x - 1, y + 1);
+            if (move.en_passant && x + 1 == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x + 1, y + 1);
         }
 
         break;
@@ -72,46 +68,83 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
         for (int i = 0; i < CHESS_BOARD_HEIGHT; i++) {
             if (i == y) continue;
             if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
-            if (COOR_INSIDE_BOARD(x, i) && x == dest_x && i == dest_y) return true;
+            if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
+            if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
         }
 
         for (int i = 0; i < CHESS_BOARD_WIDTH; i++) {
             if (i == x) continue;
-            if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
-            if (COOR_INSIDE_BOARD(i, y) && i == dest_x && y == dest_y) return true;
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
         }
 
         break;
     case PGN_PIECE_KNIGHT:
-        if (!is_piece_player_eq(pl, board[y + 2][x - 1]) && x - 1 == dest_x && y + 2 == dest_y) return true;
-        if (!is_piece_player_eq(pl, board[y + 2][x + 1]) && x + 1 == dest_x && y + 2 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x - 1, y + 2) && !is_piece_player_eq(pl, board[y + 2][x - 1]) && x - 1 == dest_x && y + 2 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x + 1, y + 2) && !is_piece_player_eq(pl, board[y + 2][x + 1]) && x + 1 == dest_x && y + 2 == dest_y) return true;
 
-        if (!is_piece_player_eq(pl, board[y + 1][x - 2]) && x - 2 == dest_x && y + 1 == dest_y) return true;
-        if (!is_piece_player_eq(pl, board[y + 1][x + 2]) && x + 2 == dest_x && y + 1 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x - 2, y + 1) && !is_piece_player_eq(pl, board[y + 1][x - 2]) && x - 2 == dest_x && y + 1 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x + 2, y + 1) && !is_piece_player_eq(pl, board[y + 1][x + 2]) && x + 2 == dest_x && y + 1 == dest_y) return true;
 
-        if (!is_piece_player_eq(pl, board[y - 2][x - 1]) && x - 1 == dest_x && y - 2 == dest_y) return true;
-        if (!is_piece_player_eq(pl, board[y - 2][x + 1]) && x + 1 == dest_x && y - 2 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x - 1, y - 2) && !is_piece_player_eq(pl, board[y - 2][x - 1]) && x - 1 == dest_x && y - 2 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x + 1, y - 2) && !is_piece_player_eq(pl, board[y - 2][x + 1]) && x + 1 == dest_x && y - 2 == dest_y) return true;
 
-        if (!is_piece_player_eq(pl, board[y - 1][x - 2]) && x - 2 == dest_x && y - 1 == dest_y) return true;
-        if (!is_piece_player_eq(pl, board[y - 1][x + 2]) && x + 2 == dest_x && y - 1 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x - 2, y - 1) && !is_piece_player_eq(pl, board[y - 1][x - 2]) && x - 2 == dest_x && y - 1 == dest_y) return true;
+        if (COOR_INSIDE_BOARD(x + 2, y - 1) && !is_piece_player_eq(pl, board[y - 1][x + 2]) && x + 2 == dest_x && y - 1 == dest_y) return true;
 
         break;
     case PGN_PIECE_BISHOP:
         for (int i = 1; i < CHESS_BOARD_HEIGHT; i++) {
-            if (COOR_INSIDE_BOARD(x + i, y + i) && x + i == dest_x && y + i == dest_y) return true;
-            if (COOR_INSIDE_BOARD(x + i, y - i) && x + i == dest_x && y - i == dest_y) return true;
-            if (COOR_INSIDE_BOARD(x - i, y - i) && x - i == dest_x && y - i == dest_y) return true;
-            if (COOR_INSIDE_BOARD(x - i, y + i) && x - i == dest_x && y + i == dest_y) return true;
+            if (x + i == dest_x && y + i == dest_y) return COOR_INSIDE_BOARD(x + i, y + i);
+            if (x + i == dest_x && y - i == dest_y) return COOR_INSIDE_BOARD(x + i, y - i);
+            if (x - i == dest_x && y - i == dest_y) return COOR_INSIDE_BOARD(x - i, y - i);
+            if (x - i == dest_x && y + i == dest_y) return COOR_INSIDE_BOARD(x - i, y + i);
         }
 
         break;
     case PGN_PIECE_QUEEN:
-        fprintf(stderr, "Queen move is not implemented yet.\n");
-        exit(1);
+        for (int i = 0; i < CHESS_BOARD_HEIGHT; i++) {
+            if (i == y) continue;
+            if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
+            if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
+            if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
+        }
+
+        for (int i = 0; i < CHESS_BOARD_WIDTH; i++) {
+            if (i == x) continue;
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        }
+
+        for (int i = 1; i < CHESS_BOARD_HEIGHT; i++) {
+            if (x + i == dest_x && y + i == dest_y) return COOR_INSIDE_BOARD(x + i, y + i);
+            if (x + i == dest_x && y - i == dest_y) return COOR_INSIDE_BOARD(x + i, y - i);
+            if (x - i == dest_x && y - i == dest_y) return COOR_INSIDE_BOARD(x - i, y - i);
+            if (x - i == dest_x && y + i == dest_y) return COOR_INSIDE_BOARD(x - i, y + i);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if (x - 1 + i == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x - 1 + i, y + 1);
+            if (x - 1 + i == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x - 1 + i, y - 1);
+        }
+
+        if (x - 1 == dest_x && y == dest_y) return COOR_INSIDE_BOARD(x - 1, y);
+        if (x + 1 == dest_x && y == dest_y) return COOR_INSIDE_BOARD(x + 1, y);
+
         break;
+    /* NOTE: King and quee move does not check for player piece (for now)
+     */
     case PGN_PIECE_KING:
-        fprintf(stderr, "King move is not implemented yet.\n");
-        exit(1);
+        for (int i = 0; i < 3; i++) {
+            if (x - 1 + i == dest_x && y + 1 == dest_y) return COOR_INSIDE_BOARD(x - 1 + i, y + 1);
+            if (x - 1 + i == dest_x && y - 1 == dest_y) return COOR_INSIDE_BOARD(x - 1 + i, y - 1);
+        }
+
+        if (x - 1 == dest_x && y == dest_y) return COOR_INSIDE_BOARD(x - 1, y);
+        if (x + 1 == dest_x && y == dest_y) return COOR_INSIDE_BOARD(x + 1, y);
+
         break;
     }
 
@@ -167,7 +200,7 @@ void move(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player pl, pgn_move
             if (!is_piece_player_eq(pl, board[i][j]))
                 continue;
 
-            int x = j, y = -(i - CHESS_BOARD_HEIGHT) - 1;
+            int x = j, y = i;
             if (move.from.y != PGN_COORDINATE_UNKNOWN && y != move.from.y - 1 ||
                 move.from.x != PGN_COORDINATE_UNKNOWN && x != move.from.x - 'a')
                 continue;
@@ -236,23 +269,25 @@ int main(void)
 
     pgn = pgn_init();
     pgn_parse(pgn, buffer);
-    /* pgn_parse(pgn, "1. e4 e5 2. Nf3 Nc6 3. Bb5 {This opening is called the Ruy Lopez.} 3... a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7 11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15. Nb1 h6 16. Bh4 c5 17. dxe5 Nxe4"); */
+    /* pgn_parse(pgn, "1. e4 e5 2. Nf3 Nc6 3. Bb5  a6 4. Ba4 Nf6"); */
 
     signal(SIGINT, __on_interrupted);
 
-    for (int i = 0; i < (int)pgn->moves->length; i++) {
+    for (size_t i = 0; i < pgn->moves->length; i++) {
+        printf("White move: %s\n", pgn_piece_to_string(pgn->moves->values[i].white.piece));
         move(board, WHITE, pgn->moves->values[i].white);
-        printf("\n");
         print_board(board);
         getchar();
+        printf("\n");
 
+        printf("Black move: %s\n", pgn_piece_to_string(pgn->moves->values[i].black.piece));
         move(board, BLACK, pgn->moves->values[i].black);
-        printf("\n");
         print_board(board);
         getchar();
+        printf("\n");
     }
 
-    printf("\n%d %d\n", pgn->score.white, pgn->score.black);
+    printf("Score: %d (White) %d (Black)\n", pgn->score.white, pgn->score.black);
     pgn_cleanup(pgn);
     return 0;
 }
