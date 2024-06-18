@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <time.h>
 #include <ctype.h>
 #include <pgn.h>
 #include <stdbool.h>
@@ -26,6 +27,30 @@ typedef enum player {
 } player;
 
 typedef pgn_coordinate_t coordinate;
+
+/* lmao don't ask me why
+ */
+void print_banner()
+{
+    srand(time(NULL));
+
+    if (rand() % 2) {
+        printf("\n"
+               "        '||                            \n"
+               "  ....   || ..     ....   ....   ....  \n"
+               ".|   ''  ||' ||  .|...|| ||. '  ||. '  \n"
+               "||       ||  ||  ||      . '|.. . '|.. \n"
+               " '|...' .||. ||.  '|...' |'..|' |'..|' \n"
+               "\n");
+        return;
+    }
+
+    printf("      __                      \n"
+           ".----|  |--.-----.-----.-----.\n"
+           "|  __|     |  -__|__ --|__ --|\n"
+           "|____|__|__|_____|_____|_____|\n"
+           "\n");
+}
 
 bool is_piece_player_eq(player pl, char piece)
 {
@@ -273,14 +298,19 @@ int main(void)
 
     signal(SIGINT, __on_interrupted);
 
+    print_banner();
+    printf("Simulating chess game played by:\n");
+    printf("%s (White) against %s (Black)\n", pgn_table_get(pgn->metadata, "White"), pgn_table_get(pgn->metadata, "Black"));
+    printf("\n");
+
     for (size_t i = 0; i < pgn->moves->length; i++) {
-        printf("White move: %s\n", pgn_piece_to_string(pgn->moves->values[i].white.piece));
+        printf("White moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].white.piece));
         move(board, WHITE, pgn->moves->values[i].white);
         print_board(board);
         getchar();
         printf("\n");
 
-        printf("Black move: %s\n", pgn_piece_to_string(pgn->moves->values[i].black.piece));
+        printf("Black moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].black.piece));
         move(board, BLACK, pgn->moves->values[i].black);
         print_board(board);
         getchar();
