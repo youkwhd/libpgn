@@ -1,8 +1,6 @@
 #include <signal.h>
 #include <ctype.h>
 #include <pgn.h>
-#include <pgn/moves.h>
-#include <pgn/piece.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -243,12 +241,12 @@ int main(void)
     signal(SIGINT, __on_interrupted);
 
     for (int i = 0; i < (int)pgn->moves->length; i++) {
-        move(board, WHITE, pgn->moves->values[i]->white);
+        move(board, WHITE, pgn->moves->values[i].white);
         printf("\n");
         print_board(board);
         getchar();
 
-        move(board, BLACK, pgn->moves->values[i]->black);
+        move(board, BLACK, pgn->moves->values[i].black);
         printf("\n");
         print_board(board);
         getchar();

@@ -131,29 +131,13 @@ pgn_move_t pgn_move_from_string(char *str)
     return __pgn_move_from_string(str, &consumed);
 }
 
-__pgn_moves_item_t *__pgn_moves_item_init()
-{
-    __pgn_moves_item_t *moves = malloc(sizeof *moves);
-    moves->alternatives = NULL;
-    return moves;
-}
-
-void __pgn_moves_item_cleanup(__pgn_moves_item_t *moves)
-{
-    if (moves->alternatives) {
-        pgn_moves_cleanup(moves->alternatives);
-    }
-
-    free(moves);
-}
-
 pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves)
 {
     if (str[0] == ')' || str[0] == '\0')
         return moves;
 
     size_t cursor = 0;
-    __pgn_moves_item_t *move = __pgn_moves_item_init();
+    __pgn_moves_item_t move = { .alternatives = NULL };
 
     /* TODO: maybe isolate into a function
      *
@@ -176,9 +160,9 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
     if (dots_count == 0 || dots_count == 1) {
-        move->white = __pgn_move_from_string(str + cursor, &cursor);
+        move.white = __pgn_move_from_string(str + cursor, &cursor);
     } else if (dots_count == 3) {
-        move->black = __pgn_move_from_string(str + cursor, &cursor);
+        move.black = __pgn_move_from_string(str + cursor, &cursor);
         /* TODO: remove pgn comments */
         pgn_moves_push(moves, move);
         __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
@@ -193,7 +177,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
+        move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
@@ -228,7 +212,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     }
     cursor += __pgn_whitespace_length(str + cursor);
 
-    move->black = __pgn_move_from_string(str + cursor, &cursor);
+    move.black = __pgn_move_from_string(str + cursor, &cursor);
 
     cursor += __pgn_whitespace_length(str + cursor);
     while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
@@ -237,7 +221,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     if (str[cursor] == '(') {
         cursor++;
         cursor += __pgn_whitespace_length(str + cursor);
-        move->alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
+        move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
         cursor += __pgn_whitespace_length(str + cursor);
         assert(str[cursor++] == ')');
 
@@ -271,7 +255,7 @@ pgn_moves_t *pgn_moves_init()
     return moves;
 }
 
-void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t *__moves)
+void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves)
 {
     if (moves->length >= moves->size) {
         moves->size += PGN_MOVES_GROW_SIZE;
@@ -284,7 +268,9 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t *__moves)
 void pgn_moves_cleanup(pgn_moves_t *moves)
 {
     for (size_t i = 0; i < moves->length; i++) {
-        __pgn_moves_item_cleanup(moves->values[i]);
+        if (moves->values[i].alternatives) {
+            pgn_moves_cleanup(moves->values[i].alternatives);
+        }
     }
 
     free(moves->values);
