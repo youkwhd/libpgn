@@ -21,29 +21,29 @@ void test_parsing_pgn()
     assert(strcmp(pgn_table_get(pgn->metadata, "Event"), "Ch City (open)") == 0);
     assert(strcmp(pgn_table_get(pgn->metadata, "Site"), "Frankfurt (Germany)") == 0);
 
-    assert(pgn->moves->values[0]->white.piece == PGN_PIECE_PAWN);
-    assert(pgn->moves->values[0]->white.dest.x == 'e');
-    assert(pgn->moves->values[0]->white.dest.y == 4);
-    assert(pgn->moves->values[0]->white.captures == false);
-    assert(pgn->moves->values[0]->white.annotation == PGN_ANNOTATION_NONE);
-    assert(pgn->moves->values[0]->black.piece == PGN_PIECE_PAWN);
-    assert(pgn->moves->values[0]->black.dest.x == 'e');
-    assert(pgn->moves->values[0]->black.dest.y == 5);
-    assert(pgn->moves->values[0]->black.captures == false);
-    assert(pgn->moves->values[0]->black.annotation == PGN_ANNOTATION_NONE);
-    assert(pgn->moves->values[0]->alternatives == NULL);
+    assert(pgn->moves->values[0].white.piece == PGN_PIECE_PAWN);
+    assert(pgn->moves->values[0].white.dest.x == 'e');
+    assert(pgn->moves->values[0].white.dest.y == 4);
+    assert(pgn->moves->values[0].white.captures == false);
+    assert(pgn->moves->values[0].white.annotation == PGN_ANNOTATION_NONE);
+    assert(pgn->moves->values[0].black.piece == PGN_PIECE_PAWN);
+    assert(pgn->moves->values[0].black.dest.x == 'e');
+    assert(pgn->moves->values[0].black.dest.y == 5);
+    assert(pgn->moves->values[0].black.captures == false);
+    assert(pgn->moves->values[0].black.annotation == PGN_ANNOTATION_NONE);
+    assert(pgn->moves->values[0].alternatives == NULL);
 
-    assert(pgn->moves->values[1]->white.piece == PGN_PIECE_KNIGHT);
-    assert(pgn->moves->values[1]->white.dest.x == 'c');
-    assert(pgn->moves->values[1]->white.dest.y == 3);
-    assert(pgn->moves->values[1]->white.captures == false);
-    assert(pgn->moves->values[1]->white.annotation == PGN_ANNOTATION_NONE);
-    assert(pgn->moves->values[1]->black.piece == PGN_PIECE_KNIGHT);
-    assert(pgn->moves->values[1]->black.dest.x == 'c');
-    assert(pgn->moves->values[1]->black.dest.y == 6);
-    assert(pgn->moves->values[1]->black.captures == false);
-    assert(pgn->moves->values[1]->black.annotation == PGN_ANNOTATION_NONE);
-    assert(pgn->moves->values[1]->alternatives == NULL);
+    assert(pgn->moves->values[1].white.piece == PGN_PIECE_KNIGHT);
+    assert(pgn->moves->values[1].white.dest.x == 'c');
+    assert(pgn->moves->values[1].white.dest.y == 3);
+    assert(pgn->moves->values[1].white.captures == false);
+    assert(pgn->moves->values[1].white.annotation == PGN_ANNOTATION_NONE);
+    assert(pgn->moves->values[1].black.piece == PGN_PIECE_KNIGHT);
+    assert(pgn->moves->values[1].black.dest.x == 'c');
+    assert(pgn->moves->values[1].black.dest.y == 6);
+    assert(pgn->moves->values[1].black.captures == false);
+    assert(pgn->moves->values[1].black.annotation == PGN_ANNOTATION_NONE);
+    assert(pgn->moves->values[1].alternatives == NULL);
 
     assert(pgn->score.white == 0 && pgn->score.black == 1);
 
