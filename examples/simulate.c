@@ -294,7 +294,7 @@ int main(void)
     for (size_t i = 0; i < pgn->moves->length; i++) {
         printf("                   \n");
         printf("\x1b[1A");
-        printf("White moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].white.piece));
+        printf("White's move: %s\n", pgn->moves->values[i].white.notation);
 
         move(board, WHITE, pgn->moves->values[i].white);
         print_board(board);
@@ -304,7 +304,7 @@ int main(void)
 
         printf("                   \n");
         printf("\x1b[1A");
-        printf("Black moves: %s\n", pgn_piece_to_string(pgn->moves->values[i].black.piece));
+        printf("Black's move: %s\n", pgn->moves->values[i].black.notation);
 
         move(board, BLACK, pgn->moves->values[i].black);
         print_board(board);
