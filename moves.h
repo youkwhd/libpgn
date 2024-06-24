@@ -19,9 +19,12 @@
 #define PGN_MOVES_INITIAL_SIZE 32
 #define PGN_MOVES_GROW_SIZE 32
 
+#define __PGN_MOVE_NOTATION_SIZE 16
+
 typedef struct pgn_move_t {
     pgn_piece_t piece, promoted_to;
     unsigned int nth_best;
+    char notation[__PGN_MOVE_NOTATION_SIZE];
     int castles;
     bool captures;
     bool en_passant;

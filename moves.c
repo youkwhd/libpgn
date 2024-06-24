@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include "moves.h"
 
@@ -72,11 +73,14 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         }
     }
 
-    *consumed += cursor;
+    int notation_len = cursor;
     if (parsed_nth_best || parsed_en_passant)
-        *consumed += (__cursor - cursor);
+        notation_len += (__cursor - cursor);
 
+    *consumed += notation_len;
     cursor--;
+
+    strncpy(move.notation, str, notation_len);
 
     while (pgn_annotation_from_string(str + cursor) != PGN_ANNOTATION_NONE) cursor--;
     move.annotation = pgn_annotation_from_string(str + (cursor + 1));
