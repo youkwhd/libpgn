@@ -78,18 +78,28 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
 
         break;
     case PGN_PIECE_ROOK:
-        for (int i = 0; i < CHESS_BOARD_HEIGHT; i++) {
-            if (i == y) continue;
+        for (int i = x + 1; i < CHESS_BOARD_WIDTH; i++) {
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        }
+
+        for (int i = x - 1; i >= 0; i--) {
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        }
+
+        for (int i = y + 1; i < CHESS_BOARD_HEIGHT; i++) {
             if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
             if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
             if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
         }
 
-        for (int i = 0; i < CHESS_BOARD_WIDTH; i++) {
-            if (i == x) continue;
-            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
-            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        for (int i = y - 1; i < CHESS_BOARD_HEIGHT; i--) {
+            if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
+            if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
+            if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
         }
 
         break;
@@ -117,18 +127,28 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
 
         break;
     case PGN_PIECE_QUEEN:
-        for (int i = 0; i < CHESS_BOARD_HEIGHT; i++) {
-            if (i == y) continue;
+        for (int i = x + 1; i < CHESS_BOARD_WIDTH; i++) {
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        }
+
+        for (int i = x - 1; i >= 0; i--) {
+            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        }
+
+        for (int i = y + 1; i < CHESS_BOARD_HEIGHT; i++) {
             if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
             if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
             if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
         }
 
-        for (int i = 0; i < CHESS_BOARD_WIDTH; i++) {
-            if (i == x) continue;
-            if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
-            if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
+        for (int i = y - 1; i < CHESS_BOARD_HEIGHT; i--) {
+            if (board[i][x] != ' ' && is_piece_player_eq(pl, board[i][x])) break;
+            if (board[i][x] != ' ' && !is_piece_player_eq(pl, board[i][x]) && !(x == dest_x && i == dest_y)) break;
+            if (x == dest_x && i == dest_y) return COOR_INSIDE_BOARD(x, i);
         }
 
         for (int i = 1; i < CHESS_BOARD_HEIGHT; i++) {
@@ -231,6 +251,9 @@ void move(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player pl, pgn_move
             return;
         }
     }
+
+    /* fprintf(stderr, "Move is illegal.\n"); */
+    /* exit(1); */
 }
 
 void print_board(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH])
