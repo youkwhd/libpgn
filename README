@@ -11,9 +11,15 @@ very simple examples within the tests/ folder, I'd recommend to
 read the `tests/pgn.c` file, as there would be the actual useful
 functions.
 
-Build
------
+Building
+--------
 
 Compiling libpgn:
 
     make
+
+Examples
+--------
+    
+Tiny Chess Sim in Ada - <https://github.com/youkwhd/szachy>,
+Or you can check out commit `38678ac` for the C implementation.
