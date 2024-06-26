@@ -29,9 +29,6 @@ $(LIB): $(OBJ)
 
 test: $(LIB) $(EXE)
 
-examples: $(LIB)
-	$(CC) examples/simulate.c -lpgn -L. -I. -o examples/simulate
-
 $(EXE):
 	$(CC) $@.c -lpgn -L. -I. -o $@
 	./$@
@@ -57,4 +54,4 @@ uninstall:
 clean:
 	$(RM) $(OBJ) $(LIB)$(EXT)
 
-.PHONY: clean all $(LIB) install uninstall test examples
+.PHONY: clean all $(LIB) install uninstall test
