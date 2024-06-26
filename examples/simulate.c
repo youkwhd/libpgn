@@ -234,7 +234,7 @@ void move(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player pl, pgn_move
                 continue;
 
             int x = j, y = i;
-            if (move.from.y != PGN_COORDINATE_UNKNOWN && y != move.from.y - 1 ||
+            if (move.from.y != PGN_COORDINATE_UNKNOWN && y != -(move.from.y - CHESS_BOARD_HEIGHT) ||
                 move.from.x != PGN_COORDINATE_UNKNOWN && x != move.from.x - 'a')
                 continue;
 
