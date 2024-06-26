@@ -80,13 +80,13 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
     case PGN_PIECE_ROOK:
         for (int i = x + 1; i < CHESS_BOARD_WIDTH; i++) {
             if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(i == dest_x && y == dest_y)) break;
             if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
         }
 
         for (int i = x - 1; i >= 0; i--) {
             if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(i == dest_x && y == dest_y)) break;
             if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
         }
 
@@ -129,13 +129,13 @@ bool is_move_possible(char board[CHESS_BOARD_HEIGHT][CHESS_BOARD_WIDTH], player 
     case PGN_PIECE_QUEEN:
         for (int i = x + 1; i < CHESS_BOARD_WIDTH; i++) {
             if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(i == dest_x && y == dest_y)) break;
             if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
         }
 
         for (int i = x - 1; i >= 0; i--) {
             if (board[y][i] != ' ' && is_piece_player_eq(pl, board[y][i])) break;
-            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(x == dest_x && i == dest_y)) break;
+            if (board[y][i] != ' ' && !is_piece_player_eq(pl, board[y][i]) && !(i == dest_x && y == dest_y)) break;
             if (i == dest_x && y == dest_y) return COOR_INSIDE_BOARD(i, y);
         }
 
