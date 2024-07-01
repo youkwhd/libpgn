@@ -1,6 +1,7 @@
 #include <pgn.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 unsigned int __nth = 1;
 
@@ -23,6 +24,7 @@ void test_parsing_move()
     assert(move.dest.x == 'e');
     assert(move.dest.y == 4);
     assert(move.check == PGN_CHECK_NONE);
+    assert(!strcmp(move.notation, "e4??"));
     assert(move.annotation == PGN_ANNOTATION_BLUNDER);
     __print_success();
 
@@ -34,6 +36,7 @@ void test_parsing_move()
     assert(move.dest.x == 'd');
     assert(move.dest.y == 5);
     assert(move.check == PGN_CHECK_SINGLE);
+    assert(!strcmp(move.notation, "Nb6d5+"));
     assert(move.annotation == PGN_ANNOTATION_NONE);
     __print_success();
 
@@ -45,6 +48,7 @@ void test_parsing_move()
     assert(move.dest.x == 'f');
     assert(move.dest.y == 1);
     assert(move.check == PGN_CHECK_NONE);
+    assert(!strcmp(move.notation, "Qf1?!"));
     assert(move.annotation == PGN_ANNOTATION_DUBIOUS_MOVE);
     __print_success();
 
@@ -57,6 +61,7 @@ void test_parsing_move()
     assert(move.dest.y == 8);
     assert(move.check == PGN_CHECK_NONE);
     assert(move.promoted_to == PGN_PIECE_QUEEN);
+    assert(!strcmp(move.notation, "bxa8=Q??"));
     assert(move.annotation == PGN_ANNOTATION_BLUNDER);
     __print_success();
 
@@ -69,6 +74,7 @@ void test_parsing_move()
     assert(move.dest.y == 2);
     assert(move.check == PGN_CHECK_NONE);
     assert(move.promoted_to == PGN_PIECE_UNKNOWN);
+    assert(!strcmp(move.notation, "Bxg2"));
     assert(move.annotation == PGN_ANNOTATION_NONE);
     __print_success();
 
@@ -81,18 +87,21 @@ void test_parsing_move()
     assert(move.dest.y == 2);
     assert(move.check == PGN_CHECK_SINGLE);
     assert(move.promoted_to == PGN_PIECE_UNKNOWN);
+    assert(!strcmp(move.notation, "exf2+!"));
     assert(move.annotation == PGN_ANNOTATION_GOOD_MOVE);
     __print_success();
 
     move = pgn_move_from_string("O-O+!!");
     assert(move.castles == PGN_CASTLING_KINGSIDE);
     assert(move.check == PGN_CHECK_SINGLE);
+    assert(!strcmp(move.notation, "O-O+!!"));
     assert(move.annotation == PGN_ANNOTATION_EXCELLENT_MOVE);
     __print_success();
 
     move = pgn_move_from_string("O-O-O");
     assert(move.castles == PGN_CASTLING_QUEENSIDE);
     assert(move.check == PGN_CHECK_NONE);
+    assert(!strcmp(move.notation, "O-O-O"));
     assert(move.annotation == PGN_ANNOTATION_NONE);
     __print_success();
 }
