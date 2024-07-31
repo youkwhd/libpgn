@@ -27,11 +27,12 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
          * to parse multiple digit.
          */
         score.white = str[cursor] - '0';
-
-        assert(str[++cursor] == '-');
         cursor++;
 
+        assert(str[cursor++] == '-');
+
         score.black = str[cursor] - '0';
+        cursor++;
     }
 
     *consumed += cursor;
