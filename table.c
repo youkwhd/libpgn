@@ -17,7 +17,7 @@ pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed)
     pgn_string_t *value_buffer = pgn_string_init();
 
     for (;;) {
-        if (str[cursor] != '[') goto cleanup;
+        if (str[cursor] != '[') break;
         cursor++;
 
         while (str[cursor] != ' ') pgn_string_append(key_buffer, str[cursor++]);
@@ -40,7 +40,6 @@ pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed)
         cursor++;
     }
 
-cleanup:
     *consumed += cursor;
     pgn_string_cleanup(key_buffer);
     pgn_string_cleanup(value_buffer);
