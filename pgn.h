@@ -29,7 +29,7 @@ typedef struct pgn_t {
 
 PGN_EXPORT pgn_t *pgn_init();
 PGN_EXPORT void pgn_cleanup(pgn_t *pgn);
-PGN_EXPORT void pgn_parse(pgn_t *pgn, char *str);
+PGN_EXPORT size_t pgn_parse(pgn_t *pgn, char *str);
 
 #define pgn_metadata_from_string(str) pgn_table_from_string(str)
 #define pgn_parse_metadata(str) pgn_table_from_string(str)
