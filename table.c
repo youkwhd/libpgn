@@ -5,40 +5,43 @@
 
 pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed)
 {
+    size_t cursor = 0;
+
     /* Redundant check, but it works to not make unnecessary
      * memory allocations (key_buf, value_buf)
      */
-    if (str[*consumed] != '[') return NULL;
+    if (str[cursor] != '[') return NULL;
 
     pgn_table_t *table = pgn_table_init();
     pgn_string_t *key_buffer = pgn_string_init();
     pgn_string_t *value_buffer = pgn_string_init();
 
     for (;;) {
-        if (str[*consumed] != '[') goto cleanup;
-        (*consumed)++;
+        if (str[cursor] != '[') goto cleanup;
+        cursor++;
 
-        while (str[*consumed] != ' ') pgn_string_append(key_buffer, str[(*consumed)++]);
+        while (str[cursor] != ' ') pgn_string_append(key_buffer, str[cursor++]);
         pgn_string_append_null_terminator(key_buffer);
 
-        assert(str[++(*consumed)] == '"');
-        (*consumed)++;
+        assert(str[++cursor] == '"');
+        cursor++;
 
-        while (str[*consumed] != '"') pgn_string_append(value_buffer, str[(*consumed)++]);
+        while (str[cursor] != '"') pgn_string_append(value_buffer, str[cursor++]);
         pgn_string_append_null_terminator(value_buffer);
 
         pgn_table_insert(table, key_buffer->buf, value_buffer->buf);
         pgn_string_reset(key_buffer);
         pgn_string_reset(value_buffer);
 
-        assert(str[++(*consumed)] == ']');
+        assert(str[++cursor] == ']');
         /* TODO: maybe expect whitespaces than just newline
          */
-        assert(str[++(*consumed)] == '\n');
-        (*consumed)++;
+        assert(str[++cursor] == '\n');
+        cursor++;
     }
 
 cleanup:
+    *consumed += cursor;
     pgn_string_cleanup(key_buffer);
     pgn_string_cleanup(value_buffer);
     return table;
