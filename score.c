@@ -26,13 +26,9 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
         /* TODO: this does not have the capability
          * to parse multiple digit.
          */
-        score.white = str[cursor] - '0';
-        cursor++;
-
+        score.white = str[cursor++] - '0';
         assert(str[cursor++] == '-');
-
-        score.black = str[cursor] - '0';
-        cursor++;
+        score.black = str[cursor++] - '0';
     }
 
     *consumed += cursor;
