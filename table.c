@@ -50,19 +50,16 @@ pgn_table_t *pgn_table_from_string(char *str)
     return __pgn_table_from_string(str, &consumed);
 }
 
-__pgn_table_item_t *__pgn_table_item_init()
+void __pgn_table_item_init(__pgn_table_item_t *item)
 {
-    __pgn_table_item_t *item = malloc(sizeof *item);
     item->key = pgn_string_init();
     item->value = pgn_string_init();
-    return item;
 }
 
 void __pgn_table_item_cleanup(__pgn_table_item_t *item)
 {
     pgn_string_cleanup(item->key);
     pgn_string_cleanup(item->value);
-    free(item);
 }
 
 pgn_table_t *pgn_table_init()
@@ -77,7 +74,7 @@ pgn_table_t *pgn_table_init()
 void pgn_table_printp(pgn_table_t *table)
 {
     for (size_t i = 0; i < table->length; i++) {
-        printf("[%s \"%s\"]\n", table->items[i]->key->buf, table->items[i]->value->buf);
+        printf("[%s \"%s\"]\n", table->items[i].key->buf, table->items[i].value->buf);
     }
 }
 
@@ -88,9 +85,11 @@ void pgn_table_insert(pgn_table_t *table, char *key, char *value)
         table->items = realloc(table->items, (sizeof *table->items) * table->size);
     }
 
-    __pgn_table_item_t *item = __pgn_table_item_init();
-    pgn_string_concat(item->key, key);
-    pgn_string_concat(item->value, value);
+    __pgn_table_item_t item = {0};
+    __pgn_table_item_init(&item);
+
+    pgn_string_concat(item.key, key);
+    pgn_string_concat(item.value, value);
 
     table->items[table->length++] = item;
 }
@@ -98,8 +97,8 @@ void pgn_table_insert(pgn_table_t *table, char *key, char *value)
 char *pgn_table_get(pgn_table_t *table, char *key)
 {
     for (size_t i = 0; i < table->length; i++) {
-        if (pgn_string_equal(table->items[i]->key, key)) {
-            return table->items[i]->value->buf;
+        if (pgn_string_equal(table->items[i].key, key)) {
+            return table->items[i].value->buf;
         }
     }
 
@@ -109,11 +108,11 @@ char *pgn_table_get(pgn_table_t *table, char *key)
 void pgn_table_delete(pgn_table_t *table, char *key)
 {
     for (size_t i = 0; i < table->length; i++) {
-        if (!pgn_string_equal(table->items[i]->key, key)) {
+        if (!pgn_string_equal(table->items[i].key, key)) {
             continue;
         }
 
-        __pgn_table_item_cleanup(table->items[i]);
+        __pgn_table_item_cleanup(&table->items[i]);
 
         for (size_t j = i; j < table->length - 1; j++) {
             table->items[j] = table->items[j + 1];
@@ -127,7 +126,7 @@ void pgn_table_delete(pgn_table_t *table, char *key)
 void pgn_table_cleanup(pgn_table_t *table)
 {
     for (size_t i = 0; i < table->length; i++) {
-        __pgn_table_item_cleanup(table->items[i]);
+        __pgn_table_item_cleanup(&table->items[i]);
     }
 
     free(table->items);

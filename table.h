@@ -16,11 +16,11 @@ typedef struct __pgn_table_item_t {
 } __pgn_table_item_t;
 
 typedef struct pgn_table_t {
-    __pgn_table_item_t **items;
+    __pgn_table_item_t *items;
     size_t length, size;
 } pgn_table_t;
 
-PGN_EXPORT __pgn_table_item_t *__pgn_table_item_init();
+PGN_EXPORT void __pgn_table_item_init(__pgn_table_item_t *item);
 PGN_EXPORT void __pgn_table_item_cleanup(__pgn_table_item_t *item);
 
 PGN_EXPORT pgn_table_t *pgn_table_init();
