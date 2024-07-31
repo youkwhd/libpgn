@@ -14,10 +14,7 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
 
     if (str[cursor] == '*') {
         cursor++;
-        goto update_consumed;
-    }
-
-    if (str[cursor] == '1' && str[cursor + 1] == '/') {
+    } else if (str[cursor] == '1' && str[cursor + 1] == '/') {
         assert(str[cursor++] == '1');
         assert(str[cursor++] == '/');
         assert(str[cursor++] == '2');
@@ -25,10 +22,7 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
         assert(str[cursor++] == '1');
         assert(str[cursor++] == '/');
         assert(str[cursor++] == '2');
-        goto update_consumed;
-    }
-
-    if (isdigit(str[cursor])) {
+    } else if (isdigit(str[cursor])) {
         /* TODO: this does not have the capability
          * to parse multiple digit.
          */
@@ -38,10 +32,8 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
         cursor++;
 
         score.black = str[cursor] - '0';
-        goto update_consumed;
     }
 
-update_consumed:
     *consumed += cursor;
     return score;
 }
