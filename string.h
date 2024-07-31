@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define PGN_STRING_INITIAL_SIZE 64
+#define PGN_STRING_INITIAL_SIZE 16
 #define PGN_STRING_GROW_SIZE 32
 
 typedef struct pgn_string_t {
