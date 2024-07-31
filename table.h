@@ -7,8 +7,8 @@
 
 #include <stdlib.h>
 
-#define PGN_TABLE_INITIAL_SIZE 7
-#define PGN_TABLE_GROW_SIZE 7
+#define PGN_TABLE_INITIAL_SIZE 8
+#define PGN_TABLE_GROW_SIZE 8
 
 typedef struct __pgn_table_item_t {
     pgn_string_t *key;
