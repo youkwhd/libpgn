@@ -33,7 +33,7 @@ $(EXE):
 	./$@
 	$(RM) $@
 
-install: $(LIB)
+install: all
 	mkdir -p $(INST)/include/pgn
 	cp *.h $(INST)/include/pgn
 	sed -i $(INST)/include/pgn/pgn.h -e "s/#include \"/#include \"pgn\//g"
