@@ -22,9 +22,7 @@ ifeq ($(OS), Windows_NT)
 	EXT := .dll
 endif
 
-all: $(LIB)
-
-$(LIB): $(OBJ)
+all: $(OBJ)
 	$(LD) $(LDLIBS) $(LDFLAGS) -shared $^ -o $(LIB)$(EXT)
 	ar rcs $(LIB).a $^
 
