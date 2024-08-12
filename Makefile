@@ -26,6 +26,7 @@ all: $(LIB)
 
 $(LIB): $(OBJ)
 	$(LD) $(LDLIBS) $(LDFLAGS) -shared $^ -o $(LIB)$(EXT)
+	ar rcs $(LIB).a $^
 
 test: $(LIB) $(EXE)
 
@@ -52,6 +53,6 @@ uninstall:
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@
 
 clean:
-	$(RM) $(OBJ) $(LIB)$(EXT)
+	$(RM) $(OBJ) $(LIB)$(EXT) $(LIB).a
 
 .PHONY: clean all $(LIB) install uninstall test
