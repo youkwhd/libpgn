@@ -15,10 +15,10 @@
 #include "moves.h"
 
 #define PGN_UNUSED(x) ((void)x)
-#define PGN_NOT_IMPLEMENTED() \
-    do { \
+#define PGN_NOT_IMPLEMENTED()                                                                                      \
+    do {                                                                                                           \
         fprintf(stderr, "libpgn: function `%s` is not implemented yet, at %s:%d\n", __func__, __FILE__, __LINE__); \
-        exit(EXIT_FAILURE); \
+        exit(EXIT_FAILURE);                                                                                        \
     } while (0)
 
 typedef struct pgn_t {
