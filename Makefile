@@ -28,6 +28,7 @@ all: $(OBJ)
 
 test: all $(EXE)
 
+# TODO: rename local string.h file to resolve colliding name.
 $(EXE):
 	$(CC) -Wno-implicit-function-declaration $@.c -lpgn -Wl,-rpath=. -L. -I. -o $@
 	./$@
