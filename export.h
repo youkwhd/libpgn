@@ -12,6 +12,4 @@
     #define PGN_EXPORT
 #endif
 
-void __pgn_export(void);
-
 #endif // __LIBPGN_EXPORT_H

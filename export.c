@@ -1,5 +1,3 @@
 #include "export.h"
 
-void __pgn_export(void)
-{
-}
+void __pgn_export(void);
