@@ -16,7 +16,13 @@ void test_parsing_pgn()
     __nth = 1;
 
     pgn_t *pgn = pgn_init();
-    pgn_parse(pgn, "[Event \"Ch City (open)\"]\n[Site \"Frankfurt (Germany)\"]\n\n1.e4 e5\n2.Nc3 Nc6\n3. g3 0-1");
+    pgn_parse(pgn,
+        "[Event \"Ch City (open)\"]\n"
+        "[Site \"Frankfurt (Germany)\"]\n"
+        "\n"
+        "1.e4 e5\n"
+        "2.Nc3 Nc6\n"
+        "3. g3 0-1");
 
     assert(strcmp(pgn_table_get(pgn->metadata, "Event"), "Ch City (open)") == 0);
     assert(strcmp(pgn_table_get(pgn->metadata, "Site"), "Frankfurt (Germany)") == 0);

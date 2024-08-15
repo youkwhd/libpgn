@@ -113,11 +113,13 @@ void test_parsing_bunch_of_moves()
     pgn_moves_t *moves = NULL;
 
     moves = pgn_moves_from_string("1.e4 e5");
+    assert(strcmp(moves->values[0].white.notation, "e4") == 0);
     assert(moves->values[0].white.piece == PGN_PIECE_PAWN);
     assert(moves->values[0].white.dest.x == 'e');
     assert(moves->values[0].white.dest.y == 4);
     assert(moves->values[0].white.captures == false);
     assert(moves->values[0].white.annotation == PGN_ANNOTATION_NONE);
+    assert(strcmp(moves->values[0].black.notation, "e5") == 0);
     assert(moves->values[0].black.piece == PGN_PIECE_PAWN);
     assert(moves->values[0].black.dest.x == 'e');
     assert(moves->values[0].black.dest.y == 5);

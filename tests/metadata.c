@@ -15,7 +15,15 @@ void test_parsing_metadata()
     printf("calling %s()\n", __func__);
     __nth = 1;
 
-    pgn_table_t *metadata = pgn_metadata_from_string("[Event \"F/S Return Match\"]\n[Site \"Belgrade, Serbia JUG\"]\n[Date \"1992.11.04\"]\n[Round \"29\"]\n[White \"Fischer, Robert J.\"]\n[Black \"Spassky, Boris V.\"]\n[Result \"1/2-1/2\"]\n");
+    pgn_table_t *metadata = pgn_metadata_from_string(
+        "[Event \"F/S Return Match\"]\n"
+        "[Site \"Belgrade, Serbia JUG\"]\n"
+        "[Date \"1992.11.04\"]\n"
+        "[Round \"29\"]\n"
+        "[White \"Fischer, Robert J.\"]\n"
+        "[Black \"Spassky, Boris V.\"]\n"
+        "[Result \"1/2-1/2\"]\n");
+
     assert(strcmp(pgn_table_get(metadata, "Event"), "F/S Return Match") == 0);
     assert(strcmp(pgn_table_get(metadata, "Site"), "Belgrade, Serbia JUG") == 0);
     assert(strcmp(pgn_table_get(metadata, "Date"), "1992.11.04") == 0);
