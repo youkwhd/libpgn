@@ -249,7 +249,7 @@ pgn_moves_t *pgn_moves_from_string(char *str)
     return __pgn_moves_from_string(str, &consumed);
 }
 
-pgn_moves_t *pgn_moves_init()
+pgn_moves_t *pgn_moves_init(void)
 {
     pgn_moves_t *moves = malloc(sizeof *moves);
     moves->values = malloc(sizeof *moves->values * PGN_MOVES_INITIAL_SIZE);

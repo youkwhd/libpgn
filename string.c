@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-pgn_string_t *pgn_string_init()
+pgn_string_t *pgn_string_init(void)
 {
     pgn_string_t *pstr = malloc(sizeof *pstr);
     pstr->buf = malloc((sizeof *pstr->buf) * PGN_STRING_INITIAL_SIZE);

@@ -2,7 +2,7 @@
 
 #include <ctype.h>
 
-pgn_t *pgn_init()
+pgn_t *pgn_init(void)
 {
     pgn_t *pgn = malloc(sizeof *pgn);
     pgn->metadata = NULL;

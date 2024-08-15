@@ -23,7 +23,7 @@ typedef struct pgn_table_t {
 PGN_EXPORT void __pgn_table_item_init(__pgn_table_item_t *item);
 PGN_EXPORT void __pgn_table_item_cleanup(__pgn_table_item_t *item);
 
-PGN_EXPORT pgn_table_t *pgn_table_init();
+PGN_EXPORT pgn_table_t *pgn_table_init(void);
 PGN_EXPORT pgn_table_t *__pgn_table_from_string(char *str, size_t *consumed);
 PGN_EXPORT pgn_table_t *pgn_table_from_string(char *str);
 PGN_EXPORT void pgn_table_printp(pgn_table_t *table);

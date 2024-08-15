@@ -64,7 +64,7 @@ void __pgn_table_item_cleanup(__pgn_table_item_t *item)
     pgn_string_cleanup(item->value);
 }
 
-pgn_table_t *pgn_table_init()
+pgn_table_t *pgn_table_init(void)
 {
     pgn_table_t *table = malloc(sizeof *table);
     table->items = malloc((sizeof *table->items) * PGN_TABLE_INITIAL_SIZE);
