@@ -26,10 +26,10 @@ all: $(OBJ)
 	$(LD) $(LDLIBS) $(LDFLAGS) -shared $^ -o $(LIB)$(EXT)
 	ar rcs $(LIB).a $^
 
-test: $(LIB) $(EXE)
+test: all $(EXE)
 
 $(EXE):
-	$(CC) $@.c -lpgn -L. -I. -o $@
+	$(CC) -Wno-implicit-function-declaration $@.c -lpgn -Wl,-rpath=. -L. -I. -o $@
 	./$@
 	$(RM) $@
 
