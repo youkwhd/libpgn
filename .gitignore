@@ -6,7 +6,6 @@ libpgn.dll
 # ignore everything except the tests/ source files
 tests/*
 !tests/*.c
-!tests/suite6.h
 
 examples/*
 !examples/*.c

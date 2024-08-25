@@ -1,4 +1,4 @@
-#include "suite6.h"
+#include "extra/suite6.h"
 
 #include <pgn.h>
 #include <string.h>
