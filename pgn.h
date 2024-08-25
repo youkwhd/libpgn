@@ -27,6 +27,15 @@ typedef struct pgn_t {
     pgn_score_t score;
 } pgn_t;
 
+#if defined(_WIN32)
+    /* MS-DOS DLL needs to know
+     * which functions are exported.
+     */
+    #define PGN_EXPORT __declspec(dllexport)
+#else
+    #define PGN_EXPORT
+#endif
+
 PGN_EXPORT pgn_t *pgn_init(void);
 PGN_EXPORT void pgn_cleanup(pgn_t *pgn);
 PGN_EXPORT size_t pgn_parse(pgn_t *pgn, char *str);

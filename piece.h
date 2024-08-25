@@ -1,8 +1,6 @@
 #ifndef __LIBPGN_PIECE_H
 #define __LIBPGN_PIECE_H
 
-#include "export.h"
-
 typedef enum pgn_piece_t {
     PGN_PIECE_UNKNOWN = 0,
     PGN_PIECE_PAWN = 'P',
@@ -13,7 +11,7 @@ typedef enum pgn_piece_t {
     PGN_PIECE_KING = 'K',
 } pgn_piece_t;
 
-PGN_EXPORT pgn_piece_t pgn_piece_from_char(char ch);
-PGN_EXPORT char *pgn_piece_to_string(pgn_piece_t piece);
+pgn_piece_t pgn_piece_from_char(char ch);
+char *pgn_piece_to_string(pgn_piece_t piece);
 
 #endif // __LIBPGN_PIECE_H

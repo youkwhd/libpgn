@@ -1,8 +1,6 @@
 #ifndef __LIBPGN_STRING_H
 #define __LIBPGN_STRING_H
 
-#include "export.h"
-
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -15,13 +13,13 @@ typedef struct pgn_string_t {
     size_t size;
 } pgn_string_t;
 
-PGN_EXPORT pgn_string_t *pgn_string_init(void);
-PGN_EXPORT void pgn_string_grow(pgn_string_t *pstr);
-PGN_EXPORT void pgn_string_reset(pgn_string_t *pstr);
-PGN_EXPORT bool pgn_string_equal(pgn_string_t *pstr, char *str);
-PGN_EXPORT void pgn_string_append(pgn_string_t *pstr, char ch);
-PGN_EXPORT void pgn_string_append_null_terminator(pgn_string_t *pstr);
-PGN_EXPORT void pgn_string_concat(pgn_string_t *pstr, char *str);
-PGN_EXPORT void pgn_string_cleanup(pgn_string_t *pstr);
+pgn_string_t *pgn_string_init(void);
+void pgn_string_grow(pgn_string_t *pstr);
+void pgn_string_reset(pgn_string_t *pstr);
+bool pgn_string_equal(pgn_string_t *pstr, char *str);
+void pgn_string_append(pgn_string_t *pstr, char ch);
+void pgn_string_append_null_terminator(pgn_string_t *pstr);
+void pgn_string_concat(pgn_string_t *pstr, char *str);
+void pgn_string_cleanup(pgn_string_t *pstr);
 
 #endif // __LIBPGN_STRING_H

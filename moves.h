@@ -1,7 +1,6 @@
 #ifndef __LIBPGN_MOVES_H
 #define __LIBPGN_MOVES_H
 
-#include "export.h"
 #include "piece.h"
 #include "coordinate.h"
 #include "annotation.h"
@@ -50,14 +49,14 @@ struct pgn_moves_t {
     size_t size;
 };
 
-PGN_EXPORT pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
-PGN_EXPORT pgn_move_t pgn_move_from_string(char *str);
+pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
+pgn_move_t pgn_move_from_string(char *str);
 
-PGN_EXPORT pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
-PGN_EXPORT pgn_moves_t *pgn_moves_from_string(char *str);
+pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
+pgn_moves_t *pgn_moves_from_string(char *str);
 
-PGN_EXPORT pgn_moves_t *pgn_moves_init(void);
-PGN_EXPORT void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves);
-PGN_EXPORT void pgn_moves_cleanup(pgn_moves_t *moves);
+pgn_moves_t *pgn_moves_init(void);
+void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves);
+void pgn_moves_cleanup(pgn_moves_t *moves);
 
 #endif // __LIBPGN_MOVES_H
