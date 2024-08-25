@@ -24,8 +24,8 @@ void test_parsing_pgn()
         "2.Nc3 Nc6\n"
         "3. g3 0-1");
 
-    assert(strcmp(pgn_table_get(pgn->metadata, "Event"), "Ch City (open)") == 0);
-    assert(strcmp(pgn_table_get(pgn->metadata, "Site"), "Frankfurt (Germany)") == 0);
+    assert(strcmp(pgn_metadata_get(pgn->metadata, "Event"), "Ch City (open)") == 0);
+    assert(strcmp(pgn_metadata_get(pgn->metadata, "Site"), "Frankfurt (Germany)") == 0);
 
     assert(strcmp(pgn->moves->values[0].white.notation, "e4") == 0);
     assert(pgn->moves->values[0].white.piece == PGN_PIECE_PAWN);

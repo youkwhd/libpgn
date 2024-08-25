@@ -15,7 +15,7 @@ void test_parsing_metadata()
     printf("calling %s()\n", __func__);
     __nth = 1;
 
-    pgn_table_t *metadata = pgn_parse_metadata(
+    pgn_metadata_t *metadata = pgn_parse_metadata(
         "[Event \"F/S Return Match\"]\n"
         "[Site \"Belgrade, Serbia JUG\"]\n"
         "[Date \"1992.11.04\"]\n"
@@ -24,18 +24,18 @@ void test_parsing_metadata()
         "[Black \"Spassky, Boris V.\"]\n"
         "[Result \"1/2-1/2\"]\n");
 
-    assert(strcmp(pgn_table_get(metadata, "Event"), "F/S Return Match") == 0);
-    assert(strcmp(pgn_table_get(metadata, "Site"), "Belgrade, Serbia JUG") == 0);
-    assert(strcmp(pgn_table_get(metadata, "Date"), "1992.11.04") == 0);
-    assert(strcmp(pgn_table_get(metadata, "Round"), "29") == 0);
-    assert(strcmp(pgn_table_get(metadata, "White"), "Fischer, Robert J.") == 0);
-    assert(strcmp(pgn_table_get(metadata, "Black"), "Spassky, Boris V.") == 0);
-    assert(strcmp(pgn_table_get(metadata, "Result"), "1/2-1/2") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Event"), "F/S Return Match") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Site"), "Belgrade, Serbia JUG") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Date"), "1992.11.04") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Round"), "29") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "White"), "Fischer, Robert J.") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Black"), "Spassky, Boris V.") == 0);
+    assert(strcmp(pgn_metadata_get(metadata, "Result"), "1/2-1/2") == 0);
 
-    pgn_score_t score = pgn_score_from_string(pgn_table_get(metadata, "Result"));
+    pgn_score_t score = pgn_score_from_string(pgn_metadata_get(metadata, "Result"));
     assert(score.white == 0 && score.black == 0);
 
-    pgn_table_cleanup(metadata);
+    pgn_metadata_cleanup(metadata);
     __print_success();
 }
 

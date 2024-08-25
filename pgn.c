@@ -13,7 +13,7 @@ pgn_t *pgn_init(void)
 void pgn_cleanup(pgn_t *pgn)
 {
     if (pgn->metadata)
-        pgn_table_cleanup(pgn->metadata);
+        pgn_metadata_cleanup(pgn->metadata);
 
     if (pgn->moves)
         pgn_moves_cleanup(pgn->moves);
@@ -21,9 +21,9 @@ void pgn_cleanup(pgn_t *pgn)
     free(pgn);
 }
 
-pgn_table_t *pgn_parse_metadata(char *str)
+pgn_metadata_t *pgn_parse_metadata(char *str)
 {
-    return pgn_table_from_string(str);
+    return pgn_metadata_from_string(str);
 }
 
 pgn_moves_t *pgn_parse_moves(char *str)
@@ -40,7 +40,7 @@ size_t pgn_parse(pgn_t *pgn, char *str)
 {
     size_t cursor = 0;
 
-    pgn->metadata = __pgn_table_from_string(str + cursor, &cursor);
+    pgn->metadata = __pgn_metadata_from_string(str + cursor, &cursor);
     while (isspace(str[cursor])) cursor++;
 
     pgn->moves = __pgn_moves_from_string(str + cursor, &cursor);
