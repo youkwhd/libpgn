@@ -16,16 +16,16 @@
 #define B "\033[34;4m"
 #define C "\033[0m"
 
-#define suite6_pass(expr)                                                           \
-    do {                                                                            \
+#define suite6_pass(expr)                                                         \
+    do {                                                                          \
         printf("%s[PASS] %s%s:%d%s :: %s\n", G, B, __FILE__, __LINE__, C, #expr); \
-    } while (0)                                                                     \
+    } while (0)                                                                   \
 
-#define suite6_fail(expr)                                                           \
-    do {                                                                            \
+#define suite6_fail(expr)                                                         \
+    do {                                                                          \
         printf("%s[FAIL] %s%s:%d%s :: %s\n", R, B, __FILE__, __LINE__, C, #expr); \
-        abort();                                                                    \
-    } while (0)                                                                     \
+        abort();                                                                  \
+    } while (0)                                                                   \
 
 #define suite6_assert(expr)              \
     if ((bool)(expr)) suite6_pass(expr); \
