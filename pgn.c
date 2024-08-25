@@ -21,6 +21,21 @@ void pgn_cleanup(pgn_t *pgn)
     free(pgn);
 }
 
+pgn_table_t *pgn_parse_metadata(char *str)
+{
+    return pgn_table_from_string(str);
+}
+
+pgn_moves_t *pgn_parse_moves(char *str)
+{
+    return pgn_moves_from_string(str);
+}
+
+pgn_score_t pgn_parse_score(char *str)
+{
+    return pgn_score_from_string(str);
+}
+
 size_t pgn_parse(pgn_t *pgn, char *str)
 {
     size_t cursor = 0;

@@ -2,6 +2,7 @@
 #define __LIBPGN_MOVES_H
 
 #include "piece.h"
+#include "export.h"
 #include "coordinate.h"
 #include "annotation.h"
 #include "check.h"
@@ -55,8 +56,8 @@ pgn_move_t pgn_move_from_string(char *str);
 pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
 pgn_moves_t *pgn_moves_from_string(char *str);
 
-pgn_moves_t *pgn_moves_init(void);
-void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves);
-void pgn_moves_cleanup(pgn_moves_t *moves);
+PGN_EXPORT pgn_moves_t *pgn_moves_init(void);
+PGN_EXPORT void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves);
+PGN_EXPORT void pgn_moves_cleanup(pgn_moves_t *moves);
 
 #endif // __LIBPGN_MOVES_H

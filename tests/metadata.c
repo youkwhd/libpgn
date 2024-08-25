@@ -15,7 +15,7 @@ void test_parsing_metadata()
     printf("calling %s()\n", __func__);
     __nth = 1;
 
-    pgn_table_t *metadata = pgn_metadata_from_string(
+    pgn_table_t *metadata = pgn_parse_metadata(
         "[Event \"F/S Return Match\"]\n"
         "[Site \"Belgrade, Serbia JUG\"]\n"
         "[Date \"1992.11.04\"]\n"
