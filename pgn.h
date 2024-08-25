@@ -30,6 +30,7 @@ PGN_EXPORT pgn_t *pgn_init(void);
 PGN_EXPORT void pgn_cleanup(pgn_t *pgn);
 
 PGN_EXPORT pgn_metadata_t *pgn_parse_metadata(char *str);
+PGN_EXPORT pgn_move_t pgn_parse_move(char *str);
 PGN_EXPORT pgn_moves_t *pgn_parse_moves(char *str);
 PGN_EXPORT pgn_score_t pgn_parse_score(char *str);
 

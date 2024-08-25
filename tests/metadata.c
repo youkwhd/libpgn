@@ -32,7 +32,7 @@ void test_parsing_metadata()
     assert(strcmp(pgn_metadata_get(metadata, "Black"), "Spassky, Boris V.") == 0);
     assert(strcmp(pgn_metadata_get(metadata, "Result"), "1/2-1/2") == 0);
 
-    pgn_score_t score = pgn_score_from_string(pgn_metadata_get(metadata, "Result"));
+    pgn_score_t score = pgn_parse_score(pgn_metadata_get(metadata, "Result"));
     assert(score.white == 0 && score.black == 0);
 
     pgn_metadata_cleanup(metadata);

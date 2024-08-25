@@ -26,6 +26,11 @@ pgn_metadata_t *pgn_parse_metadata(char *str)
     return pgn_metadata_from_string(str);
 }
 
+pgn_move_t pgn_parse_move(char *str)
+{
+    return pgn_move_from_string(str);
+}
+
 pgn_moves_t *pgn_parse_moves(char *str)
 {
     return pgn_moves_from_string(str);
