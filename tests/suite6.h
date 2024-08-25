@@ -6,6 +6,9 @@
  * Colorful test assertions
  */
 
+#ifndef SUITE6_H
+#define SUITE6_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -30,3 +33,5 @@
 #define suite6_assert(expr)              \
     if ((bool)(expr)) suite6_pass(expr); \
     else suite6_fail(expr);              \
+
+#endif // SUITE6_H
