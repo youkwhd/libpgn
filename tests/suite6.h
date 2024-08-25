@@ -1,7 +1,5 @@
 /* suite6.h - libpgn test suite
- *
- * youkwhd <lolywk@tutanota.com>
- * GPLv2 Licensed, See COPYING.
+ * Copyright (c) 2024, youkwhd <lolywk@tutanota.com>
  *
  * Colorful test assertions
  */
