@@ -18,4 +18,4 @@ Tests
 
 To run tests, simply invoke:
 
-    make test
+    make test -s
