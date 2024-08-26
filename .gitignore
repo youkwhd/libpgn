@@ -12,3 +12,4 @@ examples/*
 !examples/*.pgn
 
 bin/pgn
+bin/pgn.exe
