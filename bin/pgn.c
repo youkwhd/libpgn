@@ -37,12 +37,10 @@ int main(int argc, char **argv)
         char *filename = argv[2];
         char *pgn_file_contents = read_file(filename);
 
-        /* printf("%s", pgn_file_contents); */
-
         pgn_t *pgn = pgn_init();
         pgn_parse(pgn, pgn_file_contents);
 
-        fmt_print_formatted(pgn);
+        fmt_print(pgn);
 
         pgn_cleanup(pgn);
         free(pgn_file_contents);

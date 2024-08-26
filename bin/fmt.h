@@ -3,6 +3,6 @@
 
 #include <pgn.h>
 
-void fmt_print_formatted(pgn_t *pgn);
+void fmt_print(pgn_t *pgn);
 
 #endif // __PGN_FMT_H
