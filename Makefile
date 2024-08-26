@@ -28,6 +28,9 @@ all: $(OBJ)
 
 test: all $(EXE)
 
+bin:
+	$(MAKE) -C bin/
+
 # TODO: rename local string.h file to resolve colliding name.
 $(EXE):
 	$(CC) -Wno-error=implicit-function-declaration $@.c -lpgn -Wl,-rpath=. -L. -I. -o $@
@@ -54,4 +57,4 @@ uninstall:
 clean:
 	$(RM) $(OBJ) $(LIB)$(EXT) $(LIB).a
 
-.PHONY: clean all $(LIB) install uninstall test
+.PHONY: clean all $(LIB) install uninstall test bin
