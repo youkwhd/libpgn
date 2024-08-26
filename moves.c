@@ -102,6 +102,9 @@ check:
         cursor++;
     }
 
+    /* TODO: investigate why nth best move (possibly another form of annotation)
+     * can have more than 1 best move.
+     */
     while (str[cursor] == '$') {
         assert(isdigit(str[++cursor]));
 
