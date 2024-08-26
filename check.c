@@ -13,6 +13,11 @@ pgn_check_t __pgn_check_from_string(char *str, size_t *consumed)
         cursor++;
     }
 
+    if (check == PGN_CHECK_NONE && str[cursor] == '#') {
+        check = PGN_CHECK_MATE;
+        cursor++;
+    }
+
     *consumed += cursor;
     return check;
 }

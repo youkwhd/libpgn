@@ -19,11 +19,6 @@ pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed)
         annotation = PGN_ANNOTATION_MISTAKE;
     }
 
-    if (str[0] == '#') {
-        (*consumed)++;
-        annotation = PGN_ANNOTATION_CHECKMATE;
-    }
-
     if (str[1] == '\0')
         return annotation;
 

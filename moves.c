@@ -4,128 +4,132 @@
 #include <string.h>
 #include <stdlib.h>
 #include "moves.h"
-
-int __pgn_comment_length(char *str)
-{
-    int cursor = 0;
-
-    assert(str[cursor++] == '{');
-    while (str[cursor++] != '}');
-
-    return cursor;
-}
-
-int __pgn_whitespace_length(char *str)
-{
-    int cursor = 0;
-
-    while (isspace(str[cursor])) cursor++;
-
-    return cursor;
-}
+#include "annotation.h"
+#include "check.h"
+#include "cursor.h"
+#include "piece.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
     pgn_move_t move = {0};
-    int cursor = 0;
+    size_t cursor = 0;
 
-    int __open_paren = 0;
-    int __close_paren = 0;
-
-    while (str[cursor] != '\0' && !isspace(str[cursor])) {
-        if (str[cursor] == '(') __open_paren++;
-        if (str[cursor] == ')' && ++__close_paren > __open_paren) break;
-
-        cursor++;
-    }
-
-    /* trying to parse the nth best move
-     *
-     * TODO: check for '\0'
-     */
-    int __cursor = cursor;
-    bool parsed_nth_best  = false, parsed_en_passant = false;
-
-    if (isspace(str[__cursor])) {
-        __cursor += __pgn_whitespace_length(str + __cursor);
-
-        if (str[__cursor] == '$') {
-            assert(isdigit(str[++__cursor]));
-            /* TODO: what about 10th best move and beyond
-             *
-             * (this will only take the first digit)
-             */
-            move.nth_best = str[__cursor] - '0';
-
-            /* TODO: don't discard the rest.
-             */
-            while (isdigit(str[__cursor])) __cursor++;
-            parsed_nth_best = true;
-        }
-
-        if (str[__cursor] == 'e' && str[__cursor + 1] == '.') {
-            assert(str[__cursor++] == 'e');
-            assert(str[__cursor++] == '.');
-            assert(str[__cursor++] == 'p');
-            assert(str[__cursor++] == '.');
-            parsed_en_passant = true;
-            move.en_passant = true;
-        }
-    }
-
-    int notation_len = cursor;
-    if (parsed_nth_best || parsed_en_passant)
-        notation_len += (__cursor - cursor);
-
-    *consumed += notation_len;
-    cursor--;
-
-    strncpy(move.notation, str, notation_len);
-
-    while (pgn_annotation_from_string(str + cursor) != PGN_ANNOTATION_NONE) cursor--;
-    move.annotation = pgn_annotation_from_string(str + (cursor + 1));
-
-    while (str[cursor] == '+') cursor--;
-    move.check = pgn_check_from_string(str + (cursor + 1));
-
-    for (move.castles = PGN_CASTLING_NONE; cursor >= 0 && str[cursor] == 'O'; cursor -= 2) {
-        if (cursor - 1 >= 0)
-            assert(str[cursor - 1] == '-');
-
-        move.castles++;
-    }
-    if (cursor <= 0) return move;
-
-    move.promoted_to = pgn_piece_from_char(str[cursor]);
-    if (move.promoted_to == PGN_PIECE_UNKNOWN) {
-        if (str[cursor] == ')') {
-            move.promoted_to = pgn_piece_from_char(str[--cursor]);
-            assert(str[--cursor] == '(');
-            cursor--;
-        }
-    } else {
+    move.piece = pgn_piece_from_char(str[cursor++]);
+    if (move.piece == PGN_PIECE_UNKNOWN) {
         cursor--;
-        if (str[cursor] == '=' || str[cursor] == '/')
-            cursor--;
-    }
 
-    /* TODO:
-     * Can be refactored using a stack
-     */
-    if (isdigit(str[cursor])) move.dest.y = str[cursor--] - '0';
-    if (islower(str[cursor]) && str[cursor] != 'x') move.dest.x = str[cursor--];
+        move.castles = PGN_CASTLING_NONE;
+        if (str[cursor] == 'O') {
+            assert(str[++cursor] == '-');
+            assert(str[++cursor] == 'O');
+            move.castles = PGN_CASTLING_KINGSIDE;
+            cursor++;
+
+            if (str[cursor] == '-') {
+                assert(str[++cursor] == 'O');
+                move.castles = PGN_CASTLING_QUEENSIDE;
+                cursor++;
+            }
+
+            goto check;
+        }
+
+        move.piece = PGN_PIECE_PAWN;
+    }
 
     if (str[cursor] == 'x' || str[cursor] == ':') {
         move.captures = true;
-        cursor--;
+        cursor++;
+
+        assert(islower(str[cursor]));
+        move.dest.x = str[cursor++];
+        assert(isdigit(str[cursor]));
+        move.dest.y = str[cursor++] - '0';
+    } else {
+        if (islower(str[cursor])) move.from.x = str[cursor++];
+        if (isdigit(str[cursor])) move.from.y = str[cursor++] - '0';
+
+        if (str[cursor] == 'x' || str[cursor] == ':') {
+            move.captures = true;
+            cursor++;
+
+            assert(islower(str[cursor]));
+            move.dest.x = str[cursor++];
+            assert(isdigit(str[cursor]));
+            move.dest.y = str[cursor++] - '0';
+        } else if (islower(str[cursor])) {
+            assert(islower(str[cursor]));
+            move.dest.x = str[cursor++];
+            assert(isdigit(str[cursor]));
+            move.dest.y = str[cursor++] - '0';
+        } else {
+            move.dest = move.from;
+            move.from = (pgn_coordinate_t){0};
+        }
     }
 
-    if (isdigit(str[cursor])) move.from.y = str[cursor--] - '0';
-    if (islower(str[cursor])) move.from.x = str[cursor--];
+    move.promoted_to = pgn_piece_from_char(str[cursor]);
+    if (move.promoted_to == PGN_PIECE_UNKNOWN) {
+        switch (str[cursor]) {
+        case '(':
+            move.promoted_to = pgn_piece_from_char(str[++cursor]);
+            assert(move.promoted_to != PGN_PIECE_UNKNOWN);
+            assert(str[++cursor] == ')');
+            cursor++;
+            break;
+        case '=':
+        case '/':
+            move.promoted_to = pgn_piece_from_char(str[++cursor]);
+            assert(move.promoted_to != PGN_PIECE_UNKNOWN);
+            cursor++;
+            break;
+        }
 
-    move.piece = PGN_PIECE_PAWN;
-    if (cursor >= 0) move.piece = pgn_piece_from_char(str[cursor]);
+    }
 
+check:
+    move.check = __pgn_check_from_string(str + cursor, &cursor);
+    move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);
+
+    pgn_cursor_skip_whitespace(str, &cursor);
+
+    /* could be en passant */
+    if (str[cursor] == 'e' && str[cursor + 1] == '.') {
+        assert(str[cursor] == 'e');
+        assert(str[++cursor] == '.');
+        assert(str[++cursor] == 'p');
+        assert(str[++cursor] == '.');
+        cursor++;
+    }
+
+    while (str[cursor] == '$') {
+        assert(isdigit(str[++cursor]));
+
+        /* TODO: what about 10th best move and beyond
+         *
+         * (this will only take the first digit)
+         */
+        move.nth_best = str[cursor] - '0';
+
+        /* TODO: don't discard the rest.
+         */
+        while (isdigit(str[cursor])) cursor++;
+        pgn_cursor_skip_whitespace(str, &cursor);
+    }
+
+    size_t notation_len = cursor;
+    if (isspace(str[notation_len - 1])) {
+        notation_len--;
+
+        while (isspace(str[notation_len])) {
+            notation_len--;
+        }
+
+        notation_len++;
+    }
+    strncpy(move.notation, str, notation_len);
+
+    *consumed += cursor;
     return move;
 }
 
@@ -160,7 +164,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             dots_count++;
         }
     }
-    cursor += __pgn_whitespace_length(str + cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
     if (dots_count == 0 || dots_count == 1) {
@@ -174,18 +178,18 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    cursor += __pgn_whitespace_length(str + cursor);
-    while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
-    cursor += __pgn_whitespace_length(str + cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
+    pgn_cursor_skip_comment(str, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     if (str[cursor] == '(') {
         cursor++;
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
         move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
     }
 
     /* TODO: maybe isolate into a function
@@ -214,22 +218,22 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         for (int i = 0; i < 3; i++)
             assert(str[cursor++] == '.');
     }
-    cursor += __pgn_whitespace_length(str + cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     move.black = __pgn_move_from_string(str + cursor, &cursor);
 
-    cursor += __pgn_whitespace_length(str + cursor);
-    while (str[cursor] == '{') cursor += __pgn_comment_length(str + cursor);
-    cursor += __pgn_whitespace_length(str + cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
+    pgn_cursor_skip_comment(str, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     if (str[cursor] == '(') {
         cursor++;
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
         move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
-        cursor += __pgn_whitespace_length(str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
     }
 
     pgn_moves_push(moves, move);

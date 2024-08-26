@@ -1,4 +1,5 @@
 #include "metadata.h"
+#include "cursor.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -34,10 +35,9 @@ pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed)
         pgn_string_reset(value_buffer);
 
         assert(str[++cursor] == ']');
-        /* TODO: maybe expect whitespaces than just newline
-         */
-        assert(str[++cursor] == '\n');
         cursor++;
+
+        pgn_cursor_skip_newline(str, &cursor);
     }
 
     *consumed += cursor;

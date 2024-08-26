@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 typedef enum pgn_check_t {
+    PGN_CHECK_MATE = -1,
     PGN_CHECK_NONE = 0,
     PGN_CHECK_SINGLE,
     PGN_CHECK_DOUBLE,
