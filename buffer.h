@@ -1,5 +1,5 @@
-#ifndef __LIBpgn_buffer_H
-#define __LIBpgn_buffer_H
+#ifndef __LIBPGN_BUFFER_H
+#define __LIBPGN_BUFFER_H
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -22,4 +22,4 @@ void pgn_buffer_append_null_terminator(pgn_buffer_t *buf);
 void pgn_buffer_concat(pgn_buffer_t *buf, char *str);
 void pgn_buffer_cleanup(pgn_buffer_t *buf);
 
-#endif // __LIBpgn_buffer_H
+#endif // __LIBPGN_BUFFER_H
