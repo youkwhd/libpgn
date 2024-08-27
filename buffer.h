@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define pgn_buffer_INITIAL_SIZE 16
-#define pgn_buffer_GROW_SIZE 32
+#define PGN_BUFFER_INITIAL_SIZE 16
+#define PGN_BUFFER_GROW_SIZE 32
 
 typedef struct pgn_buffer_t {
     char *buf;

@@ -5,8 +5,8 @@
 pgn_buffer_t *pgn_buffer_init(void)
 {
     pgn_buffer_t *buf = malloc(sizeof *buf);
-    buf->buf = malloc((sizeof *buf->buf) * pgn_buffer_INITIAL_SIZE);
-    buf->size = pgn_buffer_INITIAL_SIZE;
+    buf->buf = malloc((sizeof *buf->buf) * PGN_BUFFER_INITIAL_SIZE);
+    buf->size = PGN_BUFFER_INITIAL_SIZE;
 
     pgn_buffer_reset(buf);
     return buf;
@@ -19,7 +19,7 @@ bool pgn_buffer_equal(pgn_buffer_t *buf, char *str)
 
 void pgn_buffer_grow(pgn_buffer_t *buf)
 {
-    buf->size += pgn_buffer_GROW_SIZE;
+    buf->size += PGN_BUFFER_GROW_SIZE;
     buf->buf = realloc(buf->buf, sizeof(*buf->buf) * buf->size);
 }
 
