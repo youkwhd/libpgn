@@ -102,25 +102,18 @@ check:
         cursor++;
     }
 
-    /* TODO: investigate why nth best move (possibly another form of annotation)
-     * can have more than 1 best move.
+    /* Check for NAG annotation.
      */
-    while (str[cursor] == '$') {
-        assert(isdigit(str[++cursor]));
-
-        /* TODO: what about 10th best move and beyond
-         *
-         * (this will only take the first digit)
-         */
-        move.nth_best = str[cursor] - '0';
-
-        /* TODO: don't discard the rest.
-         */
-        while (isdigit(str[cursor])) cursor++;
-        pgn_cursor_skip_whitespace(str, &cursor);
-    }
+    if (move.annotation == PGN_ANNOTATION_NULL)
+        move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);
 
     size_t notation_len = cursor;
+
+    /* We slipped too much to the right because 
+     * the possibility of having multiple NAG annotation.
+     *
+     * TODO: check for comments
+     */
     if (isspace(str[notation_len - 1])) {
         notation_len--;
 

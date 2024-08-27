@@ -23,7 +23,6 @@
 
 typedef struct pgn_move_t {
     pgn_piece_t piece, promoted_to;
-    unsigned int nth_best;
     char notation[__PGN_MOVE_NOTATION_SIZE];
     int castles;
     bool captures;
