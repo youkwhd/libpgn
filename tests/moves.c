@@ -3,7 +3,7 @@
 #include <pgn.h>
 #include <string.h>
 
-void test_parsing_move()
+void test_parsing_single_move()
 {
     pgn_move_t move = {0};
 
@@ -220,7 +220,7 @@ void test_parsing_bunch_of_moves()
     pgn_moves_cleanup(moves);
 }
 
-void test_parsing_real_games()
+void test_parsing_moves_with_score()
 {
     pgn_moves_t *moves = NULL;
 
@@ -330,9 +330,9 @@ void test_parsing_en_passant()
 
 int main(void)
 {
-    test_parsing_move();
+    test_parsing_single_move();
     test_parsing_bunch_of_moves();
-    test_parsing_real_games();
+    test_parsing_moves_with_score();
     test_parsing_en_passant();
     return 0;
 }
