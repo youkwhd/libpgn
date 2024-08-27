@@ -1,6 +1,5 @@
 #include "pgn.h"
-
-#include <ctype.h>
+#include "utils/cursor.h"
 
 pgn_t *pgn_init(void)
 {
@@ -46,7 +45,7 @@ size_t pgn_parse(pgn_t *pgn, char *str)
     size_t cursor = 0;
 
     pgn->metadata = __pgn_metadata_from_string(str + cursor, &cursor);
-    while (isspace(str[cursor])) cursor++;
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     pgn->moves = __pgn_moves_from_string(str + cursor, &cursor);
     pgn->score = __pgn_score_from_string(str + cursor, &cursor);
