@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "export.h"
 #include "metadata.h"
 #include "piece.h"
 #include "annotation.h"
@@ -12,6 +11,8 @@
 #include "score.h"
 #include "check.h"
 #include "moves.h"
+
+#include "utils/export.h"
 
 #define PGN_UNUSED(x) ((void)x)
 #define PGN_NOT_IMPLEMENTED()                                                                                      \

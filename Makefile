@@ -10,7 +10,7 @@ LDFLAGS       =
 
 INST          = /usr
 
-SRC          := $(wildcard *.c)
+SRC          := $(wildcard *.c utils/*.c)
 DEPS         := $(SRC:.c=.h)
 OBJ          := $(SRC:.c=.o)
 

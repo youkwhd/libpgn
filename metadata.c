@@ -1,5 +1,5 @@
 #include "metadata.h"
-#include "cursor.h"
+#include "utils/cursor.h"
 
 #include <stdio.h>
 #include <assert.h>

@@ -2,8 +2,8 @@
 #define __LIBPGN_METADATA_H
 
 #include "piece.h"
-#include "export.h"
-#include "buffer.h"
+#include "utils/export.h"
+#include "utils/buffer.h"
 
 #include <stdlib.h>
 

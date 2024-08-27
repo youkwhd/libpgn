@@ -2,10 +2,11 @@
 #define __LIBPGN_MOVES_H
 
 #include "piece.h"
-#include "export.h"
 #include "coordinate.h"
 #include "annotation.h"
 #include "check.h"
+
+#include "utils/export.h"
 
 #include <stdlib.h>
 #include <stdbool.h>

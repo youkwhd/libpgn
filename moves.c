@@ -3,11 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "moves.h"
 #include "annotation.h"
 #include "check.h"
-#include "cursor.h"
 #include "piece.h"
+#include "utils/cursor.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
