@@ -40,6 +40,8 @@ $(EXE):
 install: all
 	mkdir -p $(INST)/include/pgn
 	cp *.h $(INST)/include/pgn
+	mkdir -p $(INST)/include/pgn/utils
+	cp utils/*.h $(INST)/include/pgn/utils
 	sed -i $(INST)/include/pgn/pgn.h -e "s/#include \"/#include \"pgn\//g"
 	mv $(INST)/include/pgn/pgn.h $(INST)/include
 	cp $(LIB)$(EXT) $(INST)/lib
