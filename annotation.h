@@ -3,8 +3,12 @@
 
 #include <stdlib.h>
 
+/* See:
+ *   http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c10
+ *   https://en.wikipedia.org/wiki/Numeric_Annotation_Glyphs#Standard_NAGs
+ */
 typedef enum pgn_annotation_t {
-    PGN_ANNOTATION_NULL = 0,        // https://en.wikipedia.org/wiki/Numeric_Annotation_Glyphs#Standard_NAGs
+    PGN_ANNOTATION_NULL = 0,        //
     PGN_ANNOTATION_GOOD_MOVE,       // !
     PGN_ANNOTATION_MISTAKE,         // ?
     PGN_ANNOTATION_BRILLIANT_MOVE,  // !!
