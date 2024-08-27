@@ -3,7 +3,7 @@
 
 #include "piece.h"
 #include "export.h"
-#include "string.h"
+#include "buffer.h"
 
 #include <stdlib.h>
 
@@ -11,8 +11,8 @@
 #define PGN_METADATA_GROW_SIZE 8
 
 typedef struct __pgn_metadata_item_t {
-    pgn_string_t *key;
-    pgn_string_t *value;
+    pgn_buffer_t *key;
+    pgn_buffer_t *value;
 } __pgn_metadata_item_t;
 
 typedef struct pgn_metadata_t {

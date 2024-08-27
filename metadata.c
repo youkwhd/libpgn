@@ -14,25 +14,25 @@ pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed)
     if (str[cursor] != '[') return NULL;
 
     pgn_metadata_t *metadata = pgn_metadata_init();
-    pgn_string_t *key_buffer = pgn_string_init();
-    pgn_string_t *value_buffer = pgn_string_init();
+    pgn_buffer_t *key_buffer = pgn_buffer_init();
+    pgn_buffer_t *value_buffer = pgn_buffer_init();
 
     for (;;) {
         if (str[cursor] != '[') break;
         cursor++;
 
-        while (str[cursor] != ' ') pgn_string_append(key_buffer, str[cursor++]);
-        pgn_string_append_null_terminator(key_buffer);
+        while (str[cursor] != ' ') pgn_buffer_append(key_buffer, str[cursor++]);
+        pgn_buffer_append_null_terminator(key_buffer);
 
         assert(str[++cursor] == '"');
         cursor++;
 
-        while (str[cursor] != '"') pgn_string_append(value_buffer, str[cursor++]);
-        pgn_string_append_null_terminator(value_buffer);
+        while (str[cursor] != '"') pgn_buffer_append(value_buffer, str[cursor++]);
+        pgn_buffer_append_null_terminator(value_buffer);
 
         pgn_metadata_insert(metadata, key_buffer->buf, value_buffer->buf);
-        pgn_string_reset(key_buffer);
-        pgn_string_reset(value_buffer);
+        pgn_buffer_reset(key_buffer);
+        pgn_buffer_reset(value_buffer);
 
         assert(str[++cursor] == ']');
         cursor++;
@@ -41,8 +41,8 @@ pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed)
     }
 
     *consumed += cursor;
-    pgn_string_cleanup(key_buffer);
-    pgn_string_cleanup(value_buffer);
+    pgn_buffer_cleanup(key_buffer);
+    pgn_buffer_cleanup(value_buffer);
     return metadata;
 }
 
@@ -54,14 +54,14 @@ pgn_metadata_t *pgn_metadata_from_string(char *str)
 
 void __pgn_metadata_item_init(__pgn_metadata_item_t *item)
 {
-    item->key = pgn_string_init();
-    item->value = pgn_string_init();
+    item->key = pgn_buffer_init();
+    item->value = pgn_buffer_init();
 }
 
 void __pgn_metadata_item_cleanup(__pgn_metadata_item_t *item)
 {
-    pgn_string_cleanup(item->key);
-    pgn_string_cleanup(item->value);
+    pgn_buffer_cleanup(item->key);
+    pgn_buffer_cleanup(item->value);
 }
 
 pgn_metadata_t *pgn_metadata_init(void)
@@ -90,8 +90,8 @@ void pgn_metadata_insert(pgn_metadata_t *metadata, char *key, char *value)
     __pgn_metadata_item_t item = {0};
     __pgn_metadata_item_init(&item);
 
-    pgn_string_concat(item.key, key);
-    pgn_string_concat(item.value, value);
+    pgn_buffer_concat(item.key, key);
+    pgn_buffer_concat(item.value, value);
 
     metadata->items[metadata->length++] = item;
 }
@@ -99,7 +99,7 @@ void pgn_metadata_insert(pgn_metadata_t *metadata, char *key, char *value)
 char *pgn_metadata_get(pgn_metadata_t *metadata, char *key)
 {
     for (size_t i = 0; i < metadata->length; i++) {
-        if (pgn_string_equal(metadata->items[i].key, key)) {
+        if (pgn_buffer_equal(metadata->items[i].key, key)) {
             return metadata->items[i].value->buf;
         }
     }
@@ -110,7 +110,7 @@ char *pgn_metadata_get(pgn_metadata_t *metadata, char *key)
 void pgn_metadata_delete(pgn_metadata_t *metadata, char *key)
 {
     for (size_t i = 0; i < metadata->length; i++) {
-        if (!pgn_string_equal(metadata->items[i].key, key)) {
+        if (!pgn_buffer_equal(metadata->items[i].key, key)) {
             continue;
         }
 
