@@ -16,7 +16,8 @@ void pgn_cursor_skip_comment(char *str, size_t *cursor)
 
     (*cursor)++;
 
-    for (unsigned int left_brace_count = 1, right_brace_count = 0; right_brace_count != left_brace_count; (*cursor)++) {
+    unsigned int left_brace_count = 1, right_brace_count = 0; 
+    while (right_brace_count != left_brace_count) {
         /* TODO: how to error idk???
          * maybe return corrupted err file idk wtf
          */
@@ -25,9 +26,8 @@ void pgn_cursor_skip_comment(char *str, size_t *cursor)
 
         left_brace_count += str[*cursor] == '{';
         right_brace_count += str[*cursor] == '}';
+        (*cursor)++;
     }
-
-    (*cursor)++;
 }
 
 void pgn_cursor_skip_newline(char *str, size_t *cursor)

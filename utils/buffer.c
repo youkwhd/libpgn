@@ -56,6 +56,13 @@ void pgn_buffer_concat(pgn_buffer_t *buf, char *str)
     pgn_buffer_append_null_terminator(buf);
 }
 
+char *pgn_buffer_detach(pgn_buffer_t *buf)
+{
+    char *value = buf->buf;
+    free(buf);
+    return value;
+}
+
 void pgn_buffer_cleanup(pgn_buffer_t *buf)
 {
     free(buf->buf);

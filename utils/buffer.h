@@ -20,6 +20,12 @@ bool pgn_buffer_equal(pgn_buffer_t *buf, char *str);
 void pgn_buffer_append(pgn_buffer_t *buf, char ch);
 void pgn_buffer_append_null_terminator(pgn_buffer_t *buf);
 void pgn_buffer_concat(pgn_buffer_t *buf, char *str);
+
+/* Same as cleanup, but free() is called only
+ * to the struct buf itself, the value is returned and
+ * the user who calls this should free the detached buf themselves.
+ */
+char *pgn_buffer_detach(pgn_buffer_t *buf);
 void pgn_buffer_cleanup(pgn_buffer_t *buf);
 
 #endif // __LIBPGN_BUFFER_H
