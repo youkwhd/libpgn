@@ -19,8 +19,3 @@ Tests
 To run tests, simply invoke:
 
     make test -s
-
-Limitations
------------
-
-    - The parser does not parse comments (for the moment).
