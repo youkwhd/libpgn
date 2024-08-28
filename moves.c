@@ -275,7 +275,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
 
-        printf("1: [%zu] %s\n\n 2: [] %s\n\n", cursor, str, cursor + str);
         for (int i = 0; i < 3; i++)
             assert(str[cursor++] == '.');
     }
