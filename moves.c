@@ -7,6 +7,7 @@
 #include "moves.h"
 #include "annotation.h"
 #include "check.h"
+#include "comments.h"
 #include "piece.h"
 #include "utils/cursor.h"
 
@@ -177,12 +178,44 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
     if (dots_count == 0 || dots_count == 1) {
         move.white = __pgn_move_from_string(str + cursor, &cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
+
+        if (str[cursor] == '{') {
+            if (!move.white.comments)
+                move.white.comments = pgn_comments_init();
+
+            while (str[cursor] == '{') {
+                pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+                comment.position = PGN_COMMENT_POSITION_AFTER_MOVE;
+
+                pgn_comments_push(move.white.comments, comment);
+                pgn_cursor_skip_whitespace(str, &cursor);
+            }
+
+            assert(str[cursor] != '{');
+            assert(str[cursor] != '}');
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
     } else if (dots_count == 3) {
         move.black = __pgn_move_from_string(str + cursor, &cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
 
-        pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_cursor_skip_comment(str, &cursor);
-        pgn_cursor_skip_whitespace(str, &cursor);
+        if (str[cursor] == '{') {
+            if (!move.black.comments)
+                move.black.comments = pgn_comments_init();
+
+            while (str[cursor] == '{') {
+                pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+                comment.position = PGN_COMMENT_POSITION_AFTER_MOVE;
+
+                pgn_comments_push(move.black.comments, comment);
+                pgn_cursor_skip_whitespace(str, &cursor);
+            }
+
+            assert(str[cursor] != '{');
+            assert(str[cursor] != '}');
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
 
         pgn_moves_push(moves, move);
         __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
@@ -251,9 +284,22 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     move.black = __pgn_move_from_string(str + cursor, &cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
 
-    pgn_cursor_skip_whitespace(str, &cursor);
-    pgn_cursor_skip_comment(str, &cursor);
-    pgn_cursor_skip_whitespace(str, &cursor);
+    if (str[cursor] == '{') {
+        if (!move.black.comments)
+            move.black.comments = pgn_comments_init();
+
+        while (str[cursor] == '{') {
+            pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+            comment.position = PGN_COMMENT_POSITION_AFTER_MOVE;
+
+            pgn_comments_push(move.black.comments, comment);
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
+
+        assert(str[cursor] != '{');
+        assert(str[cursor] != '}');
+        pgn_cursor_skip_whitespace(str, &cursor);
+    }
 
     while (str[cursor] == '(') {
         cursor++;
@@ -339,6 +385,14 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves)
 void pgn_moves_cleanup(pgn_moves_t *moves)
 {
     for (size_t i = 0; i < moves->length; i++) {
+        if (moves->values[i].white.comments) {
+            pgn_comments_cleanup(moves->values[i].white.comments);
+        }
+
+        if (moves->values[i].black.comments) {
+            pgn_comments_cleanup(moves->values[i].black.comments);
+        }
+
         if (moves->values[i].white.alternatives) {
             pgn_alternative_moves_cleanup(moves->values[i].white.alternatives);
         }

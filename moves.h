@@ -4,6 +4,7 @@
 #include "piece.h"
 #include "coordinate.h"
 #include "annotation.h"
+#include "comments.h"
 #include "check.h"
 
 #include "utils/export.h"
@@ -43,6 +44,7 @@ typedef struct pgn_move_t {
     pgn_check_t check;
     pgn_coordinate_t from, dest;
     pgn_annotation_t annotation;
+    pgn_comments_t *comments;
     pgn_alternative_moves_t *alternatives;
 } pgn_move_t;
 

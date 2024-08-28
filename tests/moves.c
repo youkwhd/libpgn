@@ -135,6 +135,9 @@ void test_parsing_bunch_of_moves()
     pgn_moves_cleanup(moves);
 
     moves = pgn_parse_moves("9.e4 { This is a comment :O } e5 10. Nc3 Nc6");
+    suite6_assert(moves->values[0].white.comments->length == 1);
+    suite6_assert(!strcmp(moves->values[0].white.comments->values[0].value->buf, " This is a comment :O "));
+    suite6_assert(moves->values[0].white.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_MOVE);
     suite6_assert(moves->values[0].white.piece == PGN_PIECE_PAWN);
     suite6_assert(moves->values[0].white.dest.x == 'e');
     suite6_assert(moves->values[0].white.dest.y == 4);
