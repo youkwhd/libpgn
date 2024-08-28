@@ -5,7 +5,7 @@
 
 #include "fmt.h"
 
-bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index, bool newline);
+bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index);
 
 void fmt_print_tab(int depth, int width)
 {
@@ -33,17 +33,17 @@ bool fmt_print_alternative_moves(pgn_alternative_moves_t *alt, int depth, size_t
     bool printed = false;
 
     for (size_t i = 0; i < alt->length; i++) {
-        fmt_print_tab(depth, 2);
-
         printf("(");
-        fmt_print_moves(alt->values[i], 0, last_index, false);
-        printf(")\n");
+        fmt_print_moves(alt->values[i], depth, last_index);
+        printf(") ");
     }
 
     return printed;
 }
 
-bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index, bool newline)
+/* TODO: do actual formatting, we're just re-printing without comments
+ */
+bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index)
 {
     bool printed = false;
 
@@ -51,13 +51,33 @@ bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index, bool newl
         pgn_move_t white = moves->values[i].white;
         pgn_move_t black = moves->values[i].black;
 
-        fmt_print_tab(depth, 2);
-        printf("%zu. %s %s", i + last_index, white.notation, black.notation);
-        if (newline) putchar('\n');
+        if (white.notation[0]) {
+            printf("%zu. %s", i + last_index, white.notation);
 
-        if (moves->values[i].alternatives)
-            fmt_print_alternative_moves(moves->values[i].alternatives, ++depth, i + last_index);
+            if (white.alternatives) {
+                printf(" ");
+                fmt_print_alternative_moves(white.alternatives, 0, i + last_index);
+            }
+        }
 
+        if (black.notation[0]) {
+            if (white.alternatives)
+                printf(" %zu...", i + last_index);
+
+            if (!white.notation[0]) {
+                printf("%zu...", i + last_index);
+            }
+
+            printf(" %s", black.notation);
+
+            if (black.alternatives) {
+                printf(" ");
+                fmt_print_alternative_moves(black.alternatives, 0, i + last_index);
+            }
+        }
+
+
+        printf(" ");
         printed = true;
     }
 
@@ -81,6 +101,6 @@ void fmt_print(pgn_t *pgn)
     if (fmt_print_metadata(pgn->metadata))
         printf("\n");
 
-    fmt_print_moves(pgn->moves, 0, 1, true);
+    fmt_print_moves(pgn->moves, 0, 1);
     fmt_print_score(pgn);
 }
