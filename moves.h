@@ -20,23 +20,10 @@
 #define PGN_MOVES_INITIAL_SIZE 32
 #define PGN_MOVES_GROW_SIZE 32
 
-#define PGN_ALTERNATIVE_MOVES_INITIAL_SIZE 0
-#define PGN_ALTERNATIVE_MOVES_GROW_SIZE 1
-
 #define __PGN_MOVE_NOTATION_SIZE 16
 
-typedef struct pgn_move_t {
-    pgn_piece_t piece, promoted_to;
-    char notation[__PGN_MOVE_NOTATION_SIZE];
-    int castles;
-    bool captures;
-    bool en_passant;
-    pgn_check_t check;
-    pgn_coordinate_t from, dest;
-    pgn_annotation_t annotation;
-} pgn_move_t;
-
-#define PGN_MOVES_ALTERNATIVES_INITIAL_SIZE 6
+#define PGN_ALTERNATIVE_MOVES_INITIAL_SIZE 1
+#define PGN_ALTERNATIVE_MOVES_GROW_SIZE 1
 
 typedef struct pgn_moves_t pgn_moves_t;
 typedef struct __pgn_moves_item_t __pgn_moves_item_t;
@@ -47,10 +34,21 @@ typedef struct pgn_alternative_moves_t {
     size_t size;
 } pgn_alternative_moves_t;
 
+typedef struct pgn_move_t {
+    pgn_piece_t piece, promoted_to;
+    char notation[__PGN_MOVE_NOTATION_SIZE];
+    int castles;
+    bool captures;
+    bool en_passant;
+    pgn_check_t check;
+    pgn_coordinate_t from, dest;
+    pgn_annotation_t annotation;
+    pgn_alternative_moves_t *alternatives;
+} pgn_move_t;
+
 struct __pgn_moves_item_t {
     pgn_move_t white;
     pgn_move_t black;
-    pgn_alternative_moves_t *alternatives;
 };
 
 struct pgn_moves_t {

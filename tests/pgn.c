@@ -29,7 +29,6 @@ void test_parsing_pgn()
     suite6_assert(pgn->moves->values[0].black.dest.y == 5);
     suite6_assert(pgn->moves->values[0].black.captures == false);
     suite6_assert(pgn->moves->values[0].black.annotation == PGN_ANNOTATION_NULL);
-    suite6_assert(pgn->moves->values[0].alternatives == NULL);
 
     suite6_assert(strcmp(pgn->moves->values[1].white.notation, "Nc3") == 0);
     suite6_assert(pgn->moves->values[1].white.piece == PGN_PIECE_KNIGHT);
@@ -43,7 +42,6 @@ void test_parsing_pgn()
     suite6_assert(pgn->moves->values[1].black.dest.y == 6);
     suite6_assert(pgn->moves->values[1].black.captures == false);
     suite6_assert(pgn->moves->values[1].black.annotation == PGN_ANNOTATION_NULL);
-    suite6_assert(pgn->moves->values[1].alternatives == NULL);
 
     suite6_assert(pgn->score.white == 0 && pgn->score.black == 1);
 

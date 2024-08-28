@@ -142,7 +142,11 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
 
     size_t cursor = 0;
-    __pgn_moves_item_t move = { .alternatives = NULL };
+    __pgn_moves_item_t move = { 0 };
+
+    pgn_cursor_skip_whitespace(str, &cursor);
+    pgn_cursor_skip_comment(str, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     /* TODO: maybe isolate into a function
      *
@@ -153,6 +157,10 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
+    pgn_cursor_skip_whitespace(str, &cursor);
+    pgn_cursor_skip_comment(str, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
+
     int dots_count = 0;
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
@@ -161,6 +169,9 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             dots_count++;
         }
     }
+
+    pgn_cursor_skip_whitespace(str, &cursor);
+    pgn_cursor_skip_comment(str, &cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
 
     assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
@@ -168,7 +179,11 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         move.white = __pgn_move_from_string(str + cursor, &cursor);
     } else if (dots_count == 3) {
         move.black = __pgn_move_from_string(str + cursor, &cursor);
-        /* TODO: remove pgn comments */
+
+        pgn_cursor_skip_whitespace(str, &cursor);
+        pgn_cursor_skip_comment(str, &cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
+
         pgn_moves_push(moves, move);
         __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
         *consumed += cursor;
@@ -182,14 +197,25 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     while (str[cursor] == '(') {
         cursor++;
 
-        if (!move.alternatives)
-            move.alternatives = pgn_alternative_moves_init();
+        if (dots_count == 0 || dots_count == 1) {
+            if (!move.white.alternatives)
+                move.white.alternatives = pgn_alternative_moves_init();
 
-        pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_alternative_moves_push(move.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+            pgn_cursor_skip_whitespace(str, &cursor);
+            pgn_alternative_moves_push(move.white.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+        } else if (dots_count == 3) {
+            if (!move.black.alternatives)
+                move.black.alternatives = pgn_alternative_moves_init();
+
+            pgn_cursor_skip_whitespace(str, &cursor);
+            pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+        }
+
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
+        pgn_cursor_skip_whitespace(str, &cursor);
+        pgn_cursor_skip_comment(str, &cursor);
         pgn_cursor_skip_whitespace(str, &cursor);
     }
 
@@ -216,12 +242,14 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     if (isdigit(str[cursor])) {
         while (isdigit(str[cursor])) cursor++;
 
+        printf("1: [%zu] %s\n\n 2: [] %s\n\n", cursor, str, cursor + str);
         for (int i = 0; i < 3; i++)
             assert(str[cursor++] == '.');
     }
-    pgn_cursor_skip_whitespace(str, &cursor);
 
+    pgn_cursor_skip_whitespace(str, &cursor);
     move.black = __pgn_move_from_string(str + cursor, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
 
     pgn_cursor_skip_whitespace(str, &cursor);
     pgn_cursor_skip_comment(str, &cursor);
@@ -230,14 +258,16 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     while (str[cursor] == '(') {
         cursor++;
 
-        if (!move.alternatives)
-            move.alternatives = pgn_alternative_moves_init();
+        if (!move.black.alternatives)
+            move.black.alternatives = pgn_alternative_moves_init();
 
         pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_alternative_moves_push(move.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+        pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
+        pgn_cursor_skip_whitespace(str, &cursor);
+        pgn_cursor_skip_comment(str, &cursor);
         pgn_cursor_skip_whitespace(str, &cursor);
     }
 
@@ -309,8 +339,12 @@ void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves)
 void pgn_moves_cleanup(pgn_moves_t *moves)
 {
     for (size_t i = 0; i < moves->length; i++) {
-        if (moves->values[i].alternatives) {
-            pgn_alternative_moves_cleanup(moves->values[i].alternatives);
+        if (moves->values[i].white.alternatives) {
+            pgn_alternative_moves_cleanup(moves->values[i].white.alternatives);
+        }
+
+        if (moves->values[i].black.alternatives) {
+            pgn_alternative_moves_cleanup(moves->values[i].black.alternatives);
         }
     }
 
