@@ -179,10 +179,14 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     pgn_cursor_skip_comment(str, &cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
 
-    if (str[cursor] == '(') {
+    while (str[cursor] == '(') {
         cursor++;
+
+        if (!move.alternatives)
+            move.alternatives = pgn_alternative_moves_init();
+
         pgn_cursor_skip_whitespace(str, &cursor);
-        move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
+        pgn_alternative_moves_push(move.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
@@ -223,10 +227,14 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     pgn_cursor_skip_comment(str, &cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
 
-    if (str[cursor] == '(') {
+    while (str[cursor] == '(') {
         cursor++;
+
+        if (!move.alternatives)
+            move.alternatives = pgn_alternative_moves_init();
+
         pgn_cursor_skip_whitespace(str, &cursor);
-        move.alternatives = __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init());
+        pgn_alternative_moves_push(move.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
@@ -250,13 +258,41 @@ pgn_moves_t *pgn_moves_from_string(char *str)
     return __pgn_moves_from_string(str, &consumed);
 }
 
+pgn_alternative_moves_t *pgn_alternative_moves_init(void)
+{
+    pgn_alternative_moves_t *alt = malloc(sizeof *alt);
+    alt->values = malloc(sizeof *alt->values * PGN_ALTERNATIVE_MOVES_INITIAL_SIZE);
+    alt->size = PGN_ALTERNATIVE_MOVES_INITIAL_SIZE;
+    alt->length = 0;
+    return alt;
+}
+
+void pgn_alternative_moves_push(pgn_alternative_moves_t *alt, pgn_moves_t *moves)
+{
+    if (alt->length >= alt->size) {
+        alt->size += PGN_ALTERNATIVE_MOVES_GROW_SIZE;
+        alt->values = realloc(alt->values,  sizeof(*alt->values) * alt->size);
+    }
+
+    alt->values[alt->length++] = moves;
+}
+
+void pgn_alternative_moves_cleanup(pgn_alternative_moves_t *alt)
+{
+    for (size_t i = 0; i < alt->length; i++) {
+        pgn_moves_cleanup(alt->values[i]);
+    }
+
+    free(alt->values);
+    free(alt);
+}
+
 pgn_moves_t *pgn_moves_init(void)
 {
     pgn_moves_t *moves = malloc(sizeof *moves);
     moves->values = malloc(sizeof *moves->values * PGN_MOVES_INITIAL_SIZE);
     moves->size = PGN_MOVES_INITIAL_SIZE;
     moves->length = 0;
-
     return moves;
 }
 
@@ -274,7 +310,7 @@ void pgn_moves_cleanup(pgn_moves_t *moves)
 {
     for (size_t i = 0; i < moves->length; i++) {
         if (moves->values[i].alternatives) {
-            pgn_moves_cleanup(moves->values[i].alternatives);
+            pgn_alternative_moves_cleanup(moves->values[i].alternatives);
         }
     }
 

@@ -23,13 +23,4 @@ To run tests, simply invoke:
 Limitations
 -----------
 
-The parser is currently in-capable of parsing moves who has
-alternatives and is more than one.
-
-This is fine, it only has one alternative moves:
-
-    1. e4 e5 (1. f4? e5! 2. g4?? Qh4#)
-
-However, this is currently not possible:
-
-    1. e4 e5 (1. f4? e5! 2. g4?? Qh4#) (1. e4 f6? 2. d4 g5?? 3. Qh5#)
+    - The parser does not parse comments (for the moment).

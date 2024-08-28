@@ -20,6 +20,9 @@
 #define PGN_MOVES_INITIAL_SIZE 32
 #define PGN_MOVES_GROW_SIZE 32
 
+#define PGN_ALTERNATIVE_MOVES_INITIAL_SIZE 0
+#define PGN_ALTERNATIVE_MOVES_GROW_SIZE 1
+
 #define __PGN_MOVE_NOTATION_SIZE 16
 
 typedef struct pgn_move_t {
@@ -38,10 +41,16 @@ typedef struct pgn_move_t {
 typedef struct pgn_moves_t pgn_moves_t;
 typedef struct __pgn_moves_item_t __pgn_moves_item_t;
 
+typedef struct pgn_alternative_moves_t {
+    pgn_moves_t **values;
+    size_t length;
+    size_t size;
+} pgn_alternative_moves_t;
+
 struct __pgn_moves_item_t {
     pgn_move_t white;
     pgn_move_t black;
-    pgn_moves_t *alternatives;
+    pgn_alternative_moves_t *alternatives;
 };
 
 struct pgn_moves_t {
@@ -55,6 +64,10 @@ pgn_move_t pgn_move_from_string(char *str);
 
 pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
 pgn_moves_t *pgn_moves_from_string(char *str);
+
+pgn_alternative_moves_t *pgn_alternative_moves_init(void);
+void pgn_alternative_moves_push(pgn_alternative_moves_t *alt, pgn_moves_t *moves);
+void pgn_alternative_moves_cleanup(pgn_alternative_moves_t *alt);
 
 PGN_EXPORT pgn_moves_t *pgn_moves_init(void);
 PGN_EXPORT void pgn_moves_push(pgn_moves_t *moves, __pgn_moves_item_t __moves);
