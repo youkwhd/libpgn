@@ -243,7 +243,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    while (str[cursor] == '(') {
+    for (unsigned int i = 0; str[cursor] == '('; i++) {
         cursor++;
 
         if (dots_count == 0 || dots_count == 1) {
@@ -263,13 +263,23 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 
-        /*
-         * 1. e4 (1. e6 e7) {hello} (1. e9 e1) e5
-         *                  ^ skipped..
-         */
         pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_cursor_skip_comment(str, &cursor);
-        pgn_cursor_skip_whitespace(str, &cursor);
+        if (str[cursor] == '{') {
+            if (!comments) comments = pgn_comments_init();
+
+            while (str[cursor] == '{') {
+                pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+                comment.position = PGN_COMMENT_POSITION_AFTER_ALTERNATIVE;
+                comment.__alt_index = i;
+
+                pgn_comments_push(comments, comment);
+                pgn_cursor_skip_whitespace(str, &cursor);
+            }
+
+            assert(str[cursor] != '{');
+            assert(str[cursor] != '}');
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
     }
 
     pgn_cursor_skip_whitespace(str, &cursor);
@@ -379,7 +389,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         comments = NULL;
     }
 
-    while (str[cursor] == '(') {
+    for (unsigned int i = 0; str[cursor] == '('; i++) {
         cursor++;
 
         if (!move.black.alternatives)
@@ -395,8 +405,22 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
          *                     ^ skipped..
          */
         pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_cursor_skip_comment(str, &cursor);
-        pgn_cursor_skip_whitespace(str, &cursor);
+        if (str[cursor] == '{') {
+            if (!comments) comments = pgn_comments_init();
+
+            while (str[cursor] == '{') {
+                pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+                comment.position = PGN_COMMENT_POSITION_AFTER_ALTERNATIVE;
+                comment.__alt_index = i;
+
+                pgn_comments_push(comments, comment);
+                pgn_cursor_skip_whitespace(str, &cursor);
+            }
+
+            assert(str[cursor] != '{');
+            assert(str[cursor] != '}');
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
     }
 
     pgn_moves_push(moves, move);
