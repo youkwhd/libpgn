@@ -45,5 +45,6 @@ void test_parsing_moves_with_comments_nested(void)
 int main(void)
 {
     test_parsing_moves_with_comments_multiples();
+    test_parsing_moves_with_comments_nested();
     return 0;
 }
