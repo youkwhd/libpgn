@@ -106,7 +106,7 @@ void test_parsing_comments_on_position_after_alt()
     moves = pgn_moves_from_string("1. e4 e5 {IGNORE MEEE} (1... f5) {hello} {again}");
     suite6_assert(moves->values[0].black.comments != NULL);
     suite6_assert(moves->values[0].black.comments->length == 3);
-    suite6_assert(moves->values[0].black.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
+    suite6_assert(moves->values[0].black.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_MOVE);
     suite6_assert(!strcmp(moves->values[0].black.comments->values[0].value->buf, "IGNORE MEEE"));
     suite6_assert(moves->values[0].black.comments->values[1].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
     suite6_assert(moves->values[0].black.comments->values[1].__alt_index == 0);
@@ -130,9 +130,9 @@ void test_parsing_comments_on_position_all()
     suite6_assert(!strcmp(moves->values[0].white.comments->values[1].value->buf, "from"));
     suite6_assert(moves->values[0].white.comments->values[2].position == PGN_COMMENT_POSITION_AFTER_MOVE);
     suite6_assert(!strcmp(moves->values[0].white.comments->values[2].value->buf, "libpgn"));
-    suite6_assert(moves->values[0].white.comments->values[3].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
-    suite6_assert(moves->values[0].white.comments->values[3].__alt_index == 0);
-    suite6_assert(!strcmp(moves->values[0].white.comments->values[3].value->buf, "dawg"));
+    suite6_assert(moves->values[0].black.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
+    suite6_assert(moves->values[0].black.comments->values[0].__alt_index == 0);
+    suite6_assert(!strcmp(moves->values[0].black.comments->values[0].value->buf, "dawg"));
     pgn_moves_cleanup(moves);
 }
 

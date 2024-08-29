@@ -384,11 +384,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         pgn_cursor_skip_whitespace(str, &cursor);
     }
 
-    if (comments) {
-        move.black.comments = comments;
-        comments = NULL;
-    }
-
     for (unsigned int i = 0; str[cursor] == '('; i++) {
         cursor++;
 
@@ -421,6 +416,11 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             assert(str[cursor] != '}');
             pgn_cursor_skip_whitespace(str, &cursor);
         }
+    }
+
+    if (comments) {
+        move.black.comments = comments;
+        comments = NULL;
     }
 
     pgn_moves_push(moves, move);
