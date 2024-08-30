@@ -16,7 +16,7 @@ pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed)
     if (str[0] == '$') {
         size_t cursor = 0;
 
-        /* INFO: NAG annotation tends to have $0 followed by another $<num>.
+        /* NOTE: NAG annotation tends to have $0 followed by another $<num>.
          * thus why the while loop, take the last.
          */
         while (str[cursor] == '$') {
