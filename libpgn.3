@@ -1,0 +1,22 @@
+.TH PGN 3 "2024 August 30" "libpgn 0.0.1"
+
+.SH NAME
+libpgn \- PGN file parser
+
+.SH SYNOPSIS
+.B #include <pgn.h>
+.LP
+pgn_t *\fBpgn_init\fP(void);
+.br
+void \fBpgn_parse\fP(pgn_t *\fIpgn\fP, char *\fIstr\fP);
+.br
+void \fBpgn_cleanup\fP(pgn_t *\fIpgn\fP);
+
+.SH DESCRIPTION
+.LP
+.B libpgn
+is a parser for PGN (Portable Game Notation) files that's usually used to record a chess game. The parser tries to parse all the variables a PGN file has. Metadata, movetext, comments with it's respective position, and many others.
+
+.SH AUTHORS
+.LP
+youkwhd <lolywk@tutanota.com>
