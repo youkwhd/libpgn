@@ -31,7 +31,6 @@ test: all $(EXE)
 bin:
 	$(MAKE) -C bin/
 
-# TODO: rename local string.h file to resolve colliding name.
 $(EXE):
 	$(CC) $@.c -lpgn -Wl,-rpath=. -L. -I. -o $@
 	./$@
