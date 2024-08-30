@@ -1,6 +1,8 @@
 LIB           = libpgn
 EXT           = .so
 
+MAN3          = $(LIB).3
+
 CC            = gcc
 CFLAGS        = -std=c99 -pedantic-errors -Wall -Wextra
 
@@ -44,11 +46,15 @@ install: all
 	sed -i $(INST)/include/pgn/pgn.h -e "s/#include \"/#include \"pgn\//g"
 	mv $(INST)/include/pgn/pgn.h $(INST)/include
 	cp $(LIB)$(EXT) $(INST)/lib
+	mkdir -p $(INST)/share/man/man3
+	cp $(MAN3) $(INST)/share/man/man3
+	gzip $(INST)/share/man/man3/$(MAN3)
 
 uninstall:
 	$(RM) $(INST)/lib/$(LIB)$(EXT)
 	$(RM) -r $(INST)/include/pgn
 	$(RM) $(INST)/include/pgn.h
+	$(RM) $(INST)/share/man/man3/$(MAN3).gz
 
 # Assuming every file
 # depens on header DEPS
