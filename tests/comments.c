@@ -101,6 +101,7 @@ void test_parsing_comments_on_position_after(void)
 
 void test_parsing_comments_on_position_after_alt()
 {
+    unsigned int alt_index;
     pgn_moves_t *moves;
 
     moves = pgn_moves_from_string("1. e4 e5 {IGNORE MEEE} (1... f5) {hello} {again}");
@@ -109,10 +110,12 @@ void test_parsing_comments_on_position_after_alt()
     suite6_assert(moves->values[0].black.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_MOVE);
     suite6_assert(!strcmp(moves->values[0].black.comments->values[0].value->buf, "IGNORE MEEE"));
     suite6_assert(moves->values[0].black.comments->values[1].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
-    suite6_assert(moves->values[0].black.comments->values[1].__alt_index == 0);
+    alt_index = 1 - pgn_comments_get_first_after_alternative_index(moves->values[0].black.comments);
+    suite6_assert(alt_index == 0);
     suite6_assert(!strcmp(moves->values[0].black.comments->values[1].value->buf, "hello"));
     suite6_assert(moves->values[0].black.comments->values[2].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
-    suite6_assert(moves->values[0].black.comments->values[2].__alt_index == 1);
+    alt_index = 2 - pgn_comments_get_first_after_alternative_index(moves->values[0].black.comments);
+    suite6_assert(alt_index == 1);
     suite6_assert(!strcmp(moves->values[0].black.comments->values[2].value->buf, "again"));
     pgn_moves_cleanup(moves);
 }
@@ -131,7 +134,8 @@ void test_parsing_comments_on_position_all()
     suite6_assert(moves->values[0].white.comments->values[2].position == PGN_COMMENT_POSITION_AFTER_MOVE);
     suite6_assert(!strcmp(moves->values[0].white.comments->values[2].value->buf, "libpgn"));
     suite6_assert(moves->values[0].black.comments->values[0].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE);
-    suite6_assert(moves->values[0].black.comments->values[0].__alt_index == 0);
+    unsigned int alt_index = 0 - pgn_comments_get_first_after_alternative_index(moves->values[0].black.comments);
+    suite6_assert(alt_index == 0);
     suite6_assert(!strcmp(moves->values[0].black.comments->values[0].value->buf, "dawg"));
     pgn_moves_cleanup(moves);
 }

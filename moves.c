@@ -243,7 +243,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    for (unsigned int i = 0; str[cursor] == '('; i++) {
+    while (str[cursor] == '(') {
         cursor++;
 
         if (dots_count == 0 || dots_count == 1) {
@@ -270,7 +270,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             while (str[cursor] == '{') {
                 pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
                 comment.position = PGN_COMMENT_POSITION_AFTER_ALTERNATIVE;
-                comment.__alt_index = i;
 
                 pgn_comments_push(comments, comment);
                 pgn_cursor_skip_whitespace(str, &cursor);
@@ -384,7 +383,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         pgn_cursor_skip_whitespace(str, &cursor);
     }
 
-    for (unsigned int i = 0; str[cursor] == '('; i++) {
+    while (str[cursor] == '(') {
         cursor++;
 
         if (!move.black.alternatives)
@@ -406,7 +405,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             while (str[cursor] == '{') {
                 pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
                 comment.position = PGN_COMMENT_POSITION_AFTER_ALTERNATIVE;
-                comment.__alt_index = i;
 
                 pgn_comments_push(comments, comment);
                 pgn_cursor_skip_whitespace(str, &cursor);

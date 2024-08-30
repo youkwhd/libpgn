@@ -53,7 +53,7 @@ void pgn_comment_cleanup(pgn_comment_t *comment)
     pgn_buffer_cleanup(comment->value);
 }
 
-pgn_comments_t *pgn_comments_init()
+pgn_comments_t *pgn_comments_init(void)
 {
     pgn_comments_t *comments = malloc(sizeof *comments);
     comments->values = malloc((sizeof *comments->values) * PGN_COMMENTS_INITIAL_SIZE);
@@ -70,6 +70,17 @@ void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment)
     }
 
     comments->values[comments->length++] = comment;
+}
+
+int pgn_comments_get_first_after_alternative_index(pgn_comments_t *comments)
+{
+    for (int i = 0; i < (int)comments->length; i++) {
+        if (comments->values[i].position == PGN_COMMENT_POSITION_AFTER_ALTERNATIVE) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 void pgn_comments_cleanup(pgn_comments_t *comments)

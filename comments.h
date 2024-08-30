@@ -52,7 +52,6 @@ typedef enum pgn_comment_position_t {
 typedef struct pgn_comment_t {
     /* relative to a move */
     pgn_comment_position_t position;
-    unsigned int __alt_index;
     pgn_buffer_t *value;
 } pgn_comment_t;
 
@@ -75,8 +74,9 @@ char *pgn_comment_value(pgn_comment_t *comment);
 pgn_comment_t __pgn_comment_from_string(char *str, size_t *consumed);
 void pgn_comment_cleanup(pgn_comment_t *comment);
 
-pgn_comments_t *pgn_comments_init();
+pgn_comments_t *pgn_comments_init(void);
 void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment);
+int pgn_comments_get_first_after_alternative_index(pgn_comments_t *comments);
 void pgn_comments_cleanup(pgn_comments_t *comments);
 
 #endif // __LIBPGN_COMMENTS_H
