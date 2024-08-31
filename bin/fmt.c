@@ -1,11 +1,14 @@
 #include <pgn.h>
+#include <pgn/comments.h>
 #include <pgn/metadata.h>
 #include <pgn/moves.h>
 #include <stdbool.h>
 
 #include "fmt.h"
 
-bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index);
+#define TAB_WIDTH 2
+
+bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_number, bool root);
 
 void fmt_print_tab(int depth, int width)
 {
@@ -28,22 +31,92 @@ bool fmt_print_metadata(pgn_metadata_t *mt)
     return printed;
 }
 
-bool fmt_print_alternative_moves(pgn_alternative_moves_t *alt, int depth, size_t last_index)
+bool fmt_print_alternative_moves(pgn_alternative_moves_t *alt, int depth, size_t last_number)
 {
     bool printed = false;
 
     for (size_t i = 0; i < alt->length; i++) {
+        printf("\n");
+        fmt_print_tab(depth, TAB_WIDTH);
         printf("(");
-        fmt_print_moves(alt->values[i], depth, last_index);
-        printf(") ");
+        fmt_print_moves(alt->values[i], depth, last_number, false);
+        printf(")");
     }
 
     return printed;
 }
 
-/* TODO: do actual formatting, we're just re-printing without comments
- */
-bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index)
+bool __fmt_print_white(pgn_move_t *move, size_t depth, size_t number)
+{
+    bool printed = false;
+
+    if (move->notation[0]) {
+        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
+            pgn_comment_t comment = move->comments->values[i];
+
+            if (comment.position == PGN_COMMENT_POSITION_BEFORE_MOVE) {
+                printf("{%s} ", comment.value->buf);
+            }
+        }
+
+        printf("%zu. %s", number, move->notation);
+
+        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
+            pgn_comment_t comment = move->comments->values[i];
+
+            if (comment.position == PGN_COMMENT_POSITION_AFTER_MOVE) {
+                printf(" {%s}", comment.value->buf);
+            }
+        }
+
+        if (move->alternatives) {
+            fmt_print_alternative_moves(move->alternatives, depth + 1, number);
+        }
+
+        printed = true;
+    }
+
+    return printed;
+}
+
+bool __fmt_print_black(pgn_move_t *move, size_t depth, size_t number, bool white_printed)
+{
+    bool printed = false;
+
+    if (move->notation[0]) {
+        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
+            pgn_comment_t comment = move->comments->values[i];
+
+            if (comment.position == PGN_COMMENT_POSITION_BEFORE_MOVE) {
+                printf("{%s} ", comment.value->buf);
+            }
+        }
+
+        if (!white_printed) {
+            printf("%zu... ", number);
+        }
+
+        printf("%s", move->notation);
+
+        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
+            pgn_comment_t comment = move->comments->values[i];
+
+            if (comment.position == PGN_COMMENT_POSITION_AFTER_MOVE) {
+                printf(" {%s}", comment.value->buf);
+            }
+        }
+
+        if (move->alternatives) {
+            fmt_print_alternative_moves(move->alternatives, depth + 1, number);
+        }
+
+        printed = true;
+    }
+
+    return printed;
+}
+
+bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_number, bool root)
 {
     bool printed = false;
 
@@ -51,33 +124,18 @@ bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_index)
         pgn_move_t white = moves->values[i].white;
         pgn_move_t black = moves->values[i].black;
 
-        if (white.notation[0]) {
-            printf("%zu. %s", i + last_index, white.notation);
+        bool white_printed = __fmt_print_white(&white, depth, last_number + i);
+        bool black_would_be_printed = black.notation[0] != 0;
+        if (white_printed && black_would_be_printed)
+            printf(" ");
 
-            if (white.alternatives) {
-                printf(" ");
-                fmt_print_alternative_moves(white.alternatives, 0, i + last_index);
-            }
+        bool black_printed = __fmt_print_black(&black, depth, last_number + i, white_printed);
+        if (i != moves->length - 1) {
+            printf("\n");
+            if (!root) printf(" ");
+            fmt_print_tab(depth, TAB_WIDTH);
         }
 
-        if (black.notation[0]) {
-            if (white.alternatives)
-                printf(" %zu...", i + last_index);
-
-            if (!white.notation[0]) {
-                printf("%zu...", i + last_index);
-            }
-
-            printf(" %s", black.notation);
-
-            if (black.alternatives) {
-                printf(" ");
-                fmt_print_alternative_moves(black.alternatives, 0, i + last_index);
-            }
-        }
-
-
-        printf(" ");
         printed = true;
     }
 
@@ -101,6 +159,8 @@ void fmt_print(pgn_t *pgn)
     if (fmt_print_metadata(pgn->metadata))
         printf("\n");
 
-    fmt_print_moves(pgn->moves, 0, 1);
+    if (fmt_print_moves(pgn->moves, 0, 1, true))
+        printf("\n");
+
     fmt_print_score(pgn);
 }
