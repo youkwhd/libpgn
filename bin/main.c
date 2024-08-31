@@ -1,4 +1,5 @@
 #include <pgn.h>
+#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,14 +37,26 @@ int main(int argc, char **argv)
 
         char *filename = argv[2];
         char *pgn_file_contents = read_file(filename);
+        char *saved_ptr = pgn_file_contents;
 
-        pgn_t *pgn = pgn_init();
-        pgn_parse(pgn, pgn_file_contents);
+        while (*pgn_file_contents) {
+            pgn_t *pgn = pgn_init();
+            size_t consumed = pgn_parse(pgn, pgn_file_contents);
 
-        fmt_print(pgn);
+            pgn_file_contents += consumed;
+            while (isspace(*pgn_file_contents))
+                pgn_file_contents++;
 
-        pgn_cleanup(pgn);
-        free(pgn_file_contents);
+            fmt_print(pgn);
+
+            /* still have unparsed pgn */
+            if (*pgn_file_contents)
+                printf("\n");
+
+            pgn_cleanup(pgn);
+        }
+
+        free(saved_ptr);
     } else {
         fprintf(stderr, "%s: unknown subcommand '%s'.\n", *argv, subcommand);
         exit(EXIT_FAILURE);
