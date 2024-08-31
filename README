@@ -1,7 +1,7 @@
 libpgn
 ======
 
-FIDE Portable Game Notation (PGN) file manipulation.
+Portable Game Notation (PGN) file manipulation.
 
 To start working with libpgn, peeking at tests/pgn.c file is a
 great start.
