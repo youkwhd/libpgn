@@ -1,7 +1,4 @@
 #include <pgn.h>
-#include <pgn/comments.h>
-#include <pgn/metadata.h>
-#include <pgn/moves.h>
 #include <stdbool.h>
 
 #include "fmt.h"

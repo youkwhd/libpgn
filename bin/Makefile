@@ -13,10 +13,10 @@ OBJ    := $(SRC:.c=.o)
 all: $(EXE)
 
 $(EXE): $(OBJ)
-	$(LD) $(LDLIBS) -Wl,-rpath=.. -L.. -I.. $^ -o $(EXE)
+	$(LD) $(LDLIBS) -Wl,-rpath=$(shell pwd)/.. -L.. $^ -o $(EXE)
 
 %.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I.. -c $< -o $@
 
 clean:
 	$(RM) $(OBJ) $(EXE)
