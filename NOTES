@@ -6,3 +6,6 @@ working with `void *` is never a good experience.
 
 Is returing `int` for something that couldn't be minus ok? I am
 thinking too much.
+
+Maybe create a function that takes filename, and read from there,
+we could save some time. Also, it's just nicer.
