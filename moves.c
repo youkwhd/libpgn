@@ -217,7 +217,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
         pgn_cursor_skip_whitespace(str, &cursor);
         if (str[cursor] == '{') {
-            if (comments) comments = pgn_comments_init();
+            if (!comments) comments = pgn_comments_init();
 
             while (str[cursor] == '{') {
                 pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
