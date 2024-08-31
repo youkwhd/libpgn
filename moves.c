@@ -86,7 +86,6 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
             cursor++;
             break;
         }
-
     }
 
 check:
@@ -132,7 +131,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
 
     size_t cursor = 0;
-    __pgn_moves_item_t move = { 0 };
+    __pgn_moves_item_t move = {0};
 
     /* comments placeholder to wait for knowing which move the comment belongs to.
      */
@@ -181,8 +180,8 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         pgn_cursor_skip_whitespace(str, &cursor);
     }
 
-    assert(dots_count == 0 || dots_count == 1 || dots_count == 3);
-    if (dots_count == 0 || dots_count == 1) {
+    assert(dots_count == 1 || dots_count == 3);
+    if (dots_count == 1) {
         move.white = __pgn_move_from_string(str + cursor, &cursor);
 
         pgn_cursor_skip_whitespace(str, &cursor);
