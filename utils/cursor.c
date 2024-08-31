@@ -9,6 +9,11 @@ void pgn_cursor_skip_whitespace(char *str, size_t *cursor)
     while (isspace(str[*cursor])) (*cursor)++;
 }
 
+void pgn_cursor_revisit_whitespace(char *str, size_t *cursor)
+{
+    while (isspace(str[*cursor - 1])) (*cursor)--;
+}
+
 void pgn_cursor_skip_comment(char *str, size_t *cursor)
 {
     if (str[*cursor] != '{')

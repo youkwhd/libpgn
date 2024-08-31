@@ -7,6 +7,7 @@
  */
 
 void pgn_cursor_skip_whitespace(char *str, size_t *cursor);
+void pgn_cursor_revisit_whitespace(char *str, size_t *cursor);
 void pgn_cursor_skip_comment(char *str, size_t *cursor);
 void pgn_cursor_skip_newline(char *str, size_t *cursor);
 

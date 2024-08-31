@@ -32,6 +32,7 @@ pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed)
 
             pgn_cursor_skip_whitespace(str, &cursor);
         }
+        pgn_cursor_revisit_whitespace(str, &cursor);
 
         *consumed += cursor;
         return annotation;

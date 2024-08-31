@@ -109,22 +109,9 @@ check:
     if (move.annotation == PGN_ANNOTATION_NULL)
         move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);
 
+    pgn_cursor_revisit_whitespace(str, &cursor);
+
     size_t notation_len = cursor;
-
-    /* We slipped too much to the right because 
-     * the possibility of having multiple NAG annotation.
-     *
-     * TODO: check for comments
-     */
-    if (isspace(str[notation_len - 1])) {
-        notation_len--;
-
-        while (isspace(str[notation_len])) {
-            notation_len--;
-        }
-
-        notation_len++;
-    }
     strncpy(move.notation, str, notation_len);
 
     *consumed += cursor;
