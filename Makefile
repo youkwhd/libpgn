@@ -31,7 +31,7 @@ all: $(OBJ)
 test: all $(EXE)
 
 bin:
-	$(MAKE) -C bin/
+	$(MAKE) -C $(MAKECMDGOALS) 
 
 $(EXE):
 	$(CC) $@.c -lpgn -Wl,-rpath=. -L. -I. -o $@
