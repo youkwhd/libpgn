@@ -3,3 +3,6 @@ tedious and redundant. Maybe we can implement utils/array.c? I
 am honestly not a fan of making abstraction, I know it's a data
 structure that's being used dozens of time in libpgn, but
 working with `void *` is never a good experience.
+
+Is returing `int` for something that couldn't be minus ok? I am
+thinking too much.
