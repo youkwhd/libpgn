@@ -43,31 +43,57 @@ bool fmt_print_alternative_moves(pgn_alternative_moves_t *alt, int depth, size_t
     return printed;
 }
 
+bool __fmt_print_comment_before(pgn_comments_t *comments)
+{
+    bool printed = false;
+
+    for (size_t i = 0; i < comments->length; i++) {
+        pgn_comment_t comment = comments->values[i];
+
+        if (comment.position == PGN_COMMENT_POSITION_BEFORE_MOVE) {
+            printf("{%s} ", comment.value->buf);
+        }
+
+        printed = true;
+    }
+
+    return printed;
+}
+
+bool __fmt_print_comment_after(pgn_comments_t *comments)
+{
+    bool printed = false;
+
+    for (size_t i = 0; i < comments->length; i++) {
+        pgn_comment_t comment = comments->values[i];
+
+        if (comment.position == PGN_COMMENT_POSITION_AFTER_MOVE) {
+            printf(" {%s}", comment.value->buf);
+        }
+
+        printed = true;
+    }
+
+    return printed;
+}
+
 bool __fmt_print_white(pgn_move_t *move, size_t depth, size_t number)
 {
     bool printed = false;
 
     if (move->notation[0]) {
-        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
-            pgn_comment_t comment = move->comments->values[i];
-
-            if (comment.position == PGN_COMMENT_POSITION_BEFORE_MOVE) {
-                printf("{%s} ", comment.value->buf);
-            }
+        if (move->comments) {
+            __fmt_print_comment_before(move->comments);
         }
 
         printf("%zu. %s", number, move->notation);
 
-        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
-            pgn_comment_t comment = move->comments->values[i];
-
-            if (comment.position == PGN_COMMENT_POSITION_AFTER_MOVE) {
-                printf(" {%s}", comment.value->buf);
-            }
-        }
-
         if (move->alternatives) {
             fmt_print_alternative_moves(move->alternatives, depth + 1, number);
+        }
+
+        if (move->comments) {
+            __fmt_print_comment_after(move->comments);
         }
 
         printed = true;
@@ -81,12 +107,8 @@ bool __fmt_print_black(pgn_move_t *move, size_t depth, size_t number, bool white
     bool printed = false;
 
     if (move->notation[0]) {
-        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
-            pgn_comment_t comment = move->comments->values[i];
-
-            if (comment.position == PGN_COMMENT_POSITION_BEFORE_MOVE) {
-                printf("{%s} ", comment.value->buf);
-            }
+        if (move->comments) {
+            __fmt_print_comment_before(move->comments);
         }
 
         if (!white_printed) {
@@ -95,12 +117,8 @@ bool __fmt_print_black(pgn_move_t *move, size_t depth, size_t number, bool white
 
         printf("%s", move->notation);
 
-        for (size_t i = 0; move->comments && i < move->comments->length; i++) {
-            pgn_comment_t comment = move->comments->values[i];
-
-            if (comment.position == PGN_COMMENT_POSITION_AFTER_MOVE) {
-                printf(" {%s}", comment.value->buf);
-            }
+        if (move->comments) {
+            __fmt_print_comment_after(move->comments);
         }
 
         if (move->alternatives) {
