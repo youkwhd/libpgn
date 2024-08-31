@@ -104,6 +104,8 @@ check:
         cursor++;
     }
 
+    pgn_cursor_skip_whitespace(str, &cursor);
+
     /* Check for NAG annotation.
      */
     if (move.annotation == PGN_ANNOTATION_NULL)
