@@ -1,7 +1,5 @@
 #include "buffer.h"
 
-#include <string.h>
-
 pgn_buffer_t *pgn_buffer_init(void)
 {
     pgn_buffer_t *buf = malloc(sizeof *buf);
@@ -14,7 +12,13 @@ pgn_buffer_t *pgn_buffer_init(void)
 
 bool pgn_buffer_equal(pgn_buffer_t *buf, char *str)
 {
-    return strcmp(buf->buf, str) == 0;
+    for (size_t i = 0; i <= buf->length; i++) {
+        if (buf->buf[i] != str[i]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void pgn_buffer_grow(pgn_buffer_t *buf)
