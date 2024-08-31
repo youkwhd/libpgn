@@ -3,7 +3,7 @@
 
 #include "fmt.h"
 
-#define TAB_WIDTH 2
+#define TAB_WIDTH 4
 
 bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_number, bool root);
 
