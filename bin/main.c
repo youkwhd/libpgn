@@ -9,6 +9,10 @@
 char *read_file(char *filename)
 {
     FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        fprintf(stderr, "ERROR: file '%s' is not found\n", filename);
+        exit(EXIT_FAILURE);
+    }
 
     fseek(fp, 0, SEEK_END);
     int filesize = ftell(fp);
@@ -24,14 +28,14 @@ char *read_file(char *filename)
 int main(int argc, char **argv)
 {
     if (argc <= 1) {
-        fprintf(stderr, "%s: no subcommand provided.\n", *argv);
+        fprintf(stderr, "ERROR: no subcommand provided.\n");
         exit(EXIT_FAILURE);
     }
 
     char *subcommand = argv[1];
     if (strcmp(subcommand, "fmt") == 0) {
         if (argc <= 2) {
-            fprintf(stderr, "%s: no pgn file provided.\n", *argv);
+            fprintf(stderr, "ERROR: no pgn file provided.\n");
             exit(EXIT_FAILURE);
         }
 
@@ -58,7 +62,7 @@ int main(int argc, char **argv)
 
         free(saved_ptr);
     } else {
-        fprintf(stderr, "%s: unknown subcommand '%s'.\n", *argv, subcommand);
+        fprintf(stderr, "ERROR: unknown subcommand '%s'.\n", subcommand);
         exit(EXIT_FAILURE);
     }
 
