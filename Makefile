@@ -47,8 +47,8 @@ install: all
 	mv $(INST)/include/pgn/pgn.h $(INST)/include
 	cp $(LIB)$(EXT) $(INST)/lib
 	mkdir -p $(INST)/share/man/man3
-	cp $(MAN3) $(INST)/share/man/man3
-	gzip $(INST)/share/man/man3/$(MAN3)
+	gzip -k $(MAN3)
+	mv $(MAN3).gz $(INST)/share/man/man3
 
 uninstall:
 	$(RM) $(INST)/lib/$(LIB)$(EXT)
