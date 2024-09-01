@@ -148,36 +148,19 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             dots_count++;
         }
     }
+    assert(dots_count == 1 || dots_count == 3);
 
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_BETWEEN_MOVE, str + cursor);
 
-    assert(dots_count == 1 || dots_count == 3);
-    if (dots_count == 1) {
-        move.white = __pgn_move_from_string(str + cursor, &cursor);
-
-        pgn_cursor_skip_whitespace(str, &cursor);
-        cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-    } else if (dots_count == 3) {
+    if (dots_count == 3) {
         move.black = __pgn_move_from_string(str + cursor, &cursor);
 
         pgn_cursor_skip_whitespace(str, &cursor);
         cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-
-        while (str[cursor] == '(') {
-            cursor++;
-
-            if (!move.black.alternatives)
-                move.black.alternatives = pgn_alternative_moves_init();
-
-            pgn_cursor_skip_whitespace(str, &cursor);
-            pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-            pgn_cursor_skip_whitespace(str, &cursor);
-            assert(str[cursor++] == ')');
-
-            pgn_cursor_skip_whitespace(str, &cursor);
-            cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_ALTERNATIVE, str + cursor);
-        }
+        cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor);
+        pgn_cursor_skip_whitespace(str, &cursor);
+        cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
         if (comments) {
             move.black.comments = comments;
@@ -190,21 +173,10 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    while (str[cursor] == '(') {
-        cursor++;
-
-        if (!move.white.alternatives)
-            move.white.alternatives = pgn_alternative_moves_init();
-
-        pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_alternative_moves_push(move.white.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-        pgn_cursor_skip_whitespace(str, &cursor);
-        assert(str[cursor++] == ')');
-
-        pgn_cursor_skip_whitespace(str, &cursor);
-        cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_ALTERNATIVE, str + cursor);
-    }
-
+    move.white = __pgn_move_from_string(str + cursor, &cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
+    cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
+    cursor += pgn_alternative_moves_poll(&move.white.alternatives, &comments, str + cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
@@ -250,25 +222,9 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-
-    while (str[cursor] == '(') {
-        cursor++;
-
-        if (!move.black.alternatives)
-            move.black.alternatives = pgn_alternative_moves_init();
-
-        pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-        pgn_cursor_skip_whitespace(str, &cursor);
-        assert(str[cursor++] == ')');
-
-        /*
-         * 1. e4 e5 (1. e6 e7) {hello} (1. e9 e1)
-         *                     ^ skipped..
-         */
-        pgn_cursor_skip_whitespace(str, &cursor);
-        cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_ALTERNATIVE, str + cursor);
-    }
+    cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor);
+    pgn_cursor_skip_whitespace(str, &cursor);
+    cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
     if (comments) {
         move.black.comments = comments;
@@ -309,6 +265,28 @@ pgn_alternative_moves_t *pgn_alternative_moves_init(void)
     alt->size = PGN_ALTERNATIVE_MOVES_INITIAL_SIZE;
     alt->length = 0;
     return alt;
+}
+
+size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t **placeholder, char *str)
+{
+    size_t cursor = 0;
+
+    while (str[cursor] == '(') {
+        cursor++;
+
+        if (!*alt)
+            *alt = pgn_alternative_moves_init();
+
+        pgn_cursor_skip_whitespace(str, &cursor);
+        pgn_alternative_moves_push(*alt, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+        pgn_cursor_skip_whitespace(str, &cursor);
+        assert(str[cursor++] == ')');
+
+        pgn_cursor_skip_whitespace(str, &cursor);
+        cursor += pgn_comments_poll(placeholder, PGN_COMMENT_POSITION_AFTER_ALTERNATIVE, str + cursor);
+    }
+
+    return cursor;
 }
 
 void pgn_alternative_moves_push(pgn_alternative_moves_t *alt, pgn_moves_t *moves)
