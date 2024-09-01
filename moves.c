@@ -198,7 +198,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
         pgn_cursor_skip_whitespace(str, &cursor);
         pgn_alternative_moves_push(move.white.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 

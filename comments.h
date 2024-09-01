@@ -76,7 +76,10 @@ void pgn_comment_cleanup(pgn_comment_t *comment);
 
 pgn_comments_t *pgn_comments_init(void);
 void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment);
-/* parse all comments into **comments.
+/* parse all comments into **comments
+ *
+ * also skips whitespaces if comment is present
+ *
  * returns how much char parsed
  */
 size_t pgn_comments_poll(pgn_comments_t **comments, pgn_comment_position_t pos, char *str);
