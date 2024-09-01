@@ -220,6 +220,35 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
             pgn_cursor_skip_whitespace(str, &cursor);
         }
 
+        while (str[cursor] == '(') {
+            cursor++;
+
+            if (!move.black.alternatives)
+                move.black.alternatives = pgn_alternative_moves_init();
+
+            pgn_cursor_skip_whitespace(str, &cursor);
+            pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+            pgn_cursor_skip_whitespace(str, &cursor);
+            assert(str[cursor++] == ')');
+
+            pgn_cursor_skip_whitespace(str, &cursor);
+            if (str[cursor] == '{') {
+                if (!comments) comments = pgn_comments_init();
+
+                while (str[cursor] == '{') {
+                    pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+                    comment.position = PGN_COMMENT_POSITION_AFTER_ALTERNATIVE;
+
+                    pgn_comments_push(comments, comment);
+                    pgn_cursor_skip_whitespace(str, &cursor);
+                }
+
+                assert(str[cursor] != '{');
+                assert(str[cursor] != '}');
+                pgn_cursor_skip_whitespace(str, &cursor);
+            }
+        }
+
         if (comments) {
             move.black.comments = comments;
             comments = NULL;
@@ -234,19 +263,11 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     while (str[cursor] == '(') {
         cursor++;
 
-        if (dots_count == 0 || dots_count == 1) {
-            if (!move.white.alternatives)
-                move.white.alternatives = pgn_alternative_moves_init();
+        if (!move.white.alternatives)
+            move.white.alternatives = pgn_alternative_moves_init();
 
-            pgn_cursor_skip_whitespace(str, &cursor);
-            pgn_alternative_moves_push(move.white.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-        } else if (dots_count == 3) {
-            if (!move.black.alternatives)
-                move.black.alternatives = pgn_alternative_moves_init();
-
-            pgn_cursor_skip_whitespace(str, &cursor);
-            pgn_alternative_moves_push(move.black.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
-        }
+        pgn_cursor_skip_whitespace(str, &cursor);
+        pgn_alternative_moves_push(move.white.alternatives, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
 
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
