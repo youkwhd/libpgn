@@ -25,6 +25,37 @@ char *read_file(char *filename)
     return buf;
 }
 
+void run_subcommand_fmt(int argc, char **argv)
+{
+    if (argc <= 2) {
+        fprintf(stderr, "ERROR: no pgn file provided.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *filename = argv[2];
+    char *pgn_file_contents = read_file(filename);
+    char *saved_ptr = pgn_file_contents;
+
+    while (*pgn_file_contents) {
+        pgn_t *pgn = pgn_init();
+        size_t consumed = pgn_parse(pgn, pgn_file_contents);
+
+        pgn_file_contents += consumed;
+        while (isspace(*pgn_file_contents))
+            pgn_file_contents++;
+
+        fmt_print(pgn);
+
+        /* still have unparsed pgn */
+        if (*pgn_file_contents)
+            printf("\n");
+
+        pgn_cleanup(pgn);
+    }
+
+    free(saved_ptr);
+}
+
 int main(int argc, char **argv)
 {
     if (argc <= 1) {
@@ -34,37 +65,10 @@ int main(int argc, char **argv)
 
     char *subcommand = argv[1];
     if (strcmp(subcommand, "fmt") == 0) {
-        if (argc <= 2) {
-            fprintf(stderr, "ERROR: no pgn file provided.\n");
-            exit(EXIT_FAILURE);
-        }
+        run_subcommand_fmt(argc, argv);
+        return 0;
+    } 
 
-        char *filename = argv[2];
-        char *pgn_file_contents = read_file(filename);
-        char *saved_ptr = pgn_file_contents;
-
-        while (*pgn_file_contents) {
-            pgn_t *pgn = pgn_init();
-            size_t consumed = pgn_parse(pgn, pgn_file_contents);
-
-            pgn_file_contents += consumed;
-            while (isspace(*pgn_file_contents))
-                pgn_file_contents++;
-
-            fmt_print(pgn);
-
-            /* still have unparsed pgn */
-            if (*pgn_file_contents)
-                printf("\n");
-
-            pgn_cleanup(pgn);
-        }
-
-        free(saved_ptr);
-    } else {
-        fprintf(stderr, "ERROR: unknown subcommand '%s'.\n", subcommand);
-        exit(EXIT_FAILURE);
-    }
-
-    return 0;
+    fprintf(stderr, "ERROR: unknown subcommand '%s'.\n", subcommand);
+    return 1;
 }
