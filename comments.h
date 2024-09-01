@@ -76,6 +76,10 @@ void pgn_comment_cleanup(pgn_comment_t *comment);
 
 pgn_comments_t *pgn_comments_init(void);
 void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment);
+/* parse all comments into **comments.
+ * returns how much char parsed
+ */
+size_t pgn_comments_poll(pgn_comments_t **comments, pgn_comment_position_t pos, char *str);
 int pgn_comments_get_first_after_alternative_index(pgn_comments_t *comments);
 void pgn_comments_cleanup(pgn_comments_t *comments);
 

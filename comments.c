@@ -1,4 +1,5 @@
 #include "comments.h"
+#include "utils/cursor.h"
 #include "utils/buffer.h"
 
 #include <assert.h>
@@ -70,6 +71,29 @@ void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment)
     }
 
     comments->values[comments->length++] = comment;
+}
+
+size_t pgn_comments_poll(pgn_comments_t **comments, pgn_comment_position_t pos, char *str)
+{
+    size_t cursor = 0;
+
+    if (str[cursor] == '{') {
+        if (!*comments) *comments = pgn_comments_init();
+
+        while (str[cursor] == '{') {
+            pgn_comment_t comment = __pgn_comment_from_string(str + cursor, &cursor);
+            comment.position = pos;
+
+            pgn_comments_push(*comments, comment);
+            pgn_cursor_skip_whitespace(str, &cursor);
+        }
+
+        assert(str[cursor] != '{');
+        assert(str[cursor] != '}');
+        pgn_cursor_skip_whitespace(str, &cursor);
+    }
+    
+    return cursor;
 }
 
 int pgn_comments_get_first_after_alternative_index(pgn_comments_t *comments)
