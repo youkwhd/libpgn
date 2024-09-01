@@ -4,8 +4,8 @@
 #define PGN_COORDINATE_UNKNOWN 0
 
 typedef struct pgn_coordinate_t {
-    char x;
-    int y;
+    char file;
+    int rank;
 } pgn_coordinate_t;
 
 char pgn_coordinate_as_char(int n);

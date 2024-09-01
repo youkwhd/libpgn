@@ -44,26 +44,26 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         cursor++;
 
         assert(islower(str[cursor]));
-        move.dest.x = str[cursor++];
+        move.dest.file = str[cursor++];
         assert(isdigit(str[cursor]));
-        move.dest.y = str[cursor++] - '0';
+        move.dest.rank = str[cursor++] - '0';
     } else {
-        if (islower(str[cursor])) move.from.x = str[cursor++];
-        if (isdigit(str[cursor])) move.from.y = str[cursor++] - '0';
+        if (islower(str[cursor])) move.from.file = str[cursor++];
+        if (isdigit(str[cursor])) move.from.rank = str[cursor++] - '0';
 
         if (str[cursor] == 'x' || str[cursor] == ':') {
             move.captures = true;
             cursor++;
 
             assert(islower(str[cursor]));
-            move.dest.x = str[cursor++];
+            move.dest.file = str[cursor++];
             assert(isdigit(str[cursor]));
-            move.dest.y = str[cursor++] - '0';
+            move.dest.rank = str[cursor++] - '0';
         } else if (islower(str[cursor])) {
             assert(islower(str[cursor]));
-            move.dest.x = str[cursor++];
+            move.dest.file = str[cursor++];
             assert(isdigit(str[cursor]));
-            move.dest.y = str[cursor++] - '0';
+            move.dest.rank = str[cursor++] - '0';
         } else {
             move.dest = move.from;
             move.from = (pgn_coordinate_t){0};
