@@ -88,12 +88,12 @@ bool __fmt_print_white(pgn_move_t *move, size_t depth, size_t number)
 
         printf("%zu. %s", number, move->notation);
 
-        if (move->alternatives) {
-            fmt_print_alternative_moves(move->alternatives, depth + 1, number);
-        }
-
         if (move->comments) {
             __fmt_print_comment_after(move->comments);
+        }
+
+        if (move->alternatives) {
+            fmt_print_alternative_moves(move->alternatives, depth + 1, number);
         }
 
         printed = true;
