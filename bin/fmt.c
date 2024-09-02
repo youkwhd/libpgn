@@ -145,10 +145,13 @@ bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_number, bool roo
 
         bool white_printed = __fmt_print_white(&white, depth, last_number + i);
         bool black_printed = __fmt_print_black(&black, depth, last_number + i, white_printed);
+
         if (i != moves->length - 1) {
             printf("\n");
-            if (!root) printf(" ");
             fmt_print_tab(depth, TAB_WIDTH);
+
+            if (!root)
+                printf(" ");
         }
 
         printed = true;
