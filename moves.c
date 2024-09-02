@@ -140,13 +140,14 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_BEFORE_MOVE, str + cursor);
 
+    assert(isdigit(str[cursor]));
+    while (isdigit(str[cursor])) cursor++;
+
     int dots_count = 0;
-    if (isdigit(str[cursor])) {
-        while (isdigit(str[cursor])) cursor++;
-        while (str[cursor] == '.') {
-            cursor++;
-            dots_count++;
-        }
+    assert(str[cursor] == '.');
+    while (str[cursor] == '.') {
+        cursor++;
+        dots_count++;
     }
     assert(dots_count == 1 || dots_count == 3);
 
