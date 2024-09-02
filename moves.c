@@ -50,6 +50,8 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         assert(isdigit(str[cursor]));
         move.dest.rank = str[cursor++] - '0';
     } else {
+        /* NOTE: can be refactored using a stack
+         */
         if (islower(str[cursor])) move.from.file = str[cursor++];
         if (isdigit(str[cursor])) move.from.rank = str[cursor++] - '0';
 
