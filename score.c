@@ -1,7 +1,6 @@
 #include "score.h"
 
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
 typedef enum pgn_score_single_t {
