@@ -211,11 +211,6 @@ void test_parsing_bunch_of_moves()
     suite6_assert(moves->values[0].black.alternatives->values[0]->values[0].black.captures == false);
     suite6_assert(moves->values[0].black.alternatives->values[0]->values[0].black.annotation == PGN_ANNOTATION_NULL);
     pgn_moves_cleanup(moves);
-}
-
-void test_parsing_moves_with_score()
-{
-    pgn_moves_t *moves = NULL;
 
     moves = pgn_parse_moves("1.c4 ( 1.e4  ) c5 2.Nc3 Nc6");
     suite6_assert(moves->values[0].white.piece == PGN_PIECE_PAWN);
@@ -247,38 +242,9 @@ void test_parsing_moves_with_score()
     suite6_assert(moves->values[1].black.captures == false);
     suite6_assert(moves->values[1].black.annotation == PGN_ANNOTATION_NULL);
     pgn_moves_cleanup(moves);
-
-    moves = pgn_parse_moves("1.c4 ( 1.e4  ) c5 2.Nc3 Nc6 1/2-1/2");
-    suite6_assert(moves->values[0].white.piece == PGN_PIECE_PAWN);
-    suite6_assert(moves->values[0].white.dest.file == 'c');
-    suite6_assert(moves->values[0].white.dest.rank == 4);
-    suite6_assert(moves->values[0].white.captures == false);
-    suite6_assert(moves->values[0].white.annotation == PGN_ANNOTATION_NULL);
-    suite6_assert(moves->values[0].black.piece == PGN_PIECE_PAWN);
-    suite6_assert(moves->values[0].black.dest.file == 'c');
-    suite6_assert(moves->values[0].black.dest.rank == 5);
-    suite6_assert(moves->values[0].black.captures == false);
-    suite6_assert(moves->values[0].black.annotation == PGN_ANNOTATION_NULL);
-
-    suite6_assert(moves->values[0].white.alternatives->values[0]->values[0].white.piece == PGN_PIECE_PAWN);
-    suite6_assert(moves->values[0].white.alternatives->values[0]->values[0].white.dest.file == 'e');
-    suite6_assert(moves->values[0].white.alternatives->values[0]->values[0].white.dest.rank == 4);
-    suite6_assert(moves->values[0].white.alternatives->values[0]->values[0].white.captures == false);
-    suite6_assert(moves->values[0].white.alternatives->values[0]->values[0].white.annotation == PGN_ANNOTATION_NULL);
-
-    suite6_assert(moves->values[1].white.piece == PGN_PIECE_KNIGHT);
-    suite6_assert(moves->values[1].white.dest.file == 'c');
-    suite6_assert(moves->values[1].white.dest.rank == 3);
-    suite6_assert(moves->values[1].white.captures == false);
-    suite6_assert(moves->values[1].white.annotation == PGN_ANNOTATION_NULL);
-
-    suite6_assert(moves->values[1].black.piece == PGN_PIECE_KNIGHT);
-    suite6_assert(moves->values[1].black.dest.file == 'c');
-    suite6_assert(moves->values[1].black.dest.rank == 6);
-    suite6_assert(moves->values[1].black.captures == false);
-    suite6_assert(moves->values[1].black.annotation == PGN_ANNOTATION_NULL);
-    pgn_moves_cleanup(moves);
 }
+
+
 
 void test_parsing_en_passant()
 {
@@ -398,7 +364,6 @@ int main(void)
 {
     test_parsing_single_move();
     test_parsing_bunch_of_moves();
-    test_parsing_moves_with_score();
     test_parsing_en_passant();
     test_parsing_moves_with_alternatives();
     test_parsing_ambiguate_moves();

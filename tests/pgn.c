@@ -43,7 +43,7 @@ void test_parsing_pgn()
     suite6_assert(pgn->moves->values[1].black.captures == false);
     suite6_assert(pgn->moves->values[1].black.annotation == PGN_ANNOTATION_NULL);
 
-    suite6_assert(pgn->score.white == 0 && pgn->score.black == 1);
+    suite6_assert(pgn->score == PGN_SCORE_BLACK_WON);
 
     pgn_cleanup(pgn);
 }

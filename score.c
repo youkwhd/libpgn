@@ -1,40 +1,56 @@
 #include "score.h"
 
 #include <assert.h>
-#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+
+typedef enum pgn_score_single_t {
+    ZERO = 0,
+    ONE,
+    HALF,
+} pgn_score_single_t;
+
+/* only parses the score one sided
+ */
+pgn_score_single_t __pgn_score_single_from_string(char *str, size_t *consumed)
+{
+    if (strncmp(str, "1/2", 3) == 0) {
+        *consumed += 3;
+        return HALF;
+    } else if (*str == '0') {
+        *consumed += 1;
+        return ZERO;
+    } else if (*str == '1') {
+        *consumed += 1;
+        return ONE;
+    }
+
+    assert(0 && "libpgn: unreachable");
+    return -1;
+}
 
 pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
 {
-    pgn_score_t score = {
-        .white = 0,
-        .black = 0,
-    };
-
     size_t cursor = 0;
 
-    /* TODO: refactor
-     */
     if (str[cursor] == '*') {
         cursor++;
-    } else if (isdigit(str[cursor]) && str[cursor + 1] == '-') {
-        /* TODO: this does not have the capability
-         * to parse multiple digit.
-         */
-        score.white = str[cursor++] - '0';
-        assert(str[cursor++] == '-');
-        score.black = str[cursor++] - '0';
-    } else if (str[cursor] == '1' && str[cursor + 1] == '/') {
-        assert(str[cursor++] == '1');
-        assert(str[cursor++] == '/');
-        assert(str[cursor++] == '2');
-        assert(str[cursor++] == '-');
-        assert(str[cursor++] == '1');
-        assert(str[cursor++] == '/');
-        assert(str[cursor++] == '2');
+        *consumed += cursor;
+        return PGN_SCORE_UNKNOWN;
     }
 
+    pgn_score_single_t white = __pgn_score_single_from_string(str + cursor, &cursor);
+    assert(str[cursor++] == '-');
+    pgn_score_single_t black = __pgn_score_single_from_string(str + cursor, &cursor);
     *consumed += cursor;
-    return score;
+
+    if (white == HALF && black == HALF)   return PGN_SCORE_DRAW;
+    else if (white == 1 && black == 0)    return PGN_SCORE_WHITE_WON;
+    else if (white == 0 && black == 1)    return PGN_SCORE_BLACK_WON;
+    else if (white == 0 && black == 0)    return PGN_SCORE_FORFEIT;
+    else if (white == 0 && black == HALF) return PGN_SCORE_WHITE_FORFEIT;
+    else if (white == HALF && black == 0) return PGN_SCORE_BLACK_FORFEIT;
+    else                                  return PGN_SCORE_UNKNOWN;
 }
 
 pgn_score_t pgn_score_from_string(char *str)

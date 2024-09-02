@@ -21,10 +21,7 @@ void test_parsing_metadata()
     suite6_assert(strcmp(pgn_metadata_get(metadata, "White"), "Fischer, Robert J.") == 0);
     suite6_assert(strcmp(pgn_metadata_get(metadata, "Black"), "Spassky, Boris V.") == 0);
     suite6_assert(strcmp(pgn_metadata_get(metadata, "Result"), "1/2-1/2") == 0);
-
-    pgn_score_t score = pgn_parse_score(pgn_metadata_get(metadata, "Result"));
-    suite6_assert(score.white == 0 && score.black == 0);
-
+    suite6_assert(pgn_parse_score(pgn_metadata_get(metadata, "Result")) == PGN_SCORE_DRAW);
     pgn_metadata_cleanup(metadata);
 }
 

@@ -4,8 +4,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct pgn_score_t {
-    uint8_t white, black;
+typedef enum pgn_score_t {
+    PGN_SCORE_UNKNOWN = 0,
+    PGN_SCORE_DRAW,
+    PGN_SCORE_WHITE_WON,
+    PGN_SCORE_BLACK_WON,
+    PGN_SCORE_FORFEIT,
+    PGN_SCORE_WHITE_FORFEIT,
+    PGN_SCORE_BLACK_FORFEIT,
 } pgn_score_t;
 
 pgn_score_t __pgn_score_from_string(char *str, size_t *consumed);
