@@ -8,7 +8,6 @@ typedef struct pgn_coordinate_t {
     int rank;
 } pgn_coordinate_t;
 
-char pgn_coordinate_as_char(int n);
-int pgn_coordinate_as_int(char n);
+int pgn_coordinate_file_as_index(char file);
 
 #endif // __LIBPGN_COORDINATE_H

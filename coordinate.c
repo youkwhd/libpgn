@@ -1,11 +1,11 @@
 #include "coordinate.h"
 
-char pgn_coordinate_as_char(int n)
-{
-    return n + 'a';
-}
+#include <ctype.h>
 
-int pgn_coordinate_as_int(char n)
+int pgn_coordinate_file_as_index(char file)
 {
-    return n - 'a';
+    if (isupper(file))
+        return file - 'A';
+
+    return file - 'a';
 }
