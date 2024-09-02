@@ -9,6 +9,8 @@
 #include "check.h"
 #include "comments.h"
 #include "piece.h"
+#include "score.h"
+
 #include "utils/cursor.h"
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
@@ -187,11 +189,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         comments = NULL;
     }
 
-    /* TODO: maybe isolate into a function
-     *
-     * checking if it's the score.
-     */
-    if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+    if (pgn_score_from_string(str + cursor)) {
         pgn_moves_push(moves, move);
         *consumed += cursor;
         return moves;
@@ -235,11 +233,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
     pgn_moves_push(moves, move);
 
-    /* TODO: maybe isolate into a function
-     *
-     * checking if it's the score.
-     */
-    if ((isdigit(str[cursor]) && (str[cursor + 1] == '-' || str[cursor + 1] == '/')) || str[cursor] == '*') {
+    if (pgn_score_from_string(str + cursor)) {
         *consumed += cursor;
         return moves;
     }
