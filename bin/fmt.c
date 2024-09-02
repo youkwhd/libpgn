@@ -107,6 +107,10 @@ bool __fmt_print_black(pgn_move_t *move, size_t depth, size_t number, bool white
     bool printed = false;
 
     if (move->notation[0]) {
+        if (white_printed) {
+            printf(" ");
+        }
+
         if (move->comments) {
             __fmt_print_comment_before(move->comments);
         }
@@ -140,10 +144,6 @@ bool fmt_print_moves(pgn_moves_t *moves, int depth, size_t last_number, bool roo
         pgn_move_t black = moves->values[i].black;
 
         bool white_printed = __fmt_print_white(&white, depth, last_number + i);
-        bool black_would_be_printed = black.notation[0] != 0;
-        if (white_printed && black_would_be_printed)
-            printf(" ");
-
         bool black_printed = __fmt_print_black(&black, depth, last_number + i, white_printed);
         if (i != moves->length - 1) {
             printf("\n");
