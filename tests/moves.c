@@ -373,6 +373,11 @@ void test_parsing_ambiguate_moves()
     pgn_moves_cleanup(moves);
 
     moves = pgn_moves_from_string("1. Qh4e1");
+    suite6_assert(!strcmp(moves->values[0].white.notation, "Qh4e1"));
+    suite6_assert(moves->values[0].white.from.file == 'h');
+    suite6_assert(moves->values[0].white.from.rank == 4);
+    suite6_assert(moves->values[0].white.dest.file == 'e');
+    suite6_assert(moves->values[0].white.dest.rank == 1);
     pgn_moves_cleanup(moves);
 }
 
