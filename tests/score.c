@@ -4,8 +4,7 @@
 
 void test_parsing_score()
 {
-    printf("1: %d\n", pgn_parse_score("1-0"));
-    /* suite6_assert(pgn_parse_score("1/2-1/2") == PGN_SCORE_DRAW); */
+    suite6_assert(pgn_parse_score("1/2-1/2") == PGN_SCORE_DRAW);
     suite6_assert(pgn_parse_score("1-0") == PGN_SCORE_WHITE_WON);
     suite6_assert(pgn_parse_score("0-1") == PGN_SCORE_BLACK_WON);
     suite6_assert(pgn_parse_score("0-0") == PGN_SCORE_FORFEIT);
