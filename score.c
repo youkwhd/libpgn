@@ -24,7 +24,6 @@ pgn_score_single_t __pgn_score_single_from_string(char *str, size_t *consumed)
         return ONE;
     }
 
-    assert(0 && "libpgn: unreachable");
     return -1;
 }
 
@@ -39,8 +38,13 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
     }
 
     pgn_score_single_t white = __pgn_score_single_from_string(str + cursor, &cursor);
+    if ((int)white == -1) return PGN_SCORE_UNKNOWN;
+
     assert(str[cursor++] == '-');
+
     pgn_score_single_t black = __pgn_score_single_from_string(str + cursor, &cursor);
+    if ((int)black == -1) return PGN_SCORE_UNKNOWN;
+
     *consumed += cursor;
 
     if (white == HALF && black == HALF)   return PGN_SCORE_DRAW;
