@@ -101,6 +101,7 @@ check:
         assert(str[++cursor] == 'p');
         assert(str[++cursor] == '.');
         cursor++;
+        move.en_passant = true;
     }
 
     pgn_cursor_skip_whitespace(str, &cursor);

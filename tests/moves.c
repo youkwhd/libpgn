@@ -284,6 +284,7 @@ void test_parsing_en_passant()
 {
     pgn_move_t move = pgn_parse_move("exd6 e.p.");
     suite6_assert(move.piece == PGN_PIECE_PAWN);
+    suite6_assert(move.en_passant);
     suite6_assert(move.from.file == 'e');
     suite6_assert(move.dest.file == 'd');
     suite6_assert(move.dest.rank == 6);
@@ -293,25 +294,37 @@ void test_parsing_en_passant()
     suite6_assert(moves->values[0].white.piece == PGN_PIECE_PAWN);
     suite6_assert(moves->values[0].white.dest.file == 'd');
     suite6_assert(moves->values[0].white.dest.rank == 4);
+    suite6_assert(!strcmp(moves->values[0].white.notation, "d4"));
+    suite6_assert(!moves->values[0].white.en_passant);
     suite6_assert(moves->values[0].black.piece == PGN_PIECE_PAWN);
     suite6_assert(moves->values[0].black.from.file == 'e');
     suite6_assert(moves->values[0].black.dest.file == 'd');
     suite6_assert(moves->values[0].black.dest.rank == 3);
+    suite6_assert(!strcmp(moves->values[0].black.notation, "exd3 e.p."));
+    suite6_assert(moves->values[0].black.en_passant);
 
     suite6_assert(moves->values[1].white.piece == PGN_PIECE_KNIGHT);
     suite6_assert(moves->values[1].white.dest.file == 'c');
     suite6_assert(moves->values[1].white.dest.rank == 4);
+    suite6_assert(!strcmp(moves->values[1].white.notation, "Nc4"));
+    suite6_assert(!moves->values[1].white.en_passant);
     suite6_assert(moves->values[1].black.piece == PGN_PIECE_KNIGHT);
     suite6_assert(moves->values[1].black.dest.file == 'c');
     suite6_assert(moves->values[1].black.dest.rank == 6);
+    suite6_assert(!strcmp(moves->values[1].black.notation, "Nc6"));
+    suite6_assert(!moves->values[1].black.en_passant);
 
     suite6_assert(moves->values[2].white.piece == PGN_PIECE_PAWN);
     suite6_assert(moves->values[2].white.from.file == 'c');
     suite6_assert(moves->values[2].white.dest.file == 'b');
     suite6_assert(moves->values[2].white.dest.rank == 3);
+    suite6_assert(!strcmp(moves->values[2].white.notation, "cxb3 e.p."));
+    suite6_assert(moves->values[2].white.en_passant);
     suite6_assert(moves->values[2].black.piece == PGN_PIECE_BISHOP);
     suite6_assert(moves->values[2].black.dest.file == 'e');
     suite6_assert(moves->values[2].black.dest.rank == 4);
+    suite6_assert(!strcmp(moves->values[2].black.notation, "Be4"));
+    suite6_assert(!moves->values[2].black.en_passant);
     pgn_moves_cleanup(moves);
 }
 
