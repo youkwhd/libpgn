@@ -361,13 +361,15 @@ void test_parsing_ambiguate_moves()
 void test_dump_move()
 {
     pgn_move_t move = {0};
+    size_t written = 0;
 
     move = (pgn_move_t){0};
     move.annotation = PGN_ANNOTATION_UNKNOWN;
     move.piece = PGN_PIECE_PAWN;
     move.dest.file = 'e';
     move.dest.rank = 4;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "e4"));
 
     move = (pgn_move_t){0};
@@ -375,7 +377,8 @@ void test_dump_move()
     move.piece = PGN_PIECE_ROOK;
     move.dest.file = 'e';
     move.dest.rank = 4;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "Re4"));
 
     move = (pgn_move_t){0};
@@ -384,14 +387,16 @@ void test_dump_move()
     move.check = PGN_CHECK_MATE;
     move.dest.file = 'e';
     move.dest.rank = 4;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "Re4#"));
 
     move = (pgn_move_t){0};
     move.annotation = PGN_ANNOTATION_UNKNOWN;
     move.castles = PGN_CASTLING_KINGSIDE;
     move.check = PGN_CHECK_MATE;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "O-O#"));
 
     move = (pgn_move_t){0};
@@ -399,7 +404,8 @@ void test_dump_move()
     move.piece = PGN_PIECE_ROOK;
     move.dest.file = 'a';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "Ra3!?"));
 
     move = (pgn_move_t){0};
@@ -408,7 +414,8 @@ void test_dump_move()
     move.piece = PGN_PIECE_PAWN;
     move.dest.file = 'f';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "f3!? e.p."));
 
     move = (pgn_move_t){0};
@@ -416,7 +423,8 @@ void test_dump_move()
     move.piece = PGN_PIECE_PAWN;
     move.dest.file = 'f';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "f3 $9"));
 
     move = (pgn_move_t){0};
@@ -425,7 +433,8 @@ void test_dump_move()
     move.piece = PGN_PIECE_PAWN;
     move.dest.file = 'f';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "f3 e.p. $9"));
 
     move = (pgn_move_t){0};
@@ -434,7 +443,8 @@ void test_dump_move()
     move.captures = true;
     move.dest.file = 'f';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "xf3"));
 
     move = (pgn_move_t){0};
@@ -443,7 +453,8 @@ void test_dump_move()
     move.captures = true;
     move.dest.file = 'f';
     move.dest.rank = 3;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "Rxf3"));
 
     move = (pgn_move_t){0};
@@ -454,7 +465,8 @@ void test_dump_move()
     move.dest.rank = 8;
     move.promoted_to = PGN_PIECE_QUEEN;
     move.check = PGN_CHECK_DOUBLE;
-    pgn_move_dump(&move, move.notation);
+    written = pgn_move_dump(&move, move.notation);
+    suite6_assert(strlen(move.notation) == written);
     suite6_assert(!strcmp(move.notation, "xf8=Q++"));
 }
 
