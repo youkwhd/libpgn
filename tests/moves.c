@@ -1,7 +1,6 @@
 #include "extra/suite6.h"
 
 #include <pgn.h>
-#include <stdlib.h>
 #include <string.h>
 
 void test_parsing_single_move()
