@@ -92,6 +92,9 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         }
     }
 
+    assert(move.dest.file != 0);
+    assert(move.dest.rank != 0);
+
 check:
     move.check = __pgn_check_from_string(str + cursor, &cursor);
     move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);

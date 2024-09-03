@@ -360,6 +360,14 @@ void test_parsing_ambiguate_moves()
     pgn_moves_cleanup(moves);
 }
 
+void test_parsing_weird_move()
+{
+    return;
+
+    suite6_assert(*(pgn_move_from_string("Le1").notation) == '\0');
+    suite6_assert(*(pgn_move_from_string("xe100").notation) == '\0');
+}
+
 void test_parsing_moves_with_weird_spaces()
 {
     return;
@@ -383,6 +391,7 @@ int main(void)
     test_parsing_en_passant();
     test_parsing_moves_with_alternatives();
     test_parsing_ambiguate_moves();
+    test_parsing_weird_move(); // DOES NOT GET CALLED, WOULD abort()
     test_parsing_moves_with_weird_spaces(); // DOES NOT GET CALLED, WOULD abort()
     return 0;
 }
