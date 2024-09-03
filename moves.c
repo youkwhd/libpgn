@@ -31,6 +31,9 @@
 
 #include "utils/cursor.h"
 
+#define  PGN_EXPECT_WHITE 0
+#define  PGN_EXPECT_BLACK 1
+
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
     pgn_move_t move = {0};
@@ -218,7 +221,7 @@ check:
     return cursor;
 }
 
-pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves)
+pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves, int expect)
 {
     if (str[0] == ')' || str[0] == '\0')
         return moves;
@@ -242,7 +245,10 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         cursor++;
         dots_count++;
     }
+
     assert(dots_count == 1 || dots_count == 3);
+    if (expect == PGN_EXPECT_WHITE) assert(dots_count == 1);
+    if (expect == PGN_EXPECT_BLACK) assert(dots_count == 3);
 
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_BETWEEN_MOVE, str + cursor);
@@ -252,7 +258,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
         pgn_cursor_skip_whitespace(str, &cursor);
         cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-        cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor);
+        cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor, PGN_EXPECT_BLACK);
         pgn_cursor_skip_whitespace(str, &cursor);
         cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
@@ -262,7 +268,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         }
 
         pgn_moves_push(moves, move);
-        __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
+        __pgn_moves_from_string_recurse(str + cursor, &cursor, moves, PGN_EXPECT_WHITE);
         *consumed += cursor;
         return moves;
     }
@@ -270,7 +276,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
     move.white = __pgn_move_from_string(str + cursor, &cursor);
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-    cursor += pgn_alternative_moves_poll(&move.white.alternatives, &comments, str + cursor);
+    cursor += pgn_alternative_moves_poll(&move.white.alternatives, &comments, str + cursor, PGN_EXPECT_WHITE);
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
@@ -312,7 +318,7 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
 
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
-    cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor);
+    cursor += pgn_alternative_moves_poll(&move.black.alternatives, &comments, str + cursor, PGN_EXPECT_BLACK);
     pgn_cursor_skip_whitespace(str, &cursor);
     cursor += pgn_comments_poll(&comments, PGN_COMMENT_POSITION_AFTER_MOVE, str + cursor);
 
@@ -328,14 +334,14 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         return moves;
     }
 
-    __pgn_moves_from_string_recurse(str + cursor, &cursor, moves);
+    __pgn_moves_from_string_recurse(str + cursor, &cursor, moves, PGN_EXPECT_WHITE);
     *consumed += cursor;
     return moves;
 }
 
 pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed)
 {
-    return __pgn_moves_from_string_recurse(str, consumed, pgn_moves_init());
+    return __pgn_moves_from_string_recurse(str, consumed, pgn_moves_init(), PGN_EXPECT_WHITE);
 }
 
 pgn_moves_t *pgn_moves_from_string(char *str)
@@ -353,7 +359,7 @@ pgn_alternative_moves_t *pgn_alternative_moves_init(void)
     return alt;
 }
 
-size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t **placeholder, char *str)
+size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t **placeholder, char *str, int expect)
 {
     size_t cursor = 0;
 
@@ -364,7 +370,7 @@ size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t 
             *alt = pgn_alternative_moves_init();
 
         pgn_cursor_skip_whitespace(str, &cursor);
-        pgn_alternative_moves_push(*alt, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init()));
+        pgn_alternative_moves_push(*alt, __pgn_moves_from_string_recurse(str + cursor, &cursor, pgn_moves_init(), expect));
         pgn_cursor_skip_whitespace(str, &cursor);
         assert(str[cursor++] == ')');
 

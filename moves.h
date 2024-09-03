@@ -85,7 +85,7 @@ pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
 pgn_moves_t *pgn_moves_from_string(char *str);
 
 pgn_alternative_moves_t *pgn_alternative_moves_init(void);
-size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t **placeholder, char *str);
+size_t pgn_alternative_moves_poll(pgn_alternative_moves_t **alt, pgn_comments_t **placeholder, char *str, int expect);
 void pgn_alternative_moves_push(pgn_alternative_moves_t *alt, pgn_moves_t *moves);
 void pgn_alternative_moves_cleanup(pgn_alternative_moves_t *alt);
 
