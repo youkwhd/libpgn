@@ -144,6 +144,68 @@ pgn_move_t pgn_move_from_string(char *str)
     return __pgn_move_from_string(str, &consumed);
 }
 
+void pgn_move_dump(pgn_move_t *move, char *dest)
+{
+    size_t cursor = 0;
+
+    switch (move->castles) {
+    case PGN_CASTLING_NONE: break;
+    case PGN_CASTLING_KINGSIDE:
+        strcpy(dest, "O-O");
+        cursor += PGN_CASTLING_KINGSIDE * 2 - 1;
+        goto check;
+    case PGN_CASTLING_QUEENSIDE:
+        strcpy(dest, "O-O-O");
+        cursor += PGN_CASTLING_QUEENSIDE * 2 - 1;
+        goto check;
+    }
+
+    assert(move->piece != PGN_PIECE_UNKNOWN);
+    if (move->piece != PGN_PIECE_PAWN) {
+        dest[cursor++] = move->piece;
+    }
+
+    if (move->from.file) dest[cursor++] = move->from.file;
+    if (move->from.rank) dest[cursor++] = '0' + move->from.rank;
+
+    dest[cursor++] = move->dest.file;
+    dest[cursor++] = '0' + move->dest.rank;
+
+check:
+    switch (move->check) {
+        case PGN_CHECK_NONE:
+            break;
+        case PGN_CHECK_MATE:
+            dest[cursor++] = '#';
+            break;
+        case PGN_CHECK_SINGLE:
+            dest[cursor++] = '+';
+            break;
+        case PGN_CHECK_DOUBLE:
+            dest[cursor++] = '+';
+            dest[cursor++] = '+';
+            break;
+    }
+
+    if (move->annotation >= PGN_ANNOTATION_GOOD_MOVE && move->annotation <= PGN_ANNOTATION_DUBIOUS_MOVE) {
+        cursor += pgn_annotation_to_string(move->annotation, dest + cursor);
+    }
+
+    if (move->en_passant) {
+        dest[cursor++] = ' ';
+        strcpy(dest + cursor, "e.p.");
+        cursor += 4;
+    }
+
+    if (move->annotation > PGN_ANNOTATION_DUBIOUS_MOVE || move->annotation == PGN_ANNOTATION_NULL) {
+        dest[cursor++] = ' ';
+        cursor += pgn_annotation_to_string(move->annotation, dest + cursor);
+    }
+
+    /* just to make sure */
+    dest[cursor] = '\0';
+}
+
 pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves)
 {
     if (str[0] == ')' || str[0] == '\0')

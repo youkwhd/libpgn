@@ -1,6 +1,7 @@
 #include "extra/suite6.h"
 
 #include <pgn.h>
+#include <stdlib.h>
 #include <string.h>
 
 void test_parsing_single_move()
@@ -244,8 +245,6 @@ void test_parsing_bunch_of_moves()
     pgn_moves_cleanup(moves);
 }
 
-
-
 void test_parsing_en_passant()
 {
     pgn_move_t move = pgn_parse_move("exd6 e.p.");
@@ -360,6 +359,60 @@ void test_parsing_ambiguate_moves()
     pgn_moves_cleanup(moves);
 }
 
+void test_dump_move()
+{
+    pgn_move_t move = {0};
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_UNKNOWN;
+    move.piece = PGN_PIECE_PAWN;
+    move.dest.file = 'e';
+    move.dest.rank = 4;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "e4"));
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_UNKNOWN;
+    move.piece = PGN_PIECE_ROOK;
+    move.dest.file = 'e';
+    move.dest.rank = 4;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "Re4"));
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_UNKNOWN;
+    move.piece = PGN_PIECE_ROOK;
+    move.check = PGN_CHECK_MATE;
+    move.dest.file = 'e';
+    move.dest.rank = 4;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "Re4#"));
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_UNKNOWN;
+    move.castles = PGN_CASTLING_KINGSIDE;
+    move.check = PGN_CHECK_MATE;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "O-O#"));
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_INTRESTING_MOVE;
+    move.piece = PGN_PIECE_ROOK;
+    move.dest.file = 'a';
+    move.dest.rank = 3;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "Ra3!?"));
+
+    move = (pgn_move_t){0};
+    move.annotation = PGN_ANNOTATION_INTRESTING_MOVE;
+    move.en_passant = true;
+    move.piece = PGN_PIECE_PAWN;
+    move.dest.file = 'f';
+    move.dest.rank = 3;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "f3!? e.p."));
+}
+
 void test_parsing_weird_move()
 {
     return;
@@ -391,6 +444,7 @@ int main(void)
     test_parsing_en_passant();
     test_parsing_moves_with_alternatives();
     test_parsing_ambiguate_moves();
+    test_dump_move();
     test_parsing_weird_move(); // DOES NOT GET CALLED, WOULD abort()
     test_parsing_moves_with_weird_spaces(); // DOES NOT GET CALLED, WOULD abort()
     return 0;
