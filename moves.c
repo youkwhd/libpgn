@@ -168,8 +168,16 @@ void pgn_move_dump(pgn_move_t *move, char *dest)
     if (move->from.file) dest[cursor++] = move->from.file;
     if (move->from.rank) dest[cursor++] = '0' + move->from.rank;
 
+    if (move->captures) dest[cursor++] = 'x';
+
     dest[cursor++] = move->dest.file;
     dest[cursor++] = '0' + move->dest.rank;
+
+    if (move->promoted_to) {
+        assert(move->promoted_to != PGN_PIECE_PAWN);
+        dest[cursor++] = '=';
+        dest[cursor++] = move->promoted_to;
+    }
 
 check:
     switch (move->check) {
