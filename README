@@ -28,6 +28,7 @@ opening <https://en.wikipedia.org/wiki/Bongcloud_Attack>:
         pgn_parse(pgn,
                 "[Event \"Global Championship Finals 2022\"]\n"
                 "[Result \"*\"]\n"
+                "\n"
                 "1. e4 e5 2. Ke2? *");
 
         printf("%s\n", pgn_metadata_get(pgn->metadata, "Event"));
