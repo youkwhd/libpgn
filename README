@@ -3,8 +3,10 @@ libpgn
 
 Portable Game Notation (PGN) file manipulation.
 
-To start working with libpgn, peeking at tests/pgn.c file is a
-great start.
+libpgn(3) is capable to read and create PGN files, it is however not
+a FEN parser, and is only intended to parse PGN files.
+
+See the man page for more detailed information.
 
 Building
 --------
