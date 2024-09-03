@@ -34,7 +34,7 @@ pgn_score_t __pgn_score_from_string(char *str, size_t *consumed)
     if (str[cursor] == '*') {
         cursor++;
         *consumed += cursor;
-        return PGN_SCORE_UNKNOWN;
+        return PGN_SCORE_ONGOING;
     }
 
     pgn_score_single_t white = __pgn_score_single_from_string(str + cursor, &cursor);
