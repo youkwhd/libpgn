@@ -4,39 +4,41 @@
 #include <assert.h>
 #include <ctype.h>
 
+pgn_annotation_t __pgn_annotation_nag_from_string(char *str, size_t *consumed)
+{
+    pgn_annotation_t annotation = PGN_ANNOTATION_UNKNOWN;
+    size_t cursor = 0;
+
+    /* NOTE: NAG annotation tends to have $0 followed by another $<num>.
+     * thus why the while loop, take the last.
+     */
+    while (str[cursor] == '$')
+    {
+        assert(isdigit(str[++cursor]));
+
+        /* TODO: don't discard the rest.
+         */
+        char *endptr = NULL;
+        long num = strtol(str + cursor, &endptr, 10);
+
+        annotation = num;
+        cursor += endptr - (str + cursor);
+
+        pgn_cursor_skip_whitespace(str, &cursor);
+    }
+
+    *consumed += cursor;
+    return annotation;
+}
+
 pgn_annotation_t __pgn_annotation_from_string(char *str, size_t *consumed)
 {
     /* TODO: maybe refactor using strcmp()?
      */
-    pgn_annotation_t annotation = PGN_ANNOTATION_NULL;
+    pgn_annotation_t annotation = PGN_ANNOTATION_UNKNOWN;
 
     if (str[0] == '\0')
         return annotation;
-
-    if (str[0] == '$') {
-        size_t cursor = 0;
-
-        /* NOTE: NAG annotation tends to have $0 followed by another $<num>.
-         * thus why the while loop, take the last.
-         */
-        while (str[cursor] == '$') {
-            assert(isdigit(str[++cursor]));
-
-            /* TODO: don't discard the rest.
-             */
-            char *endptr = NULL;
-            long num = strtol(str + cursor, &endptr, 10);
-
-            annotation = num;
-            cursor += endptr - (str + cursor);
-
-            pgn_cursor_skip_whitespace(str, &cursor);
-        }
-        pgn_cursor_revisit_whitespace(str, &cursor);
-
-        *consumed += cursor;
-        return annotation;
-    }
 
     if (str[0] == '!') {
         (*consumed)++;

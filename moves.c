@@ -96,10 +96,14 @@ check:
     move.check = __pgn_check_from_string(str + cursor, &cursor);
     move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);
 
-    pgn_cursor_skip_whitespace(str, &cursor);
+    bool skipped_whitespace_before_ep = pgn_cursor_skip_whitespace(str, &cursor);
 
     /* could be en passant */
     if (str[cursor] == 'e' && str[cursor + 1] == '.') {
+        /* TODO: error no spaces in between
+         */
+        assert(skipped_whitespace_before_ep);
+
         assert(str[cursor] == 'e');
         assert(str[++cursor] == '.');
         assert(str[++cursor] == 'p');
@@ -108,12 +112,19 @@ check:
         move.en_passant = true;
     }
 
-    pgn_cursor_skip_whitespace(str, &cursor);
+    bool skipped_whitespace_after_ep = move.en_passant ? pgn_cursor_skip_whitespace(str, &cursor) : skipped_whitespace_before_ep;
 
     /* Check for NAG annotation.
      */
-    if (move.annotation == PGN_ANNOTATION_NULL)
-        move.annotation = __pgn_annotation_from_string(str + cursor, &cursor);
+    if (move.annotation == PGN_ANNOTATION_UNKNOWN) {
+        move.annotation = __pgn_annotation_nag_from_string(str + cursor, &cursor);
+
+        /* TODO: error no spaces in between
+         */
+        if (move.annotation != PGN_ANNOTATION_UNKNOWN) {
+            assert(skipped_whitespace_after_ep);
+        }
+    }
 
     pgn_cursor_revisit_whitespace(str, &cursor);
 

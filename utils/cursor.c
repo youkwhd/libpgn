@@ -4,20 +4,34 @@
 #include <assert.h>
 #include <ctype.h>
 
-void pgn_cursor_skip_whitespace(char *str, size_t *cursor)
+bool pgn_cursor_skip_whitespace(char *str, size_t *cursor)
 {
-    while (isspace(str[*cursor])) (*cursor)++;
+    bool skipped = false;
+
+    while (isspace(str[*cursor])) {
+        (*cursor)++;
+        skipped = true;
+    }
+
+    return skipped;
 }
 
-void pgn_cursor_revisit_whitespace(char *str, size_t *cursor)
+bool pgn_cursor_revisit_whitespace(char *str, size_t *cursor)
 {
-    while (isspace(str[*cursor - 1])) (*cursor)--;
+    bool skipped = false;
+
+    while (isspace(str[*cursor - 1])) {
+        (*cursor)--;
+        skipped = true;
+    }
+
+    return skipped;
 }
 
-void pgn_cursor_skip_comment(char *str, size_t *cursor)
+bool pgn_cursor_skip_comment(char *str, size_t *cursor)
 {
     if (str[*cursor] != '{')
-        return;
+        return false;
 
     (*cursor)++;
 
@@ -33,15 +47,18 @@ void pgn_cursor_skip_comment(char *str, size_t *cursor)
         right_brace_count += str[*cursor] == '}';
         (*cursor)++;
     }
+
+    return true;
 }
 
-void pgn_cursor_skip_newline(char *str, size_t *cursor)
+bool pgn_cursor_skip_newline(char *str, size_t *cursor)
 {
     if (str[*cursor] == '\r') {
         assert(str[(*cursor)++] == '\r');
         assert(str[(*cursor)++] == '\n');
-        return;
+        return true;
     }
 
     assert(str[(*cursor)++] == '\n');
+    return true;
 }
