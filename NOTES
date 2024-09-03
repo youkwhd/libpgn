@@ -4,6 +4,8 @@ am honestly not a fan of making abstraction, I know it's a data
 structure that's being used dozens of time in libpgn, but
 working with `void *` is never a good experience.
 
+Or, we could use casting, like what sys/socket.h uses, see: bind(3p).
+
 Is returing `int` for something that couldn't be minus ok? I am
 thinking too much.
 
