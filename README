@@ -47,7 +47,7 @@ opening <https://en.wikipedia.org/wiki/Bongcloud_Attack>:
         return 0;
     }
 
-You can find more examples from the tests/ dir.
+You can find more examples from the bin/ and tests/ dir.
 
 Tests
 -----
