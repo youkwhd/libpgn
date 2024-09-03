@@ -1,7 +1,7 @@
 libpgn
 ======
 
-Portable Game Notation (PGN) file manipulation.
+Tiny C library for parsing PGN files (Chess Games Records).
 
 libpgn(3) is capable to read and write PGN files, it is however
 not a FEN parser, and is only intended to work with PGN files.
