@@ -2,6 +2,7 @@
 #include "utils/cursor.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
 pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed)

@@ -1,7 +1,7 @@
 #ifndef __LIBPGN_BUFFER_H
 #define __LIBPGN_BUFFER_H
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdbool.h>
 
 #define PGN_BUFFER_INITIAL_SIZE 16

@@ -1,7 +1,7 @@
 #ifndef __LIBPGN_COMMENTS_H
 #define __LIBPGN_COMMENTS_H
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #include "utils/buffer.h"
 

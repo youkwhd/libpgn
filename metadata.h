@@ -5,7 +5,7 @@
 #include "utils/export.h"
 #include "utils/buffer.h"
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #define PGN_METADATA_INITIAL_SIZE 8
 #define PGN_METADATA_GROW_SIZE 8

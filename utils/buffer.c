@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "buffer.h"
 
 pgn_buffer_t *pgn_buffer_init(void)

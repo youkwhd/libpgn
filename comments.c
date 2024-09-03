@@ -2,6 +2,7 @@
 #include "utils/cursor.h"
 #include "utils/buffer.h"
 
+#include <stdlib.h>
 #include <assert.h>
 
 void pgn_comment_init(pgn_comment_t *comment)

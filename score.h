@@ -1,8 +1,7 @@
 #ifndef __LIBPGN_SCORE_H
 #define __LIBPGN_SCORE_H
 
-#include <stdint.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 typedef enum pgn_score_t {
     PGN_SCORE_UNKNOWN = 0,

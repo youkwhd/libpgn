@@ -1,9 +1,6 @@
 #ifndef __LIBPGN_PGN_H
 #define __LIBPGN_PGN_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "metadata.h"
 #include "piece.h"
 #include "annotation.h"
