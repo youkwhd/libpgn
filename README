@@ -15,6 +15,10 @@ Compile libpgn as shared & static library:
 
     make
 
+Compile & Run PGN formatter:
+
+    make bin && ./bin/pgn fmt games/lazysicilian.pgn
+
 Examples
 --------
 
