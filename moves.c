@@ -211,7 +211,6 @@ check:
         cursor += pgn_annotation_to_string(move->annotation, dest + cursor);
     }
 
-    /* just to make sure */
     dest[cursor] = '\0';
 }
 
