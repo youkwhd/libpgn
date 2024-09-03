@@ -16,5 +16,6 @@ typedef enum pgn_score_t {
 
 pgn_score_t __pgn_score_from_string(char *str, size_t *consumed);
 pgn_score_t pgn_score_from_string(char *str);
+char *pgn_score_to_string(pgn_score_t score);
 
 #endif // __LIBPGN_SCORE_H

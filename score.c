@@ -61,3 +61,17 @@ pgn_score_t pgn_score_from_string(char *str)
     size_t consumed = 0;
     return __pgn_score_from_string(str, &consumed);
 }
+
+char *pgn_score_to_string(pgn_score_t score)
+{
+    switch (score) {
+    case PGN_SCORE_UNKNOWN:       return "";
+    case PGN_SCORE_ONGOING:       return "*";
+    case PGN_SCORE_DRAW:          return "1/2-1/2";
+    case PGN_SCORE_WHITE_WON:     return "1-0";
+    case PGN_SCORE_BLACK_WON:     return "0-1";
+    case PGN_SCORE_FORFEIT:       return "0-0";
+    case PGN_SCORE_WHITE_FORFEIT: return "0-1/2";
+    case PGN_SCORE_BLACK_FORFEIT: return "1/2-0";
+    }
+}
