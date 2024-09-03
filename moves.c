@@ -174,6 +174,7 @@ void pgn_move_dump(pgn_move_t *move, char *dest)
     dest[cursor++] = '0' + move->dest.rank;
 
     if (move->promoted_to) {
+        assert(move->piece == PGN_PIECE_PAWN);
         assert(move->promoted_to != PGN_PIECE_PAWN);
         dest[cursor++] = '=';
         dest[cursor++] = move->promoted_to;
