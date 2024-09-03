@@ -41,37 +41,22 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
         move.piece = PGN_PIECE_PAWN;
     }
 
-    if (str[cursor] == 'x' || str[cursor] == ':') {
-        move.captures = true;
-        cursor++;
+    /* NOTE: can be refactored using a stack
+     */
+    if (islower(str[cursor]) && str[cursor] != 'x') move.from.file = str[cursor++];
+    if (isdigit(str[cursor])) move.from.rank = str[cursor++] - '0';
 
+    move.captures = str[cursor] == 'x' || str[cursor] == ':';
+    cursor += move.captures;
+
+    if (islower(str[cursor])) {
         assert(islower(str[cursor]));
         move.dest.file = str[cursor++];
         assert(isdigit(str[cursor]));
         move.dest.rank = str[cursor++] - '0';
     } else {
-        /* NOTE: can be refactored using a stack
-         */
-        if (islower(str[cursor])) move.from.file = str[cursor++];
-        if (isdigit(str[cursor])) move.from.rank = str[cursor++] - '0';
-
-        if (str[cursor] == 'x' || str[cursor] == ':') {
-            move.captures = true;
-            cursor++;
-
-            assert(islower(str[cursor]));
-            move.dest.file = str[cursor++];
-            assert(isdigit(str[cursor]));
-            move.dest.rank = str[cursor++] - '0';
-        } else if (islower(str[cursor])) {
-            assert(islower(str[cursor]));
-            move.dest.file = str[cursor++];
-            assert(isdigit(str[cursor]));
-            move.dest.rank = str[cursor++] - '0';
-        } else {
-            move.dest = move.from;
-            move.from = (pgn_coordinate_t){0};
-        }
+        move.dest = move.from;
+        move.from = (pgn_coordinate_t){0};
     }
 
     move.promoted_to = pgn_piece_from_char(str[cursor]);
