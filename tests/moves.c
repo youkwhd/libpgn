@@ -411,6 +411,23 @@ void test_dump_move()
     move.dest.rank = 3;
     pgn_move_dump(&move, move.notation);
     suite6_assert(!strcmp(move.notation, "f3!? e.p."));
+
+    move = (pgn_move_t){0};
+    move.annotation = 9;
+    move.piece = PGN_PIECE_PAWN;
+    move.dest.file = 'f';
+    move.dest.rank = 3;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "f3 $9"));
+
+    move = (pgn_move_t){0};
+    move.annotation = 9;
+    move.en_passant = true;
+    move.piece = PGN_PIECE_PAWN;
+    move.dest.file = 'f';
+    move.dest.rank = 3;
+    pgn_move_dump(&move, move.notation);
+    suite6_assert(!strcmp(move.notation, "f3 e.p. $9"));
 }
 
 void test_parsing_weird_move()
