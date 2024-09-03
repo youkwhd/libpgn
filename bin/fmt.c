@@ -1,4 +1,5 @@
 #include <pgn.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "fmt.h"
