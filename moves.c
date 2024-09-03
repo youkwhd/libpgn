@@ -129,7 +129,7 @@ pgn_move_t pgn_move_from_string(char *str)
     return __pgn_move_from_string(str, &consumed);
 }
 
-void pgn_move_dump(pgn_move_t *move, char *dest)
+size_t pgn_move_dump(pgn_move_t *move, char *dest)
 {
     size_t cursor = 0;
 
@@ -197,6 +197,7 @@ check:
     }
 
     dest[cursor] = '\0';
+    return cursor;
 }
 
 pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_moves_t *moves)
