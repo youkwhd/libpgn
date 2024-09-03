@@ -30,7 +30,7 @@ all: $(OBJ)
 
 test: all $(EXE)
 
-bin:
+bin: all
 	$(MAKE) -C $(MAKECMDGOALS) 
 
 $(EXE):
