@@ -1,7 +1,6 @@
 #include "metadata.h"
 #include "utils/cursor.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -72,13 +71,6 @@ pgn_metadata_t *pgn_metadata_init(void)
     metadata->size = PGN_METADATA_INITIAL_SIZE;
     metadata->length = 0;
     return metadata;
-}
-
-void pgn_metadata_printp(pgn_metadata_t *metadata)
-{
-    for (size_t i = 0; i < metadata->length; i++) {
-        printf("[%s \"%s\"]\n", metadata->items[i].key->buf, metadata->items[i].value->buf);
-    }
 }
 
 void pgn_metadata_insert(pgn_metadata_t *metadata, char *key, char *value)

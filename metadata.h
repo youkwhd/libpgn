@@ -26,7 +26,6 @@ void __pgn_metadata_item_cleanup(__pgn_metadata_item_t *item);
 PGN_EXPORT pgn_metadata_t *pgn_metadata_init(void);
 PGN_EXPORT pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed);
 PGN_EXPORT pgn_metadata_t *pgn_metadata_from_string(char *str);
-PGN_EXPORT void pgn_metadata_printp(pgn_metadata_t *metadata);
 PGN_EXPORT void pgn_metadata_insert(pgn_metadata_t *metadata, char *key, char *value);
 PGN_EXPORT char *pgn_metadata_get(pgn_metadata_t *metadata, char *key);
 PGN_EXPORT void pgn_metadata_delete(pgn_metadata_t *metadata, char *key);
