@@ -246,7 +246,6 @@ pgn_moves_t *__pgn_moves_from_string_recurse(char *str, size_t *consumed, pgn_mo
         dots_count++;
     }
 
-    assert(dots_count == 1 || dots_count == 3);
     if (expect == PGN_EXPECT_WHITE) assert(dots_count == 1);
     if (expect == PGN_EXPECT_BLACK) assert(dots_count == 3);
 
