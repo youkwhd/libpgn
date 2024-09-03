@@ -3,7 +3,7 @@ libpgn
 
 Portable Game Notation (PGN) file manipulation.
 
-libpgn(3) is capable to read and create PGN files, it is however not
+libpgn(3) is capable to read and write PGN files, it is however not
 a FEN parser, and is only intended to parse PGN files.
 
 See the man page for more detailed information.
