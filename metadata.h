@@ -19,11 +19,11 @@
 #ifndef __LIBPGN_METADATA_H
 #define __LIBPGN_METADATA_H
 
+#include <stddef.h>
+
 #include "piece.h"
 #include "utils/export.h"
 #include "utils/buffer.h"
-
-#include <stddef.h>
 
 #define PGN_METADATA_INITIAL_SIZE 8
 #define PGN_METADATA_GROW_SIZE 8

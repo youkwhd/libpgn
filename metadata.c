@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "metadata.h"
-#include "utils/cursor.h"
-
 #include <stdlib.h>
 #include <assert.h>
+
+#include "metadata.h"
+#include "utils/cursor.h"
 
 pgn_metadata_t *__pgn_metadata_from_string(char *str, size_t *consumed)
 {

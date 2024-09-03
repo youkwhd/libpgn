@@ -16,9 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "piece.h"
-
 #include <stddef.h>
+
+#include "piece.h"
 
 pgn_piece_t pgn_piece_from_char(char ch)
 {

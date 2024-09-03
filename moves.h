@@ -19,6 +19,9 @@
 #ifndef __LIBPGN_MOVES_H
 #define __LIBPGN_MOVES_H
 
+#include <stddef.h>
+#include <stdbool.h>
+
 #include "piece.h"
 #include "coordinate.h"
 #include "annotation.h"
@@ -26,9 +29,6 @@
 #include "check.h"
 
 #include "utils/export.h"
-
-#include <stddef.h>
-#include <stdbool.h>
 
 /* TODO: move this somewhere
  */

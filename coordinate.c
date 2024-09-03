@@ -16,9 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "coordinate.h"
-
 #include <ctype.h>
+
+#include "coordinate.h"
 
 int pgn_coordinate_file_as_index(char file)
 {

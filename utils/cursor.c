@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "cursor.h"
-
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+
+#include "cursor.h"
 
 bool pgn_cursor_skip_whitespace(char *str, size_t *cursor)
 {

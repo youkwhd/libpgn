@@ -17,6 +17,7 @@
  */
 
 #include "pgn.h"
+
 #include "utils/cursor.h"
 
 pgn_t *pgn_init(void)

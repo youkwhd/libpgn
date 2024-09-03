@@ -16,13 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "annotation.h"
-#include "utils/cursor.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "annotation.h"
+#include "utils/cursor.h"
 
 pgn_annotation_t __pgn_annotation_nag_from_string(char *str, size_t *consumed)
 {

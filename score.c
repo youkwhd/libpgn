@@ -16,10 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "score.h"
-
-#include <assert.h>
 #include <string.h>
+
+#include "score.h"
 
 typedef enum pgn_score_single_t {
     ZERO = 0,
