@@ -16,7 +16,7 @@ Compile libpgn as shared & static library:
 Examples
 --------
 
-In a perfect world, Parsing the simplest Bongcloud Attack
+In a perfect world, parsing the simplest Bongcloud Attack
 opening <https://en.wikipedia.org/wiki/Bongcloud_Attack>:
 
     #include <pgn.h>
