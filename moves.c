@@ -38,28 +38,26 @@ pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
     pgn_move_t move = {0};
     size_t cursor = 0;
+    
+    if (str[cursor] == 'O') {
+        assert(str[++cursor] == '-');
+        assert(str[++cursor] == 'O');
+        move.castles = PGN_CASTLING_KINGSIDE;
+        cursor++;
+
+        if (str[cursor] == '-') {
+            assert(str[++cursor] == 'O');
+            move.castles = PGN_CASTLING_QUEENSIDE;
+            cursor++;
+        }
+
+        goto check;
+    }
 
     move.piece = pgn_piece_from_char(str[cursor++]);
     if (move.piece == PGN_PIECE_UNKNOWN) {
-        cursor--;
-
-        move.castles = PGN_CASTLING_NONE;
-        if (str[cursor] == 'O') {
-            assert(str[++cursor] == '-');
-            assert(str[++cursor] == 'O');
-            move.castles = PGN_CASTLING_KINGSIDE;
-            cursor++;
-
-            if (str[cursor] == '-') {
-                assert(str[++cursor] == 'O');
-                move.castles = PGN_CASTLING_QUEENSIDE;
-                cursor++;
-            }
-
-            goto check;
-        }
-
         move.piece = PGN_PIECE_PAWN;
+        cursor--;
     }
 
     /* NOTE: can be refactored using a stack
