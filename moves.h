@@ -79,7 +79,7 @@ struct pgn_moves_t {
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed);
 pgn_move_t pgn_move_from_string(char *str);
-size_t pgn_move_dump(pgn_move_t *move, char *dest);
+size_t pgn_move_to_string(pgn_move_t *move, char *dest);
 
 pgn_moves_t *__pgn_moves_from_string(char *str, size_t *consumed);
 pgn_moves_t *pgn_moves_from_string(char *str);

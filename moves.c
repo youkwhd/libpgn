@@ -150,7 +150,7 @@ pgn_move_t pgn_move_from_string(char *str)
     return __pgn_move_from_string(str, &consumed);
 }
 
-size_t pgn_move_dump(pgn_move_t *move, char *dest)
+size_t pgn_move_to_string(pgn_move_t *move, char *dest)
 {
     size_t cursor = 0;
 
