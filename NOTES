@@ -11,3 +11,6 @@ thinking too much.
 
 Maybe create a function that takes filename, and read from there,
 we could save some time. Also, it's just nicer.
+
+https://news.ycombinator.com/item?id=41442029
+Show HN: libpgn – Tiny C library for parsing PGN files (Chess Game Records)
