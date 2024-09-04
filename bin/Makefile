@@ -13,7 +13,7 @@ OBJ    := $(SRC:.c=.o)
 all: $(EXE)
 
 $(EXE): $(OBJ)
-	$(LD) $(LDLIBS) -Wl,-rpath=$(shell pwd)/.. -L.. $^ -o $(EXE)
+	$(LD) -Wl,-rpath=$(shell pwd)/.. -L.. $^ $(LDLIBS) -o $(EXE)
 
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -I.. -c $< -o $@
