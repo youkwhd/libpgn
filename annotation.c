@@ -29,6 +29,11 @@ pgn_annotation_t __pgn_annotation_nag_from_string(char *str, size_t *consumed)
     pgn_annotation_t annotation = PGN_ANNOTATION_UNKNOWN;
     size_t cursor = 0;
 
+    /* works for not revisiting whitespaces
+     */
+    if (str[cursor] != '$')
+        return annotation;
+
     /* NOTE: NAG annotation tends to have $0 followed by another $<num>.
      * thus why the while loop, take the last.
      */
@@ -46,6 +51,7 @@ pgn_annotation_t __pgn_annotation_nag_from_string(char *str, size_t *consumed)
 
         pgn_cursor_skip_whitespace(str, &cursor);
     }
+    pgn_cursor_revisit_whitespace(str, &cursor);
 
     *consumed += cursor;
     return annotation;
