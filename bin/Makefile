@@ -1,9 +1,9 @@
 EXE     = pgn
 
-CC      = cc
+CC      = gcc
 CFLAGS  = -std=c99 -Wall -Wextra
 
-LD      = cc
+LD      = gcc
 LDLIBS  = -lpgn
 
 SRC    := $(wildcard *.c)
