@@ -31,8 +31,8 @@
 
 #include "utils/cursor.h"
 
-#define  PGN_EXPECT_WHITE 0
-#define  PGN_EXPECT_BLACK 1
+#define PGN_EXPECT_WHITE 0
+#define PGN_EXPECT_BLACK 1
 
 pgn_move_t __pgn_move_from_string(char *str, size_t *consumed)
 {
