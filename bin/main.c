@@ -18,8 +18,8 @@ char *read_file(char *filename)
     int filesize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
 
-    char *buf = malloc(sizeof(*buf) * (filesize + 1));
-    fread(buf, sizeof(*buf), filesize, fp);
+    char *buf = malloc((sizeof *buf) * (filesize + 1));
+    fread(buf, sizeof *buf, filesize, fp);
     buf[filesize] = '\0';
 
     fclose(fp);

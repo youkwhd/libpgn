@@ -44,7 +44,7 @@ bool pgn_buffer_equal(pgn_buffer_t *buf, char *str)
 void pgn_buffer_grow(pgn_buffer_t *buf)
 {
     buf->size += PGN_BUFFER_GROW_SIZE;
-    buf->buf = realloc(buf->buf, sizeof(*buf->buf) * buf->size);
+    buf->buf = realloc(buf->buf, (sizeof *buf->buf) * buf->size);
 }
 
 void pgn_buffer_reset(pgn_buffer_t *buf)

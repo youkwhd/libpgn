@@ -86,7 +86,7 @@ void pgn_comments_push(pgn_comments_t *comments, pgn_comment_t comment)
 {
     if (comments->length >= comments->size) {
         comments->size += PGN_COMMENTS_GROW_SIZE;
-        comments->values = realloc(comments->values, sizeof(*comments->values) * comments->size);
+        comments->values = realloc(comments->values, (sizeof *comments->values) * comments->size);
     }
 
     comments->values[comments->length++] = comment;
