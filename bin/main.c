@@ -22,6 +22,7 @@ char *read_file(char *filename)
     fread(buf, sizeof(*buf), filesize, fp);
     buf[filesize] = '\0';
 
+    fclose(fp);
     return buf;
 }
 
