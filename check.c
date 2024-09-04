@@ -25,16 +25,19 @@ pgn_check_t __pgn_check_from_string(char *str, size_t *consumed)
     size_t cursor = 0;
     pgn_check_t check = PGN_CHECK_NONE;
 
-    while (str[cursor] == '+') {
-        check++;
-        cursor++;
-    }
-    assert(check <= 2);
+    switch (str[cursor]) {
+        case '+':
+            while (str[cursor] == '+') {
+                check++;
+                cursor++;
+            }
 
-    if (str[cursor] == '#') {
-        assert(check == PGN_CHECK_NONE);
-        check = PGN_CHECK_MATE;
-        cursor++;
+            assert(check <= 2);
+            break;
+        case '#':
+            check = PGN_CHECK_MATE;
+            cursor++;
+            break;
     }
 
     *consumed += cursor;
