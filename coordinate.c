@@ -22,8 +22,5 @@
 
 int pgn_coordinate_file_as_index(char file)
 {
-    if (isupper(file))
-        return file - 'A';
-
-    return file - 'a';
+    return file - (isupper(file) ? 'A' : 'a');
 }
